@@ -1,0 +1,17 @@
+.login-page {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(172, 243, 219);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-form {
+    width: 50%;
+    height: 80%;
+    background-color: rgb(181, 181, 255);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
