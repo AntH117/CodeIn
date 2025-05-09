@@ -1,0 +1,145 @@
+.post-body {
+    width: 30%;
+    height: 60%;
+    min-width: 400px;
+    background-color: rgb(172, 172, 233);
+    border-radius: 15px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cancel-button {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 2%;
+    right: 2%;
+    border-radius: 100%;
+    border: 1px solid black;
+    cursor: pointer;
+    background-color: rgb(255, 176, 176);
+}
+
+.post-button {
+    width: 70px;
+    height: 30px;
+    position: absolute;
+    bottom: 3%;
+    right: 3%;
+    border-radius: 5px;
+    border: 1px solid black;
+    background-color: rgb(208, 247, 217);
+    cursor: pointer;
+}
+
+
+.form-body {
+    width: 90%;
+    height: 90%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.form-top {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+
+}
+
+@media (max-width: 760px) {
+    .form-top {
+        width: 100%;
+        height: fit-content;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.form-title {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.form-title-input {
+    border-radius: 3px;
+    border: 1px solid black;
+    width: 70%;
+}
+
+.form-visibility {
+    width: 50%;
+    min-width: 150px;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.form-middle {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+}
+
+.form-paragraph {
+    width: 90%;
+    resize: vertical;
+    max-height: 350px;
+    min-height: 200px;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+.form-bottom {
+    width: 90%;
+    min-height: 100px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-imports {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.form-import-button {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    border-radius: 20px;
+    border: 1px solid white;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}
+
+.form-import-button img {
+    width: 120%;
+}
+
+.file-upload {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    z-index: 3;
+    display: none;
+}

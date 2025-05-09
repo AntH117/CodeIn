@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+body {
+  font-family: 'Sansation' ;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
