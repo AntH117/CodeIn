@@ -1,7 +1,16 @@
 import express from 'express'
+import CodeInCtrl from './codeIn.controller.js'
 
 const router = express.Router();
 
-router.route('/').get((req, res) => res.send('Home Page'))
-
+//See and Edit Posts
+router.route('/posts/:id')
+    .get(CodeInCtrl.apiGetPost)
+    .put(CodeInCtrl.apiUpdatePost)
+    .delete(CodeInCtrl.apiDeletePost)
+//Create new Post
+router.route('/new').post(CodeInCtrl.apiCreatePost)
+//Get User Posts
+router.route('/user/:id')
+    .get(CodeInCtrl.apiGetUserPosts)
 export default router
