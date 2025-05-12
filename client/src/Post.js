@@ -3,6 +3,7 @@ import React from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import image_upload from './images/image_upload.png'
 import file_upload from './images/file-upload.png'
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Post() {
     const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function Post() {
         const postWithTime = {
             ...newPost,
             time: new Date().toISOString(),
+            postId: uuidv4()
         }
         const existing = JSON.parse(localStorage.getItem('posts')) || [];
         existing.push(postWithTime);
@@ -52,7 +54,8 @@ export default function Post() {
     }
 
 
-    return <div className='post-body'>
+    return <div className='post-outer-body'>
+        <div className='post-body'>
         <button className='cancel-button' onClick={() => navigate('/')}>
             X
         </button>
@@ -98,5 +101,6 @@ export default function Post() {
         <button className='post-button' onClick={() => savePost(formData)}>
             Post
         </button>
+    </div>
     </div>
 }

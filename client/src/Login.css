@@ -9,15 +9,15 @@
 }
 
 .login-form {
-    width: 50%;
-    height: 80%;
+    width: 700px;
+    margin-top: 50px;
+    height: 90%;
     background-color: rgb(181, 181, 255);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     position: relative;
     align-items: center;
-    margin-top: 50px;
 }
 
 
