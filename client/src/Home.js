@@ -5,12 +5,31 @@ import { Link, Outlet, Navigate, useLocation, useNavigate} from 'react-router-do
 export default function Home() {
     const navigate = useNavigate();
     const location = useLocation();
-    const getPosts = () => {
-        return JSON.parse(localStorage.getItem('posts')) || [];
-      };
+     
     const [posts, setPosts] = React.useState([])
+
+    //Temp looking for posts with Anthony
+    const APILINK = `http://localhost:5000/api/v1/codeIn/user/Anthony`
+
+    const getPosts = async () => {
+        try {
+            const response = await fetch(APILINK, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+            setPosts(data)
+        } catch (e) {
+            console.error('Unable to load posts:', e)
+        }
+      };
+
+
+    console.log(posts)
     React.useEffect(() => {
-        setPosts(getPosts())
+        getPosts()
     }, [location])
 
     function convertTime(time) {
@@ -29,16 +48,16 @@ export default function Home() {
 
     function IndividualPost({data}) {
         return <div className='IP-body'>
-            <div className='IP-title' onClick={() => navigate(`/posts/${data.postId}`)}>
-                <h2>{data.title}</h2>
+            <div className='IP-title' onClick={() => navigate(`/posts/${data._id}`)}>
+                <h2>{data.postContent.title}</h2>
             </div>
             <div className='IP-author-date'>
-                <h4><span style={{cursor: 'pointer'}}>Anonymous</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.time)}</span></h4>
+                <h4><span style={{cursor: 'pointer'}}>{data.user}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.postContent.time)}</span></h4>
             </div>
             <div className='IP-paragraph'>
-                <p>{data.paragraph}</p>
+                <p>{data.postContent.paragraph}</p>
             </div>
-            {data.files.length > 0 && <div className='IP-attachments'></div>}
+            {data.postContent.files.length > 0 && <div className='IP-attachments'></div>}
             <div className='IP-images'>
                 <div className='test-image'>
 
@@ -46,7 +65,7 @@ export default function Home() {
             </div>
             <div className='IP-interact'>
                 <h5>Like</h5>
-                <h5 onClick={() => navigate(`/posts/${data.postId}`)}>Comment</h5>
+                <h5 onClick={() => navigate(`/posts/${data._id}`)}>Comment</h5>
                 <h5>Share</h5>
             </div>
         </div>

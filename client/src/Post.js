@@ -6,6 +6,8 @@ import file_upload from './images/file-upload.png'
 import { v4 as uuidv4 } from 'uuid';
 
 export default function Post() {
+    const APILINK = `http://localhost:5000/api/v1/codeIn/posts`
+
     const navigate = useNavigate();
     const [formData, setFormData] = React.useState({
         title: '',
@@ -14,17 +16,34 @@ export default function Post() {
         files: []
     })
     
-    const savePost = (newPost) => {
+    const savePost = async (newPost) => {
         const postWithTime = {
             ...newPost,
             time: new Date().toISOString(),
             postId: uuidv4()
         }
-        const existing = JSON.parse(localStorage.getItem('posts')) || [];
-        existing.push(postWithTime);
-        localStorage.setItem('posts', JSON.stringify(existing));
-
-        navigate('/')
+        try {
+            const response = await fetch(APILINK, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    postContent: postWithTime,
+                    user: 'Anthony' || 'Anonymous'
+                }),
+            });
+            
+            const result = await response.json();
+            if (result.status === 'success') {
+                console.log('Post successfully saved')
+                navigate('/')
+            } else {
+                console.error('Backend Error', result.error)
+            }
+        } catch (e) {
+            console.error('failed to save post:', e)
+        }
       };
 
     const handleFileChange = (e) => {

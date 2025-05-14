@@ -9,8 +9,8 @@ router.route('/posts/:id')
     .put(CodeInCtrl.apiUpdatePost)
     .delete(CodeInCtrl.apiDeletePost)
 //Create new Post
-router.route('/new').post(CodeInCtrl.apiCreatePost)
+router.route('/posts').post(CodeInCtrl.apiCreatePost)
 //Get User Posts
-router.route('/user/:id')
+router.route('/user/:name')
     .get(CodeInCtrl.apiGetUserPosts)
 export default router
