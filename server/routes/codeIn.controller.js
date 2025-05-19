@@ -1,4 +1,6 @@
 import CodeInDAO from '../dao/CodeInDao.js'
+import path from 'path'
+import fs from 'fs';
 
 export default class CodeInController {
 
@@ -8,6 +10,20 @@ export default class CodeInController {
             const postContent = req.body.postContent
             const user = req.body.user
 
+            //file upload
+            if (!postContent.files || postContent.files.length === 0) {
+                //remove so that users can create a post without uploading
+                return res.status(400).json({ error: "No files to move" });
+            } else {
+                const movedFiles = postContent.files.map(tempPath => {
+                    const fileName = path.basename(tempPath);
+                    const finalPath = path.join('uploads', 'final', fileName);
+                    fs.renameSync(tempPath, finalPath);
+                    return finalPath;
+                });
+                postContent.files = movedFiles;
+            }
+
             const postResponse = await CodeInDAO.createPost(
                 postContent,
                 user
@@ -15,6 +31,20 @@ export default class CodeInController {
             res.json({ status: "success" })
         } catch (e) {
             res.status(500).json({error: e.message})
+        }
+    }
+    //handle uploading files for creating/editing posts
+    static handleUpload(req, res, next) {
+        try {
+            if (!req.file) {
+                return res.status(400).json({ error: 'No file uploaded' });
+            }
+            res.json({
+                status: 'success',
+                filePath: `uploads/temp/${req.file.filename}`
+            });
+        } catch (e) {
+            res.status(500).json({ error: e.message });
         }
     }
     static async apiGetPost(req, res, next) {

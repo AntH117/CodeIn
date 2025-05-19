@@ -15,14 +15,16 @@
 
 .post-body {
     width: 80%;
-    height: 60%;
+    height: 50%;
     min-width: 400px;
-    background-color: rgb(172, 172, 233);
-    border-radius: 15px;
+    background-color: #fffaf5;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    color: #333;
 }
 
 .cancel-button {
@@ -32,9 +34,10 @@
     top: 2%;
     right: 2%;
     border-radius: 100%;
-    border: 1px solid black;
+    border: 0px solid black;
     cursor: pointer;
-    background-color: rgb(255, 176, 176);
+    background-color: rgba(112,94,218,255);
+    color: white;
 }
 
 .post-button {
@@ -43,10 +46,12 @@
     position: absolute;
     bottom: 3%;
     right: 3%;
-    border-radius: 5px;
-    border: 1px solid black;
-    background-color: rgb(208, 247, 217);
-    cursor: pointer;
+    background-color: rgba(112,94,218,255);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    transition: background-color 0.2s;
 }
 
 
@@ -87,8 +92,10 @@
 
 .form-title-input {
     border-radius: 3px;
-    border: 1px solid black;
     width: 70%;
+    background-color: #fefefe;
+    border: 1px solid #bbb;
+    color: #333;
 }
 
 .form-visibility {
@@ -100,6 +107,17 @@
     align-items: center;
     margin-left: 10px;
 }
+
+.form-visibility select {
+    background-color: #fefefe;
+    border: 1px solid #bbb;
+    color: #333;
+}
+
+.form-visibility select:focus {
+    outline: none;
+}
+
 
 .form-middle {
     width: 100%;
@@ -114,7 +132,14 @@
     max-height: 350px;
     min-height: 200px;
     border-radius: 10px;
-    border: 1px solid black;
+    background-color: #fefefe;
+    border: 1px solid #bbb;
+    color: #333;
+    padding-left: 15px;
+}
+
+.form-paragraph:focus {
+    outline: none;
 }
 
 .form-bottom {
@@ -138,7 +163,9 @@
     height: 40px;
     margin-right: 10px;
     border-radius: 20px;
-    border: 1px solid white;
+    background-color: #fefefe;
+    border: 1px solid #bbb;
+    color: #333;
     cursor: pointer;
     display: flex;
     justify-content: center;

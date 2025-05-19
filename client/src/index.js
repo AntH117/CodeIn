@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import Home from './Home';
 import Login from './Login';
 import Post from './Post';
+import ExpandedPost from './ExpandedPost';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/posts/:id',
-        element: ''
+        element: <ExpandedPost />
       }
     ]
   },

@@ -11,7 +11,7 @@ export default function Post() {
     const navigate = useNavigate();
     const [formData, setFormData] = React.useState({
         title: '',
-        visibility: '',
+        visibility: 'Public',
         paragraph: '',
         files: []
     })
@@ -20,7 +20,12 @@ export default function Post() {
         const postWithTime = {
             ...newPost,
             time: new Date().toISOString(),
-            postId: uuidv4()
+            postId: uuidv4(),
+            socials: {
+                likes: 0,
+                comments: [],
+                shares: 0
+            }
         }
         try {
             const response = await fetch(APILINK, {
@@ -36,7 +41,7 @@ export default function Post() {
             
             const result = await response.json();
             if (result.status === 'success') {
-                console.log('Post successfully saved')
+                alert('Post successfully saved')
                 navigate('/')
             } else {
                 console.error('Backend Error', result.error)
@@ -46,12 +51,25 @@ export default function Post() {
         }
       };
 
-    const handleFileChange = (e) => {
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+                
+        const form = new FormData();
+        form.append('file', file);
+
+        const res = await fetch(`${APILINK}/temp-upload`, {
+            method: 'POST',
+            body: form
+        });
+
+  const data = await res.json();
         setFormData((preVal) => ({
             ...preVal,
-            files: [...preVal.files, e.target.files[0]]
-        }))
+            files: [...preVal.files, data.filePath]
+       }))
     }
+    console.log(formData)
 
     const handleChange = (e) => {
         const { name, value } = e.target;
