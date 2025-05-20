@@ -1,6 +1,7 @@
 import CodeInDAO from '../dao/CodeInDao.js'
 import path from 'path'
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 
 export default class CodeInController {
 
@@ -47,6 +48,30 @@ export default class CodeInController {
             res.status(500).json({ error: e.message });
         }
     }
+
+    static handleFileDelete(req, res) {
+        try {
+            const __filename = fileURLToPath(import.meta.url);
+            const __dirname = path.dirname(__filename);
+            
+            const filename  = req.body.fileName;
+            const filePath = path.join(__dirname, '../uploads/temp', filename);
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    console.error('Error deleting file', err)
+                } else {
+                    console.log('Temp file deleted', filename)
+                }
+                res.json({
+                    status: 'success'
+                });
+            })
+        } 
+        catch (e) {
+            res.status(500).json({'error': e.message})
+        }
+    }
+
     static async apiGetPost(req, res, next) {
         try {
             let id = req.params.id || {}

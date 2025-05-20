@@ -7,6 +7,24 @@ import Icons from './icons/Icons';
 
 export default function ExpandedPost () {
     const [post, setPost] = React.useState(null)
+    const [imageFiles, setImageFiles] = React.useState(null)
+    const [otherFiles, setOtherFiles] = React.useState(null)
+
+    function setFiles () {
+        if (post?.postContent.files.length > 0) {
+            const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.svg'];
+            const images = post.postContent.files.filter(file => {
+                const ext = file.slice(file.lastIndexOf('.')).toLowerCase();
+                return imageExtensions.includes(ext);
+              });
+            setImageFiles(images)
+            const other = post.postContent.files.filter(file => {
+                const ext = file.slice(file.lastIndexOf('.')).toLowerCase();
+                return !imageExtensions.includes(ext);
+              });
+            setOtherFiles(other)
+        }
+    }
     const location  = useLocation()
     const id = location.pathname.split('/').at(-1)
     const navigate = useNavigate();
@@ -30,7 +48,12 @@ export default function ExpandedPost () {
     //icons
     React.useEffect(() => {
         getPost()
-    }, [location])
+    }, [])
+
+    React.useEffect(() => {
+        setFiles()
+    }, [post])
+
 
     //Delete post
     const deletePost = async () => {
@@ -224,8 +247,32 @@ export default function ExpandedPost () {
             </div>
         )
     }
-
+    
+    function ImageGrid({ imageFiles }) {
+        
+        const columns = Math.min(imageFiles.length, 4);
+        const gridStyle = {
+          display: 'grid',
+          gridTemplateColumns: `repeat(${columns}, 1fr)`,
+          gap: '10px',
+        };
+        return (
+          <div style={gridStyle} className='IP-image-container'>
+            {imageFiles.map((src, idx) => (
+              <img
+                onClick={() => navigate(`image/${src.split('\\').at(-1)}`)}
+                className='IP-image'
+                key={idx}
+                src={`http://localhost:5000/${src}`}
+                alt={`Image ${idx + 1}`}
+              />
+            ))}
+          </div>
+        );
+      }
+    
     return (<div className='EP-outer-body'>
+            <Outlet />
     {post && <div className='EP-inner-body'>
                     <DropDownMenu />
                     <div className='IP-title'>
@@ -240,12 +287,8 @@ export default function ExpandedPost () {
                         <div className='IP-paragraph'>
                             <p>{post.postContent.paragraph}</p>
                         </div>
+                        {imageFiles && <ImageGrid imageFiles={imageFiles}/>}
                         {post.postContent.files.length > 0 && <div className='IP-attachments'></div>}
-                        <div className='IP-images'>
-                            <div className='test-image'>
-
-                            </div>
-                        </div>
                         <Socials />
                         <div className='IP-interact' style={{marginBottom: '1rem'}}>
                             <h5>Like</h5>

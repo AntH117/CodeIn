@@ -7,6 +7,7 @@ import Home from './Home';
 import Login from './Login';
 import Post from './Post';
 import ExpandedPost from './ExpandedPost';
+import ExpandedImage from './ExpandedImage';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -23,7 +24,13 @@ const router = createBrowserRouter([
       },
       {
         path: '/posts/:id',
-        element: <ExpandedPost />
+        element: <ExpandedPost />,
+        children: [
+          {
+            path: 'image/:imageId',
+            element: <ExpandedImage />
+          }
+        ]
       }
     ]
   },

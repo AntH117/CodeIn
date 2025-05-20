@@ -94,6 +94,7 @@
     height: 20%;
     display: flex;
     justify-content: left;
+    margin-bottom: 1rem;
 }
 
 .IP-title h2 {
@@ -136,11 +137,19 @@
     margin: 0;
 }
 
-.IP-images {
+.IP-image-container {
     width: 80%;
     height: 200px;
     border-radius: 20px;
     overflow: hidden;
+    display: grid;
+    cursor: pointer;
+}
+.IP-image {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+
 }
 
 .test-image {

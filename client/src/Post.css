@@ -128,9 +128,8 @@
 
 .form-paragraph {
     width: 90%;
-    resize: vertical;
-    max-height: 350px;
-    min-height: 200px;
+    resize: none;
+    min-height: 150px;
     border-radius: 10px;
     background-color: #fefefe;
     border: 1px solid #bbb;
@@ -184,4 +183,41 @@
     border-radius: 20px;
     z-index: 3;
     display: none;
+}
+
+.imported-content {
+    width: 100%;
+    height: fit-content;
+    max-height: 4.5rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
+.file-import-body {
+    min-width: 7rem;
+    width: fit-content;
+    height: 1.5rem;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+}
+
+.file-import-delete {
+    width: 1rem;
+    height: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.file-import-delete:hover {
+    border: 1px solid transparent;
+    color: white;
+    background-color: rgb(255, 68, 68);
 }

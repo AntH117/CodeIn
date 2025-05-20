@@ -6,7 +6,7 @@ import file_upload from './images/file-upload.png'
 import { v4 as uuidv4 } from 'uuid';
 
 export default function Post() {
-    const APILINK = `http://localhost:5000/api/v1/codeIn/posts`
+    const APILINK = `http://localhost:5000/api/v1/codeIn`
 
     const navigate = useNavigate();
     const [formData, setFormData] = React.useState({
@@ -28,7 +28,7 @@ export default function Post() {
             }
         }
         try {
-            const response = await fetch(APILINK, {
+            const response = await fetch(`${APILINK}/posts`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -63,13 +63,12 @@ export default function Post() {
             body: form
         });
 
-  const data = await res.json();
-        setFormData((preVal) => ({
-            ...preVal,
-            files: [...preVal.files, data.filePath]
-       }))
+        const data = await res.json();
+            setFormData((preVal) => ({
+                ...preVal,
+                files: [...preVal.files, data.filePath]
+        }))
     }
-    console.log(formData)
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -88,6 +87,42 @@ export default function Post() {
     }
     const handleFileClick = () => {
         fileInputRef.current.click();
+    }
+    //IMPORTS
+    function FileImports({name}) {
+        const uniqueFile = name.split('/').at(-1)
+        const originalName = name.slice(50)
+        const deleteTempFile = async (e) => {
+            const res = await fetch(`${APILINK}/temp-upload`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fileName: uniqueFile
+                })
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                setFormData((preVal) => ({
+                    ...preVal,
+                    files: preVal.files.filter((x) => x !== name)
+                }))
+            } else {
+                console.error('Unable to delete file')
+            }
+        }
+
+        return <div className='file-import-body'>
+            <p>
+                {originalName}
+            </p>
+            <div className='file-import-delete' onClick={() => deleteTempFile()}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+            </div>
+        </div>
     }
 
 
@@ -121,7 +156,9 @@ export default function Post() {
         
             <div className='form-bottom'>
                 <div className='imported-content'>
-
+                        {formData.files.length > 0 && formData.files.map((x) => {
+                            return <FileImports name={x}/>
+                        })}
                 </div>
                 <div className='form-imports'>
                     <button className='form-import-button' type="button" onClick={handldeImageClick}>

@@ -29,8 +29,9 @@ router.route('/posts/:id')
 //Create new Post
 router.route('/posts')
     .post(CodeInCtrl.apiCreatePost)
-router.route('/posts/temp-upload')
-    .post(upload.single('file'), CodeInCtrl.handleUpload);
+router.route('/temp-upload')
+    .post(upload.single('file'), CodeInCtrl.handleUpload)
+    .delete(CodeInCtrl.handleFileDelete);
 //Get User Posts
 router.route('/user/:name')
     .get(CodeInCtrl.apiGetUserPosts)

@@ -46,6 +46,43 @@ export default function Home() {
     }
 
     function IndividualPost({data}) {
+        let imageFiles;
+        let otherFiles;
+
+        if (data.postContent.files.length > 0) {
+            const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.svg'];
+             imageFiles = data.postContent.files.filter(file => {
+                const ext = file.slice(file.lastIndexOf('.')).toLowerCase();
+                return imageExtensions.includes(ext);
+              });
+            otherFiles = data.postContent.files.filter(file => {
+                const ext = file.slice(file.lastIndexOf('.')).toLowerCase();
+                return !imageExtensions.includes(ext);
+              });
+        }
+
+        function ImageGrid({ imageFiles }) {
+            const columns = Math.min(imageFiles.length, 4);
+            const gridStyle = {
+              display: 'grid',
+              gridTemplateColumns: `repeat(${columns}, 1fr)`,
+              gap: '10px',
+            };
+          
+            return (
+              <div style={gridStyle} className='IP-image-container'>
+                {imageFiles.map((src, idx) => (
+                  <img
+                    className='IP-image'
+                    key={idx}
+                    src={`http://localhost:5000/${src}`}
+                    alt={`Image ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            );
+          }
+
         return <div className='IP-body'>
             <div className='IP-title'>
                 <h2 onClick={() => navigate(`/posts/${data._id}`)}>{data.postContent.title}</h2>
@@ -60,11 +97,7 @@ export default function Home() {
                 <p>{data.postContent.paragraph}</p>
             </div>
             {data.postContent.files.length > 0 && <div className='IP-attachments'></div>}
-            <div className='IP-images'>
-                <div className='test-image'>
-
-                </div>
-            </div>
+                {imageFiles && <ImageGrid imageFiles={imageFiles}/>}
             <div className='IP-socials'>
                 <div className='IP-socials-individual'>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd"
