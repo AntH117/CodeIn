@@ -53,7 +53,7 @@ export default class CodeInController {
         try {
             const __filename = fileURLToPath(import.meta.url);
             const __dirname = path.dirname(__filename);
-            
+
             const filename  = req.body.fileName;
             const filePath = path.join(__dirname, '../uploads/temp', filename);
             fs.unlink(filePath, (err) => {
@@ -123,6 +123,7 @@ export default class CodeInController {
             res.status(500).json({error: e.message})
         }
     }
+
     static async apiGetUserPosts (req, res, next) {
         try {
             let user = req.params.name || {}

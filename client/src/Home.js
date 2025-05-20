@@ -46,8 +46,8 @@ export default function Home() {
     }
 
     function IndividualPost({data}) {
-        let imageFiles;
-        let otherFiles;
+        let imageFiles = [];
+        let otherFiles = [];
 
         if (data.postContent.files.length > 0) {
             const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.svg'];
@@ -70,7 +70,7 @@ export default function Home() {
             };
           
             return (
-              <div style={gridStyle} className='IP-image-container'>
+              <div style={gridStyle} className='IP-image-container'  onClick={() => navigate(`/posts/${data._id}`)}>
                 {imageFiles.map((src, idx) => (
                   <img
                     className='IP-image'
@@ -93,11 +93,15 @@ export default function Home() {
                     </div>
                     <h4><span style={{cursor: 'pointer'}}>{data.user}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.postContent.time)}</span></h4>
                 </div>
-            <div className='IP-paragraph'>
+            {data.postContent.paragraph && <div className='IP-paragraph'>
                 <p>{data.postContent.paragraph}</p>
+            </div>}
+            {imageFiles?.length > 0 && <ImageGrid imageFiles={imageFiles} />}
+            {otherFiles?.length > 0 && 
+            <div className='IP-attachments' style={{marginTop: '1rem'}}>
+                + {otherFiles.length} attachment{otherFiles.length > 1 && 's'}
             </div>
-            {data.postContent.files.length > 0 && <div className='IP-attachments'></div>}
-                {imageFiles && <ImageGrid imageFiles={imageFiles}/>}
+            }
             <div className='IP-socials'>
                 <div className='IP-socials-individual'>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd"

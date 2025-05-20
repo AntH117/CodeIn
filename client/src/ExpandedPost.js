@@ -271,6 +271,19 @@ export default function ExpandedPost () {
         );
       }
     
+    function FileAttachment({file}) {
+        const originalName = file.slice(51)
+
+        return <div className='file-attachment-body'>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
+             <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+            </svg>
+            <p>
+                {originalName}
+            </p>
+        </div>
+    }
+
     return (<div className='EP-outer-body'>
             <Outlet />
     {post && <div className='EP-inner-body'>
@@ -284,11 +297,15 @@ export default function ExpandedPost () {
                             </div>
                             <h4><span style={{cursor: 'pointer'}}>{post.user}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(post.postContent.time)}</span></h4>
                         </div>
-                        <div className='IP-paragraph'>
+                       {post.postContent.paragraph && <div className='IP-paragraph'>
                             <p>{post.postContent.paragraph}</p>
-                        </div>
+                        </div>}
                         {imageFiles && <ImageGrid imageFiles={imageFiles}/>}
-                        {post.postContent.files.length > 0 && <div className='IP-attachments'></div>}
+                        {otherFiles && <div className='IP-attachments'>
+                            {otherFiles.map((x) => {
+                                return <FileAttachment file={x}/>
+                            })}
+                        </div>}
                         <Socials />
                         <div className='IP-interact' style={{marginBottom: '1rem'}}>
                             <h5>Like</h5>
