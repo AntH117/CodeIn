@@ -63,6 +63,7 @@ export default function ExpandedPost () {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: post?.postContent.files.length > 0 ? JSON.stringify(post?.postContent.files) : null
             })
             if (response.ok) {
                 alert('Post deleted successfully.');
@@ -91,6 +92,7 @@ export default function ExpandedPost () {
           return formatted
     }
 
+    //Edit && Delete
     function DropDownMenu() {
         const [open, setOpen] = React.useState(false)
 
@@ -101,7 +103,7 @@ export default function ExpandedPost () {
             <div className='dot'></div>
         </div>
         {open && <div className='EP-dropdown'>
-                <div className='EP-dropdown-option'> <Icons.Edit /> Edit</div>
+                <div className='EP-dropdown-option' onClick={() => navigate('edit')}> <Icons.Edit /> Edit</div>
                 <div className='EP-dropdown-option' onClick={() => deletePost()}>
                         <Icons.Trash />
                         Delete
@@ -283,7 +285,6 @@ export default function ExpandedPost () {
             </p>
         </div>
     }
-
     return (<div className='EP-outer-body'>
             <Outlet />
     {post && <div className='EP-inner-body'>
@@ -295,7 +296,10 @@ export default function ExpandedPost () {
                             <div className='IP-author-image'>
                                 <img src={testImage}></img>
                             </div>
-                            <h4><span style={{cursor: 'pointer'}}>{post.user}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(post.postContent.time)}</span></h4>
+                            <h4><span style={{cursor: 'pointer'}}>{post.user}</span> 
+                            <span style={{fontWeight: '200'}}> &#9679; {convertTime(post.postContent.time)}</span>
+                            <span style={{fontWeight: '400'}}>{post.postContent?.edited ? ' (Edited)' : ''}</span>
+                            </h4>
                         </div>
                        {post.postContent.paragraph && <div className='IP-paragraph'>
                             <p>{post.postContent.paragraph}</p>

@@ -38,6 +38,15 @@
     cursor: pointer;
     background-color: rgba(112,94,218,255);
     color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.cancel-button:hover {
+    background-color: rgb(255, 159, 159);
+    color: rgb(117, 117, 117);
 }
 
 .post-button {
@@ -51,7 +60,13 @@
     border: none;
     border-radius: 6px;
     padding: 6px 12px;
-    transition: background-color 0.2s;
+    transition: all ease-in-out 0.2s;
+    cursor: pointer;
+}
+
+.post-button:hover {
+    background-color: rgb(195, 255, 221);
+    color: rgb(114, 114, 114);
 }
 
 
@@ -82,7 +97,7 @@
 } */
 
 .form-title {
-    width: 80%;
+    width: 100%;
     height: 100%;
     display: flex;
     justify-content: space-between;
@@ -99,7 +114,7 @@
 }
 
 .form-visibility {
-    width: 50%;
+    width: 100%;
     min-width: 150px;
     height: 100%;
     display: flex;
@@ -109,6 +124,8 @@
 }
 
 .form-visibility select {
+    border-radius: 3px;
+    font-family: 'Sansation' ;
     background-color: #fefefe;
     border: 1px solid #bbb;
     color: #333;

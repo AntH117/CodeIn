@@ -2,6 +2,7 @@ import CodeInDAO from '../dao/CodeInDao.js'
 import path from 'path'
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { promises as fsPromises } from 'fs';
 
 export default class CodeInController {
 
@@ -92,12 +93,56 @@ export default class CodeInController {
             const postContent = req.body.postContent
             const user = req.body.user
             const postId = req.params.id       
+            const deletedFiles = req.body.deletedFiles;
+            
+            //file upload
+            if (postContent.files.length > 0) {
+                const finalArray = postContent.files.filter((x) => {
+                    const folderName = x.includes('\\') ? x.split('\\')[1] : x.split('/')[1];
+                    return folderName === 'final';
+                });
+            
+                const newArray = postContent.files.filter((x) => {
+                    const folderName = x.includes('\\') ? x.split('\\')[1] : x.split('/')[1];
+                    return folderName === 'temp';
+                });
+            
+                if (newArray.length > 0) {
+                    const movedFiles = newArray.map(tempPath => {
+                        const fileName = path.basename(tempPath);
+                        const finalPath = path.join('uploads', 'final', fileName);
+                        fs.renameSync(tempPath, finalPath);
+                        return finalPath;
+                    });
+                
+                    postContent.files = [...finalArray, ...movedFiles];
+                    console.log('files moved successfully')
+                }
+            }
+            //delete final files
+            if (deletedFiles.length > 0) {
+                const __filename = fileURLToPath(import.meta.url);
+                const __dirname = path.dirname(__filename);
+    
+                for (const filePaths of deletedFiles) {
+                    const normalizedPath = path.normalize(filePaths);
+                    const filePath = path.join(__dirname, '..', normalizedPath);
+    
+                    try {
+                        await fsPromises.unlink(filePath);
+                        console.log('Deleted file:', normalizedPath);
+                    } catch (err) {
+                        console.error('Error deleting file', normalizedPath, err);
+                    }
+                }
+            }
 
             const postResponse = await CodeInDAO.updatePost (
                 postId,
                 postContent,
                 user
             )
+            
 
             var { error } = postResponse
             if (error) {
@@ -116,6 +161,26 @@ export default class CodeInController {
     }
     static async apiDeletePost (req, res, next) {
         try {
+            //deleting attachments
+            const __filename = fileURLToPath(import.meta.url);
+            const __dirname = path.dirname(__filename);
+            const attachments = req.body
+            if (attachments) {
+                attachments.forEach((x) => {
+                    const filename = x.split('\\').at(-1)
+                    console.log(filename)
+                    const filePath = path.join(__dirname, '../uploads/final', filename);
+                    fs.unlink(filePath, (err) => {
+                        if (err) {
+                            console.error('Error deleting file', err)
+                        } else {
+                            console.log('final file deleted', filename)
+                        }
+                    })
+                }) 
+                
+            }
+            // deleting post
             const postId = req.params.id
             const postResponse = await CodeInDAO.deletePost(postId)
             res.json({ status: 'success'})
@@ -127,6 +192,7 @@ export default class CodeInController {
     static async apiGetUserPosts (req, res, next) {
         try {
             let user = req.params.name || {}
+
             let posts = await CodeInDAO.getPostsByUserId(user)
             if (!posts) {
                 res.status(404).json({error: 'Not Found'})

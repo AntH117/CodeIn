@@ -8,6 +8,8 @@ import Login from './Login';
 import Post from './Post';
 import ExpandedPost from './ExpandedPost';
 import ExpandedImage from './ExpandedImage';
+import EditPost from './EditPost';
+
 import {
   createBrowserRouter,
   RouterProvider,
@@ -21,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: '/post',
         element: <Post />
+      },
+      {
+        path: '/posts/:id/edit',
+        element: <EditPost />
       },
       {
         path: '/posts/:id',

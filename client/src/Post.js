@@ -4,6 +4,7 @@ import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import image_upload from './images/image_upload.png'
 import file_upload from './images/file-upload.png'
 import { v4 as uuidv4 } from 'uuid';
+import Icons from './icons/Icons';
 
 export default function Post() {
     const APILINK = `http://localhost:5000/api/v1/codeIn`
@@ -129,9 +130,10 @@ export default function Post() {
     return <div className='post-outer-body'>
         <div className='post-body'>
         <button className='cancel-button' onClick={() => navigate('/')}>
-            X
+            <Icons.X />
         </button>
         <form className='form-body'>
+            <h2 style={{margin: 0}}>Create a New Post</h2>
             <div className='form-top'>
                 <div className='form-title'>
                     <h3>Title</h3>
