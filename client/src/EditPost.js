@@ -145,7 +145,6 @@ export default function EditPost() {
             files: [...preVal.files, data.filePath]
     }))
     }
-
     const editPost = async () => {
             const newPost = {
                 ...editedPost,
@@ -177,6 +176,15 @@ export default function EditPost() {
             }
           };
 
+    function handleCancelEdits() {
+        if (post?.postContent !== editedPost) {
+            if (!window.confirm("Are you sure you undo all edits?")) {
+                return
+              }
+        }
+        navigate(-1)
+    }
+
     return <div className='EP-outer-body'>
       {editedPost && <div className='EP-inner-body'>
                           <div className='IP-title'>
@@ -203,7 +211,7 @@ export default function EditPost() {
                             <div className='IP-paragraph'>
                                 <textarea className='IP-paragraph-textarea' value={editedPost.paragraph} onChange={handleChange} name='paragraph'></textarea>
                             </div>
-                            <button className='cancel-button' onClick={() => navigate(-1)}>
+                            <button className='cancel-button' onClick={() => handleCancelEdits()}>
                                 <Icons.X />
                             </button>
                             {editedPost.files.length > 0 && <div className='file-imports-body'>

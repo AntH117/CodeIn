@@ -56,6 +56,12 @@ export default function ExpandedPost () {
 
 
     //Delete post
+    function handleDeletePost() {
+        if (window.confirm("Are you sure you want to delete this post?")) {
+            // Perform deletion
+            deletePost();
+          }
+    }
     const deletePost = async () => {
         try {
             const response = await fetch (APILINK, {
@@ -104,7 +110,7 @@ export default function ExpandedPost () {
         </div>
         {open && <div className='EP-dropdown'>
                 <div className='EP-dropdown-option' onClick={() => navigate('edit')}> <Icons.Edit /> Edit</div>
-                <div className='EP-dropdown-option' onClick={() => deletePost()}>
+                <div className='EP-dropdown-option' onClick={() => handleDeletePost()}>
                         <Icons.Trash />
                         Delete
                 </div>

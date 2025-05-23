@@ -95,10 +95,9 @@
 
 .IP-title {
     width: 80%;
-    height: 20%;
     display: flex;
     justify-content: left;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .IP-title h2 {
