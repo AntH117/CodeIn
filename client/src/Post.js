@@ -16,6 +16,27 @@ export default function Post() {
         paragraph: '',
         files: []
     })
+
+    const [submissionConditions, setSubmissionConditions] = React.useState({
+        titleLengthMin: null,
+        titleLengthMax: null,
+        titleCharacters: null,
+        paragraphCharacters: null,
+    })
+
+    const [fileConditions, setFileConditions] = React.useState({
+        fileSize: null,
+        fileType: null
+    })
+
+    const errorMessages = {
+        titleLengthMin: 'Please include a title',
+        titleLengthMax: 'Title must not be more than 30 characters',
+        titleCharacters: 'Title contains invalid characters',
+        fileSize: 'File must be less than 35mb',
+        fileType: 'Invalid file format',
+        paragraphCharacters: 'Paragraph contains invalid characters'
+    }
     
     const savePost = async (newPost) => {
         const postWithTime = {
@@ -52,10 +73,44 @@ export default function Post() {
         }
       };
 
+    //validate if all post conditions are met
+    function validatePost(postData) {
+        setSubmissionConditions({
+            titleLengthMin: postData.title?.length > 0,
+            titleLengthMax: postData.title?.length <= 30,
+            titleCharacters: /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(postData?.title),
+        })
+        const allTrue = Object.values(submissionConditions).every(value => value === true);
+        if (allTrue) {
+            savePost(formData)
+        } else {
+            return
+        }
+    }
+
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-                
+        //file conditions
+        const validFiles = [  
+            "image/jpeg",
+            "image/png",
+            "image/gif",
+            "image/webp",
+            "application/pdf"]
+            const maxFileSizeMb = 35;
+        
+        const valid = {
+            fileSize: file.size <= maxFileSizeMb * 1024 * 1024, 
+            fileType: validFiles.includes(file.type),
+        }
+        setFileConditions(valid)
+        const allTrue = Object.values(valid).every(value => value === true);
+        if (!allTrue) {
+            return
+        }
+
+        //post file
         const form = new FormData();
         form.append('file', file);
 
@@ -125,11 +180,33 @@ export default function Post() {
             </div>
         </div>
     }
-
+    const cancelPost = async() => {
+        if (formData.files.length > 0) {
+            const deleteRequests = formData.files.map(async (filePath) => {
+                const uniqueFile = filePath.split('/').at(-1)
+                const res = await fetch(`${APILINK}/temp-upload`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ fileName: uniqueFile })
+                });
+        
+                const data = await res.json();
+                if (data.status !== 'success') {
+                    console.error(`Failed to delete: ${uniqueFile}`);
+                }
+            });
+            await Promise.all(deleteRequests);
+        }
+    }
 
     return <div className='post-outer-body'>
         <div className='post-body'>
-        <button className='cancel-button' onClick={() => navigate('/')}>
+        <button className='cancel-button' onClick={() => {
+            cancelPost();
+            navigate('/')
+        }}>
             <Icons.X />
         </button>
         <form className='form-body'>
@@ -138,6 +215,11 @@ export default function Post() {
                 <div className='form-title'>
                     <h3>Title</h3>
                     <input type='text' className='form-title-input' name='title' onChange={handleChange}></input>
+                    <div className='form-title-error'>
+                        {submissionConditions.titleLengthMin === false && errorMessages.titleLengthMin}
+                        {submissionConditions.titleLengthMax === false && errorMessages.titleLengthMax}
+                        {submissionConditions.titleCharacters === false && errorMessages.titleCharacters}
+                    </div>
                 </div>
                 <div className='form-visibility'>
                     <h3>Visibility</h3>
@@ -154,6 +236,9 @@ export default function Post() {
                 <textarea className='form-paragraph' name='paragraph' onChange={handleChange}>
 
                 </textarea>
+                {submissionConditions.paragraphCharacters === false && <div className='form-paragraph-error'>
+                    <p>{errorMessages.paragraphCharacters}</p>
+                </div>}
             </div>
         
             <div className='form-bottom'>
@@ -171,10 +256,14 @@ export default function Post() {
                         <img src={file_upload}></img>
                         <input type='file' name='file' className='file-upload' onChange={handleFileChange} ref={fileInputRef}></input>
                     </button>
+                    <div className='form-imports-error'>
+                        {fileConditions.fileSize === false && <p>{errorMessages.fileSize}</p>}
+                        {fileConditions.fileType === false && <p>{errorMessages.fileType}</p>}
+                    </div>
                 </div>
             </div>
         </form>
-        <button className='post-button' onClick={() => savePost(formData)}>
+        <button className='post-button' onClick={() => validatePost(formData)}>
             Post
         </button>
     </div>
