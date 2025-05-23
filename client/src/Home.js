@@ -94,6 +94,7 @@ export default function Home() {
                         <img src={testImage}></img>
                     </div>
                     <h4><span style={{cursor: 'pointer'}}>{data.user}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.postContent.time)}</span></h4>
+                    <span style={{fontWeight: '400', marginLeft: '5px'}}>{data.postContent?.edited ? ' (Edited)' : ''}</span>
                 </div>
             {data.postContent.paragraph && <div className='IP-paragraph'>
                 <p>{data.postContent.paragraph}</p>

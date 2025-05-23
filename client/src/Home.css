@@ -106,7 +106,7 @@
 
 .IP-author-date {
     width: 80%;
-    height: 10%;
+    height: fit-content;
     display: flex;
     flex-direction: row;
 }
@@ -121,6 +121,10 @@
     display: flex;
     justify-content: left;
     margin-top: 1rem;
+}
+
+.IP-paragraph p {
+    margin: 0;
 }
 
 .IP-interact {

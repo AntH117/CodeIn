@@ -93,7 +93,7 @@ export default class CodeInController {
             const postContent = req.body.postContent
             const user = req.body.user
             const postId = req.params.id       
-            const deletedFiles = req.body.deletedFiles;
+            const deletedFiles = req.body?.deletedFiles;
             
             //file upload
             if (postContent.files.length > 0) {
@@ -120,7 +120,7 @@ export default class CodeInController {
                 }
             }
             //delete final files
-            if (deletedFiles.length > 0) {
+            if (deletedFiles?.length > 0) {
                 const __filename = fileURLToPath(import.meta.url);
                 const __dirname = path.dirname(__filename);
     

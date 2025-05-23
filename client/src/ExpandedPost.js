@@ -155,6 +155,7 @@ export default function ExpandedPost () {
                 },
             },
         }
+        console.log(updatedPost)
         try {
             const response = await fetch(APILINK, {
                 method: 'PUT',
@@ -177,6 +178,12 @@ export default function ExpandedPost () {
       };
       
       //delete comment
+      function handleDeleteComment(commentId) {
+        if (window.confirm('Are you sure you want to delete this comment?')) {
+            deleteComment(commentId)
+        }
+      }
+
       const deleteComment = async (commentId) => {
         const updatedComments = post.postContent.socials.comments.filter(
             (comment) => comment.commentId !== commentId
@@ -220,7 +227,7 @@ export default function ExpandedPost () {
             //If user, allow delete post
             return (
                 <div className='IC-body'>
-                    <div className='IC-delete' onClick={() => {deleteComment(data.commentId)}}>
+                    <div className='IC-delete' onClick={() => handleDeleteComment(data.commentId)}>
                         <Icons.Trash />
                     </div>
                     <div className='IC-user-info'>
@@ -296,7 +303,7 @@ export default function ExpandedPost () {
     {post && <div className='EP-inner-body'>
                     <DropDownMenu />
                     <div className='IP-title'>
-                            <h2>{post.postContent.title}</h2>
+                            <h2>{post?.postContent.title}</h2>
                         </div>
                         <div className='IP-author-date'>
                             <div className='IP-author-image'>
