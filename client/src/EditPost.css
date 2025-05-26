@@ -4,7 +4,8 @@
     border-radius: 0.5rem;
     padding-left: 1rem;
     padding-top: 0.5rem;
-    margin-top: 0.5rem
+    margin-top: 0.5rem;
+    border: 1px solid rgb(206, 206, 206);
 }
 
 .IP-paragraph-textarea:focus {
@@ -12,13 +13,16 @@
 }
 
 .IP-title-input {
-    margin-top: 1.4rem;
+    margin-top: 0.5rem;
     margin-bottom: 1rem;
     width: 100%;
-    height: 1.5rem;
+    height: 2rem;
     font-size: 1.5rem;
     font-family: 'Sansation' ;
     font-weight: 400;
+    border: 1px solid rgb(206, 206, 206);
+    border-radius: 0.5rem;
+    padding-left: 0.5rem;
 }
 
 .edit-button {
@@ -45,6 +49,7 @@
     display: flex;
     width: 80%;
     height: fit-content;
+    padding-bottom: 20px;
     margin-top: 15px
 }
 
@@ -52,19 +57,31 @@
     width: 80%;
     margin-top: 10px;
     height: fit-content;
-    max-height: 4.5rem;
     display: flex;
     flex-direction: column;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
+    gap: 10px;
+
+}
+
+.file-import-name {
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+    border: 1px solid rgb(206, 206, 206);
+    border-radius: 0.3rem;
+    padding: 0.3rem;
+    background-color: rgb(255, 255, 255);
+}
+
+.file-import-name p {
+    margin:0;
 }
 
 .IP-visibility {
     width: 40%;
     height: fit-content;
     display: flex;
-    justify-content: space-between;
-    align-items: start;
-    margin-left: 10px;
 }
 
 .IP-visibility h3 {
@@ -87,4 +104,14 @@
     width: 80%;
     display: flex;
     flex-direction: row;
+}
+
+.edit-post-title {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    height: 30px;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
 }

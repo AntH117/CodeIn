@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Home from './Home';
 import Login from './Login';
+import Register from './Register';
 import Post from './Post';
 import ExpandedPost from './ExpandedPost';
 import ExpandedImage from './ExpandedImage';
@@ -20,6 +21,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <Home />,
     children: [
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/register",
+        element: <Register />,
+      },    
       {
         path: '/post',
         element: <Post />
@@ -40,15 +49,6 @@ const router = createBrowserRouter([
       }
     ]
   },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/register",
-    element: <Login />,
-  },
-
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

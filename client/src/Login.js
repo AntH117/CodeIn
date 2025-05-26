@@ -1,6 +1,7 @@
 import './Login.css';
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login() {
 
@@ -9,27 +10,23 @@ export default function Login() {
         return (
             <div className='form-data'>
                 <h2>Login</h2>
-                <form onSubmit={''}>
-
-                </form>
-                <div className='register-link'>
-                    <Link to={'/register'}>
-                        Not a member?
-                    </Link>
+                <form className='credentials-form'>
+                    <input className='credentials-input' placeholder='Email'></input>
+                    <input className='credentials-input' placeholder='Password'></input>
+                    <button className='credentials-button'>Login</button>
+                    <div className='register-link'>
+                        <Link to={'/register'}>
+                            Not yet a member?
+                        </Link>
                 </div>
+                </form>
             </div>
         )
     }
 
     return (
-
-    <div className='login-page'>
-        <div className='nav-bar'>
-            <Link to={'/'}>Home</Link>
-            <Link to={'/login'}>Login</Link>
-        </div>
-        <div className='login-form'>
+        <div className='login-form'> 
             <LoginForm />
         </div>
-    </div>)
+    )
 }
