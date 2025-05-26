@@ -3,16 +3,23 @@ import React from 'react';
 import { Link, Outlet, Navigate, useLocation, useNavigate} from 'react-router-dom';
 import testImage from './images/Temp-profile-pic.png'
 import Icons from './icons/Icons';
-
+import { useAuth } from "./AuthContext";
+import { signOut } from "firebase/auth";
+import { auth } from './firebase';
+import { db } from "./firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export default function Home() {
+    //user
+    const { user } = useAuth();
+
     const navigate = useNavigate();
     const location = useLocation();
      
     const [posts, setPosts] = React.useState([])
 
     //Temp looking for posts with Anthony
-    const APILINK = `http://localhost:5000/api/v1/codeIn/user/Anthony`
+    const APILINK = user ? `http://localhost:5000/api/v1/codeIn/user/${user.uid}` : `http://localhost:5000/api/v1/codeIn/user/Anthony`
 
     const getPosts = async () => {
         try {
@@ -46,8 +53,30 @@ export default function Home() {
           const formatted = new Intl.DateTimeFormat('en-US', options).format(date);
           return formatted
     }
-
     function IndividualPost({data}) {
+        //getting author info
+        const [authorInfo, setAuthorInfo] = React.useState()
+        async function getUserInfo(uid) {
+            const docRef = doc(db, "users", uid);
+            const docSnap = await getDoc(docRef);
+          
+            if (docSnap.exists()) {
+              return docSnap.data(); // { displayName, photoURL, email }
+            } else {
+              return null;
+            }
+          }
+
+        async function getAuthorInfo() {
+            const authorInfo = await getUserInfo(data.user)
+            setAuthorInfo(authorInfo)
+        }
+
+        React.useEffect(() => {
+            getAuthorInfo()
+        },[])
+
+    
         let imageFiles = [];
         let otherFiles = [];
 
@@ -91,9 +120,11 @@ export default function Home() {
             </div>
                 <div className='IP-author-date'>
                     <div className='IP-author-image'>
-                        <img src={testImage}></img>
+                        <img src={authorInfo?.photoUrl || testImage}></img>
                     </div>
-                    <h4><span style={{cursor: 'pointer'}}>{data.user}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.postContent.time)}</span></h4>
+                    <h4><span style={{cursor: 'pointer'}} onClick={() => navigate(`/users/${data.user}`)}>{ 
+                    authorInfo?.displayName || authorInfo?.email
+                    }</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.postContent.time)}</span></h4>
                     <span style={{fontWeight: '400', marginLeft: '5px'}}>{data.postContent?.edited ? ' (Edited)' : ''}</span>
                 </div>
             {data.postContent.paragraph && <div className='IP-paragraph'>
@@ -127,10 +158,23 @@ export default function Home() {
         </div>
     }
 
+    function handleSignOut() {
+        if (window.confirm('Are you sure you want to sign out?')) {
+            signOut(auth)
+        }
+    }
+
     return <div className='home'>
         <div className='nav-bar'>
             <Link to={'/'} style={{color: 'black', textDecoration: 'none'}}>Home</Link>
-            <Link to={'/login'} style={{color: 'black', textDecoration: 'none'}}>Login</Link>
+            {user ? 
+            <Link to={`/users/${user.uid}`} style={{color: 'black', textDecoration: 'none'}}>Profile</Link>  
+            : 
+            <Link to={'/login'} style={{color: 'black', textDecoration: 'none'}}>Login</Link>  
+            }
+            {
+            user && <div onClick={handleSignOut} style={{cursor: 'pointer'}}>Sign Out</div>
+            }
         </div>
         <div className='news-feed-body'>
                 <div className='news-feed'>
@@ -139,9 +183,9 @@ export default function Home() {
                     })}
                     {
                     location.pathname == '/' && <div className='create-post'>
-                    <button className='create-post-button'>
+                    {user && <button className='create-post-button'>
                         <Link to={'/post'} style={{color: 'white', textDecoration: 'none'}}>Create Post</Link>
-                    </button>
+                    </button>}
                 </div>
                     }
                 </div>

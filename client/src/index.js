@@ -10,7 +10,8 @@ import Post from './Post';
 import ExpandedPost from './ExpandedPost';
 import ExpandedImage from './ExpandedImage';
 import EditPost from './EditPost';
-
+import Profile from './Profile';
+import { AuthProvider } from './AuthContext';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register />,
+      },
+      {
+        path: '/users/:id',
+        element: <Profile />
       },    
       {
         path: '/post',
@@ -54,7 +59,9 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router}/>
+    <AuthProvider>
+      <RouterProvider router={router}/>
+    </AuthProvider>
   </React.StrictMode>
 );
 

@@ -5,8 +5,11 @@ import image_upload from './images/image_upload.png'
 import file_upload from './images/file-upload.png'
 import { v4 as uuidv4 } from 'uuid';
 import Icons from './icons/Icons';
+import { useAuth } from "./AuthContext";
+
 
 export default function Post() {
+    const { user } = useAuth();
     const APILINK = `http://localhost:5000/api/v1/codeIn`
 
     const navigate = useNavigate();
@@ -57,7 +60,7 @@ export default function Post() {
                 },
                 body: JSON.stringify({
                     postContent: postWithTime,
-                    user: 'Anthony' || 'Anonymous'
+                    user: user.uid
                 }),
             });
             
@@ -72,7 +75,6 @@ export default function Post() {
             console.error('failed to save post:', e)
         }
       };
-
     //validate if all post conditions are met
     function validatePost(postData) {
         setSubmissionConditions({
