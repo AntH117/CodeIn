@@ -70,4 +70,14 @@ export default class CodeInDAO {
             return {error: e}
         }
     }
+
+    static async getPublicPosts() {
+        try {
+            const cursor = await posts.find({"postContent.visibility": "Public"})
+            return cursor.toArray()
+        } catch (e) {
+            console.error(`Unable to get posts: ${e}`)
+            return {error: e}
+        }
+    }
 }

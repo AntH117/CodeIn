@@ -4,11 +4,17 @@ import { Link, Outlet, Navigate, useLocation, useNavigate} from 'react-router-do
 import testImage from './images/Temp-profile-pic.png'
 import { v4 as uuidv4 } from 'uuid';
 import Icons from './icons/Icons';
+import { useAuth } from "./AuthContext";
+import { auth } from './firebase';
+import { db } from "./firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export default function ExpandedPost () {
+    const { user } = useAuth();
     const [post, setPost] = React.useState(null)
     const [imageFiles, setImageFiles] = React.useState(null)
     const [otherFiles, setOtherFiles] = React.useState(null)
+    const [authorInfo, setAuthorInfo] = React.useState()
 
     function setFiles () {
         if (post?.postContent.files.length > 0) {
@@ -44,17 +50,32 @@ export default function ExpandedPost () {
             console.error(`Unable to load post:`, e)
         }
     }
-
     //icons
     React.useEffect(() => {
         getPost()
     }, [])
-
+    
     React.useEffect(() => {
         setFiles()
+        getAuthorInfo()
     }, [post])
-
-
+    //Get Author details
+    async function getUserInfo(uid) {
+        const docRef = doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+    
+        if (docSnap.exists()) {
+        return docSnap.data(); // { displayName, photoURL, email }
+        } else {
+        return null;
+        }
+    }
+    async function getAuthorInfo() {
+        if (post) {
+            const authorInfo = await getUserInfo(post?.user)
+            setAuthorInfo(authorInfo)
+        }
+    }
     //Delete post
     function handleDeletePost() {
         if (window.confirm("Are you sure you want to delete this post?")) {
@@ -307,9 +328,9 @@ export default function ExpandedPost () {
                         </div>
                         <div className='IP-author-date'>
                             <div className='IP-author-image'>
-                                <img src={testImage}></img>
+                                <img src={authorInfo?.photoURL || testImage}></img>
                             </div>
-                            <h4><span style={{cursor: 'pointer'}}>{post.user}</span> 
+                            <h4><span style={{cursor: 'pointer'}} onClick={() => navigate(`/users/${post?.user}`)}>{authorInfo?.displayName || authorInfo?.email}</span> 
                             <span style={{fontWeight: '200'}}> &#9679; {convertTime(post.postContent.time)}</span>
                             <span style={{fontWeight: '400'}}>{post.postContent?.edited ? ' (Edited)' : ''}</span>
                             </h4>

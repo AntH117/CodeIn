@@ -19,7 +19,8 @@ export default function Home() {
     const [posts, setPosts] = React.useState([])
 
     //Temp looking for posts with Anthony
-    const APILINK = user ? `http://localhost:5000/api/v1/codeIn/user/${user.uid}` : `http://localhost:5000/api/v1/codeIn/user/Anthony`
+    // const APILINK = user ? `http://localhost:5000/api/v1/codeIn/user/${user.uid}` : `http://localhost:5000/api/v1/codeIn/user/Anthony`
+    const APILINK = 'http://localhost:5000/api/v1/codeIn/posts/'
 
     const getPosts = async () => {
         try {

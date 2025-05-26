@@ -27,7 +27,7 @@ router.route('/posts/:id')
     .put(CodeInCtrl.apiUpdatePost)
     .delete(CodeInCtrl.apiDeletePost)
 //Create new Post
-router.route('/posts')
+router.route('/create')
     .post(CodeInCtrl.apiCreatePost)
 router.route('/temp-upload')
     .post(upload.single('file'), CodeInCtrl.handleUpload)
@@ -35,5 +35,7 @@ router.route('/temp-upload')
 //Get User Posts
 router.route('/user/:name')
     .get(CodeInCtrl.apiGetUserPosts)
-    
+//Get all public posts
+router.route('/posts')
+    .get(CodeInCtrl.apiGetPublicPosts)
 export default router

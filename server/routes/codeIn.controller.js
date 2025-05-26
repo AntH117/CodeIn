@@ -204,4 +204,18 @@ export default class CodeInController {
             res.status(500).json({error: e})
         }
     }
+    //get all public posts
+    static async apiGetPublicPosts (req, res, next) {
+        try {
+            let posts = await CodeInDAO.getPublicPosts()
+            if (!posts) {
+                res.status(404).json({error: 'Not Found'})
+                return
+            }
+            res.json(posts)
+        } catch (e) {
+            console.log(`api, ${e}`)
+            res.status(500).json({error: e})
+        }
+    }
 }

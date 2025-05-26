@@ -1,4 +1,4 @@
-import './Profile.css';
+import './EditProfile.css';
 import React from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from "./AuthContext";
@@ -8,22 +8,20 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import testImage from './images/Temp-profile-pic.png'
 import Icons from './icons/Icons';
 
-export default function Profile () {
+export default function EditProfile() {
     const { user } = useAuth();
-
-    const [profileInfo, getProfileInfo] = React.useState()
+    const [profileInfo, getProfileInfo] = React.useState({
+    })
     const location = useLocation();
-    const userId = location.pathname.split('/').at(-1)
+    const userId = user.uid
     const navigate = useNavigate()
-
-    const isUser = user?.uid == userId
 
     async function getUserInfo(uid) {
         const docRef = doc(db, "users", uid);
         const docSnap = await getDoc(docRef);
         
         if (docSnap.exists()) {
-            return docSnap.data(); // { displayName, photoURL, email }
+            return docSnap.data();
         } else {
             return null;
         }
@@ -42,7 +40,6 @@ export default function Profile () {
         <div className='user-profile-inner-body'>
             <div className='user-background'>
                 <img className='user-background-image' src={profileInfo?.backgroundURL || null}>
-
                 </img>
                 <div className='user-info-image'>
                     <img src={profileInfo?.photoURL || testImage}>
@@ -54,9 +51,6 @@ export default function Profile () {
                 <div className='user-info-tag'>
                     @{profileInfo?.email}
                 </div>
-                {isUser && <div className='user-edit'>
-                        <div className='EP-dropdown-option' onClick={() => navigate('edit')}> <Icons.Edit /> Edit</div>
-                </div>}
             </div>
         </div>
     </div>

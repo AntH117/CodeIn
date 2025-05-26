@@ -53,7 +53,7 @@ export default function Post() {
             }
         }
         try {
-            const response = await fetch(`${APILINK}/posts`, {
+            const response = await fetch(`${APILINK}/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

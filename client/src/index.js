@@ -11,6 +11,7 @@ import ExpandedPost from './ExpandedPost';
 import ExpandedImage from './ExpandedImage';
 import EditPost from './EditPost';
 import Profile from './Profile';
+import EditProfile from './EditProfile';
 import { AuthProvider } from './AuthContext';
 import {
   createBrowserRouter,
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
         path: "/register",
         element: <Register />,
       },
+      {
+        path: '/users/:id/edit',
+        element: <EditProfile />
+      }, 
       {
         path: '/users/:id',
         element: <Profile />

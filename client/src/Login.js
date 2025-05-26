@@ -44,22 +44,12 @@ export default function Login() {
     }
 
     //Sync user basic data with db
-    async function saveUserInfo(user) {
-        const userRef = doc(db, "users", user.uid);
-      
-        await setDoc(userRef, {
-          displayName: user.displayName || null,
-          email: user.email,
-          photoURL: user.photoURL || "",
-        }, { merge: true }); // merge keeps existing data
-      }
     function handleSignIn({email, password}) {
         signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
         // Store basic user details upon login
-        saveUserInfo(user)
         navigate('/')
         })
         .catch((error) => {
