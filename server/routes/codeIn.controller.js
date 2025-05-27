@@ -218,4 +218,22 @@ export default class CodeInController {
             res.status(500).json({error: e})
         }
     }
+
+    static handleFinalUpload (req, res, next) {
+        const { filePath } = req.body; // e.g., "uploads/temp/image123.png"
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
+        const fileName = path.basename(filePath);
+        const oldPath = path.join(__dirname, '..', filePath);
+        const newPath = path.join(__dirname, '..', 'uploads/final', fileName);
+      
+        fs.rename(oldPath, newPath, (err) => {
+          if (err) {
+            console.error('Error moving file:', err);
+            return res.status(500).json({ error: 'Failed to move file' });
+          }
+      
+          return res.json({ newPath: `uploads/final/${fileName}` });
+        });
+      };
 }

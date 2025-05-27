@@ -327,10 +327,10 @@ export default function ExpandedPost () {
                             <h2>{post?.postContent.title}</h2>
                         </div>
                         <div className='IP-author-date'>
-                            <div className='IP-author-image'>
+                            <div className='IP-author-image' onClick={() => navigate(`/users/${post?.user}`)}>
                                 <img src={authorInfo?.photoURL || testImage}></img>
                             </div>
-                            <h4><span style={{cursor: 'pointer'}} onClick={() => navigate(`/users/${post?.user}`)}>{authorInfo?.displayName || authorInfo?.email}</span> 
+                            <h4><span style={{cursor: 'pointer'}} onClick={() => navigate(`/users/${post?.user}`)}>{authorInfo?.displayName || `@${authorInfo?.displayTag}`}</span> 
                             <span style={{fontWeight: '200'}}> &#9679; {convertTime(post.postContent.time)}</span>
                             <span style={{fontWeight: '400'}}>{post.postContent?.edited ? ' (Edited)' : ''}</span>
                             </h4>

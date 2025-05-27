@@ -22,5 +22,6 @@ app.use((req, res, next) => {
 // Mount routes
 app.use('/api/v1/codeIn', router)
 app.use('/uploads/final', express.static(path.join(__dirname, 'uploads/final')));
+app.use('/uploads/temp', express.static(path.join(__dirname, 'uploads/temp')));
 app.use((req, res) => {res.status(404).json({error: "not found"})})
 export default app

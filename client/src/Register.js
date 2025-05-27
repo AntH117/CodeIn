@@ -12,12 +12,15 @@ export default function Register () {
     const { user } = useAuth();
     async function saveUserInfo(user) {
         const userRef = doc(db, "users", user.uid);
-        
-    await setDoc(userRef, {
-        displayName: user.displayName || null,
-        email: user.email,
-        photoURL: user.photoURL || "",
-    }, { merge: true }); // merge keeps existing data
+            
+        await setDoc(userRef, {
+            displayName: user.displayName || null,
+            displayTag: user.email.split('@').at(0),
+            email: user.email,
+            photoURL: user.photoURL || "",
+            backgroundURL: '',
+            creationDate: user.metadata.creationTime,
+        }, { merge: true }); // merge keeps existing data
     }
     
     const navigate = useNavigate()
@@ -44,12 +47,11 @@ export default function Register () {
         'auth/email-already-in-use': 'Email already in use',
     }
 
-
 function handleSignUp({email, password}) {
     createUserWithEmailAndPassword(auth, email, password)
         .then(userCred => {
             alert('User successfully created')
-            saveUserInfo(user)
+            saveUserInfo(userCred.user)
             navigate('/')
         })
         .catch(error => setSubmitConditions(preVal => {

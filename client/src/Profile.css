@@ -33,7 +33,7 @@
 .user-info-image {
     width: 100px;
     height: 100px;
-    border-radius: 100%;
+    border-radius: 50%;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -44,8 +44,10 @@
     border: 1px solid rgb(131, 130, 130);
 }
 
-.user-info-image  img{
-    width: 130%;
+.user-info-image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .user-info-name {
@@ -60,9 +62,11 @@
 
 .user-info-tag {
     width: 100%;
-    height: 30px;
+    height: fit-content;
     font-size: 0.8rem;
     margin-top: 2px;
+    margin-bottom: 0.5rem
+    
 }
 
 .user-edit {
@@ -83,4 +87,13 @@
 .user-background-image {
     width: 100%;
     height: 100%;
+    object-fit: cover;
+}
+
+.user-creation-date {
+    font-size: 0.8rem;
+    width: fit-content;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
 }

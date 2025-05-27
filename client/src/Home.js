@@ -12,7 +12,6 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 export default function Home() {
     //user
     const { user } = useAuth();
-
     const navigate = useNavigate();
     const location = useLocation();
      
@@ -75,8 +74,7 @@ export default function Home() {
 
         React.useEffect(() => {
             getAuthorInfo()
-        },[])
-
+        },[location])
     
         let imageFiles = [];
         let otherFiles = [];
@@ -120,11 +118,11 @@ export default function Home() {
                 <h2 onClick={() => navigate(`/posts/${data._id}`)}>{data.postContent.title}</h2>
             </div>
                 <div className='IP-author-date'>
-                    <div className='IP-author-image'>
-                        <img src={authorInfo?.photoUrl || testImage}></img>
+                    <div className='IP-author-image' onClick={() => navigate(`/users/${data.user}`)}>
+                        <img src={authorInfo?.photoURL}></img>
                     </div>
                     <h4><span style={{cursor: 'pointer'}} onClick={() => navigate(`/users/${data.user}`)}>{ 
-                    authorInfo?.displayName || authorInfo?.email
+                    authorInfo?.displayName || `@${authorInfo?.displayTag}`
                     }</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.postContent.time)}</span></h4>
                     <span style={{fontWeight: '400', marginLeft: '5px'}}>{data.postContent?.edited ? ' (Edited)' : ''}</span>
                 </div>

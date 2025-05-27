@@ -34,12 +34,17 @@ export default function Profile () {
         getProfileInfo(profileInfo)
     }
 
+    function convertDate(date) {
+        const dateSplit = date.split(' ')
+        const dateCreated = dateSplit.slice(1, 4).join(' ')
+        return dateCreated
+    }
+
     React.useEffect(() => {
         getAuthorInfo()
     },[location])
-
     return <div className='user-profile-outer-body'>
-        <div className='user-profile-inner-body'>
+        {profileInfo && <div className='user-profile-inner-body'>
             <div className='user-background'>
                 <img className='user-background-image' src={profileInfo?.backgroundURL || null}>
 
@@ -52,12 +57,15 @@ export default function Profile () {
             <div className='user-info-name'>
                 <span style={{fontWeight: 'bold', marginRight: "10px"}}>{profileInfo?.displayName || 'No name yet'}</span>
                 <div className='user-info-tag'>
-                    @{profileInfo?.email}
+                    @{profileInfo?.displayTag}
                 </div>
                 {isUser && <div className='user-edit'>
                         <div className='EP-dropdown-option' onClick={() => navigate('edit')}> <Icons.Edit /> Edit</div>
                 </div>}
+                <div className='user-creation-date'>
+                   <Icons.Calendar /> Joined {convertDate(profileInfo?.creationDate)}
+                </div>
             </div>
-        </div>
+        </div>}
     </div>
 }

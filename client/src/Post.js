@@ -138,10 +138,10 @@ export default function Post() {
       };
 
     const visibilityTypes = ['Public', 'Friends', 'Private']
-    const imagleInputRef = React.useRef();
+    const imageInputRef = React.useRef();
     const fileInputRef = React.useRef();
-    const handldeImageClick = () => {
-        imagleInputRef.current.click();
+    const handleImageClick = () => {
+        imageInputRef.current.click();
     }
     const handleFileClick = () => {
         fileInputRef.current.click();
@@ -252,9 +252,9 @@ export default function Post() {
                         })}
                 </div>
                 <div className='form-imports'>
-                    <button className='form-import-button' type="button" onClick={handldeImageClick}>
+                    <button className='form-import-button' type="button" onClick={handleImageClick}>
                         <img src={image_upload}></img>
-                        <input type='file' name='file' className='file-upload' onChange={handleFileChange} ref={imagleInputRef}></input>
+                        <input type='file' name='file' className='file-upload' onChange={handleFileChange} ref={imageInputRef}></input>
                     </button>
                     <button className='form-import-button' type="button" onClick={handleFileClick}>
                         <img src={file_upload}></img>

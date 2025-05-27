@@ -32,6 +32,9 @@ router.route('/create')
 router.route('/temp-upload')
     .post(upload.single('file'), CodeInCtrl.handleUpload)
     .delete(CodeInCtrl.handleFileDelete);
+//for profile edits rather than post edits
+router.route('/final-upload')
+    .post(CodeInCtrl.handleFinalUpload)
 //Get User Posts
 router.route('/user/:name')
     .get(CodeInCtrl.apiGetUserPosts)
