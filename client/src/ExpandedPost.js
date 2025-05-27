@@ -293,7 +293,7 @@ export default function ExpandedPost () {
           gap: '10px',
         };
         return (
-          <div style={gridStyle} className='IP-image-container'>
+          <div style={imageFiles.length === 1 ? {} : gridStyle} className={`IP-image-container ${imageFiles.length === 1 ? 'single' : ''}`}>
             {imageFiles.map((src, idx) => (
               <img
                 onClick={() => navigate(`image/${src.split('\\').at(-1)}`)}

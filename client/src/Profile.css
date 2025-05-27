@@ -53,7 +53,7 @@
 .user-info-name {
     display: flex;
     width: 90%;
-    height: 200px;
+    height: 100px;
     font-size: 1.1rem;
     padding-top: 60px;
     position: relative;
@@ -96,4 +96,30 @@
     display: flex;
     gap: 0.5rem;
     align-items: center;
+}
+
+.user-posts-body {
+    width: 100%;
+    min-height: 300px;
+    max-height: 600px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    gap: 15px;
+    border-top: 1px solid rgb(207, 207, 207);
+    padding-bottom: 50px;
+    margin-top: 20px;
+}
+
+.individual-user-post-body {
+    width: 100%;
+    height: fit-content;
+    background-color: rgba(253,245,234,255);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1), 0px 0px 10px rgba(0, 0, 0, 0.05);
+    position: relative;
 }

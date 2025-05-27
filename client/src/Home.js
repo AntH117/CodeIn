@@ -100,7 +100,7 @@ export default function Home() {
             };
           
             return (
-              <div style={gridStyle} className='IP-image-container'  onClick={() => navigate(`/posts/${data._id}`)}>
+              <div style={imageFiles.length === 1 ? {} : gridStyle} className={`IP-image-container ${imageFiles.length === 1 ? 'single' : ''}`}  onClick={() => navigate(`/posts/${data._id}`)}>
                 {imageFiles.map((src, idx) => (
                   <img
                     className='IP-image'
