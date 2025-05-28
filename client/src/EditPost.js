@@ -5,7 +5,9 @@ import file_upload from './images/file-upload.png'
 import { Link, Outlet, Navigate, useLocation, useNavigate} from 'react-router-dom';
 import testImage from './images/Temp-profile-pic.png'
 import { v4 as uuidv4 } from 'uuid';
+import { auth, db } from './firebase';
 import Icons from './icons/Icons';
+import { useAuth } from "./AuthContext";
 
 export default function EditPost() {
     const [post, setPost] = React.useState()
@@ -16,7 +18,17 @@ export default function EditPost() {
     const location = useLocation()
     const id = location.pathname.split('/').at(-2)
     const visibilityTypes = ['Public', 'Friends', 'Private']
+
+    const { user } = useAuth();
+    //Check for user
+    React.useEffect(() => {
+        if (!post || !user) return; // Wait until both are loaded
     
+        if (user.uid !== post.user) {
+            navigate(-1);
+        }
+    }, [user, post, location]);
+
     //Obtain post data
     const getPost = async () => {
         try {

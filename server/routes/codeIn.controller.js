@@ -13,10 +13,7 @@ export default class CodeInController {
             const user = req.body.user
 
             //file upload
-            if (!postContent.files || postContent.files.length === 0) {
-                //remove so that users can create a post without uploading
-                return res.status(400).json({ error: "No files to move" });
-            } else {
+            if (postContent?.files.length > 0) {
                 const movedFiles = postContent.files.map(tempPath => {
                     const fileName = path.basename(tempPath);
                     const finalPath = path.join('uploads', 'final', fileName);

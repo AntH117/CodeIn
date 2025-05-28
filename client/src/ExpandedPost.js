@@ -266,13 +266,14 @@ export default function ExpandedPost () {
             )
         }
         const postComments = post.postContent.socials.comments;
-
+        
+        //must be signed in to comment
         return (
             <div className='EP-comments-body'>
-                <div className='EP-add-comment'>
+                {user && <div className='EP-add-comment'>
                     <input type='text' className='EP-comment-input' placeholder='Add a comment...' id='comment-input'  onChange={(e) => setCurrentComment(e.target.value)} value={currentComment}></input>
                     <button className='EP-comment-post' onClick={() => currentComment.length > 0 ? saveComment(currentComment) : console.error('Comment invalid')}>Post</button>
-                </div>
+                </div>}
                 <div className='EP-comments'>
                     {postComments.length > 0 && postComments.slice().reverse().slice(0, commentLimit).map((x) => {
                         return <IndividualComment data = {x}/>
@@ -322,7 +323,7 @@ export default function ExpandedPost () {
     return (<div className='EP-outer-body'>
             <Outlet />
     {post && <div className='EP-inner-body'>
-                    <DropDownMenu />
+                    {user?.uid == post.user && <DropDownMenu />}
                     <div className='IP-title'>
                             <h2>{post?.postContent.title}</h2>
                         </div>
