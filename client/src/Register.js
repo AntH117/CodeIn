@@ -20,6 +20,7 @@ export default function Register () {
             photoURL: user.photoURL || "",
             backgroundURL: '',
             creationDate: user.metadata.creationTime,
+            uid: user.uid
         }, { merge: true }); // merge keeps existing data
     }
     

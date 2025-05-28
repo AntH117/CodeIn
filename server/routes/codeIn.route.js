@@ -1,5 +1,5 @@
 import express from 'express'
-import CodeInCtrl from './codeIn.controller.js'
+import CodeInCtrl from '../controllers/codeIn.controller.js'
 import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
@@ -41,4 +41,5 @@ router.route('/user/:name')
 //Get all public posts
 router.route('/posts')
     .get(CodeInCtrl.apiGetPublicPosts)
+
 export default router

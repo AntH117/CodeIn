@@ -91,7 +91,6 @@ export default class CodeInController {
             const user = req.body.user
             const postId = req.params.id       
             const deletedFiles = req.body?.deletedFiles;
-            
             //file upload
             if (postContent.files.length > 0) {
                 const finalArray = postContent.files.filter((x) => {

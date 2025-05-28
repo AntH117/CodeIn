@@ -15,6 +15,7 @@ export default function ExpandedPost () {
     const [imageFiles, setImageFiles] = React.useState(null)
     const [otherFiles, setOtherFiles] = React.useState(null)
     const [authorInfo, setAuthorInfo] = React.useState()
+    const [comments, setComments] = React.useState([])
 
     function setFiles () {
         if (post?.postContent.files.length > 0) {
@@ -144,46 +145,34 @@ export default function ExpandedPost () {
         <div className='IP-socials'>
                 <div className='IP-socials-individual'>
                     <Icons.Heart />
-                    {post.postContent.socials.likes}
+                    {post.likeCount}
                 </div>
                 <div className='IP-socials-individual'>
                     <Icons.Comment />
-                    {post.postContent.socials.comments.length}
+                    {post.commentCount}
                 </div>
                 <div className='IP-socials-individual'>
                     <Icons.Share />
-                    {post.postContent.socials.shares}
+                    {post.shareCount}
                 </div>
-                </div>
+        </div>
         )
     }
-    
     //create comment
+    const CommentAPILINK = `http://localhost:5000/api/v1/comments`
     const saveComment = async (currentComment) => {
         const savedComment = {
-            comment: currentComment,
-            user: 'Anthony',
-            time: new Date().toISOString(),
-            commentId: uuidv4(),
+            postId: post._id,
+            text: currentComment,
+            userId: user.uid
         }
-        const updatedPost = {
-            ...post,
-            postContent: {
-                ...post.postContent,
-                socials: {
-                    ...post.postContent.socials,
-                    comments: [...post.postContent.socials.comments, savedComment],
-                },
-            },
-        }
-        console.log(updatedPost)
         try {
-            const response = await fetch(APILINK, {
-                method: 'PUT',
+            const response = await fetch(`${CommentAPILINK}/add`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(updatedPost)
+                body: JSON.stringify(savedComment)
             });
             
             const result = await response.json();
@@ -199,33 +188,19 @@ export default function ExpandedPost () {
       };
       
       //delete comment
-      function handleDeleteComment(commentId) {
+      function handleDeleteComment(commentId, postId) {
         if (window.confirm('Are you sure you want to delete this comment?')) {
-            deleteComment(commentId)
+            deleteComment(commentId, postId)
         }
       }
-
-      const deleteComment = async (commentId) => {
-        const updatedComments = post.postContent.socials.comments.filter(
-            (comment) => comment.commentId !== commentId
-        )
-        const updatedPost = {
-            ...post,
-            postContent: {
-                ...post.postContent,
-                socials: {
-                    ...post.postContent.socials,
-                    comments: updatedComments,
-                },
-            },
-        }
+      const deleteComment = async (commentId, postId) => {
         try {
-            const response = await fetch(APILINK, {
-                method: 'PUT',
+            const response = await fetch(`${CommentAPILINK}/${commentId}`, {
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(updatedPost)
+                body: JSON.stringify({postId})
             });
             
             const result = await response.json();
@@ -239,33 +214,78 @@ export default function ExpandedPost () {
             console.error('failed to delete comment:', e)
         }
       };
-      
+      //get comments by post
+      const getComments = async () => {
+        try {
+            const response = await fetch(`${CommentAPILINK}/post/${post._id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            
+            const result = await response.json();
+            if (result) {
+                setComments(result)
+            } else {
+                console.error('failed to receive comments')
+            }
+        } catch (e) {
+            console.error('failed to receive comments:', e)
+        }
+      }
 
+      React.useEffect(() => {
+        if (post) {
+            getComments()
+        }
+      }, [post])
     function Comments() {
         const [commentLimit, setCommentLimit] = React.useState(5)
         const [currentComment, setCurrentComment] = React.useState('')
+        //display each comment
         function IndividualComment({data}) {
+            const [userInfo, setUserInfo] = React.useState()
+            //get User Info
+            async function getUserInfo(uid) {
+                const docRef = doc(db, "users", uid);
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    return docSnap.data(); // { displayName, photoURL, email }
+                } else {
+                    return null;
+                }
+            }
+            async function getuserInfo() {
+                const userInfo = await getUserInfo(data.userId)
+                setUserInfo(userInfo)
+            }
+
+            //get comment posters info
+            React.useEffect(() => {
+                getuserInfo()
+            }, [])
             //If user, allow delete post
             return (
                 <div className='IC-body'>
-                    <div className='IC-delete' onClick={() => handleDeleteComment(data.commentId)}>
+                    {user?.uid === userInfo?.uid &&<div className='IC-delete' onClick={() => handleDeleteComment(data._id, post._id)}>
                         <Icons.Trash />
-                    </div>
+                    </div>}
                     <div className='IC-user-info'>
                         <div className='IC-user-image'>
-                            <img src={testImage}></img>
+                            <img src={userInfo?.photoURL || null}></img>
                         </div>
                         <div className='IC-user-name-date'>
-                         <h4><span style={{cursor: 'pointer'}}>{data.user}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.time)}</span></h4>
+                         <h4><span style={{cursor: 'pointer'}}>{userInfo?.displayName || userInfo?.displayTag}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.comment.timestamp)}</span></h4>
                         </div>
                     </div>
                     <div className='IC-comment'>
-                        <p>{data.comment}</p>
+                        <p>{data.comment.text}</p>
                     </div>
                 </div>
             )
         }
-        const postComments = post.postContent.socials.comments;
         
         //must be signed in to comment
         return (
@@ -275,11 +295,11 @@ export default function ExpandedPost () {
                     <button className='EP-comment-post' onClick={() => currentComment.length > 0 ? saveComment(currentComment) : console.error('Comment invalid')}>Post</button>
                 </div>}
                 <div className='EP-comments'>
-                    {postComments.length > 0 && postComments.slice().reverse().slice(0, commentLimit).map((x) => {
+                    {comments.length > 0 && comments.map((x) => {
                         return <IndividualComment data = {x}/>
                     })}
-                    {post.postContent.socials.comments.length == 0 && <p>No comments yet!</p>}
-                    {postComments.length > commentLimit && <button className='load-comments-button' onClick={() => setCommentLimit((preval) => preval += 5)}>Load more</button>}
+                    {comments.length == 0 && <p>No comments yet!</p>}
+                    {comments.length > commentLimit && <button className='load-comments-button' onClick={() => setCommentLimit((preval) => preval += 5)}>Load more</button>}
                 </div>
             </div>
         )

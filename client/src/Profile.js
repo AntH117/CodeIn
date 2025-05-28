@@ -149,15 +149,15 @@ export default function Profile () {
                 <div className='IP-socials'>
                     <div className='IP-socials-individual'>
                         <Icons.Heart />
-                        {data.postContent.socials.likes}
+                        {data.likeCount}
                     </div>
                     <div className='IP-socials-individual'>
                         <Icons.Comment />
-                        {data.postContent.socials.comments.length}
+                        {data.commentCount}
                     </div>
                     <div className='IP-socials-individual'>
                         <Icons.Share />
-                        {data.postContent.socials.shares}
+                        {data.shareCount}
                     </div>
                 </div>
                 <div className='IP-interact'>

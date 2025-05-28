@@ -1,5 +1,6 @@
 import app from './server.js'
 import CodeInDAO from './dao/CodeInDao.js';
+import CommentsDao from './dao/CommentsDao.js';
 import mongodb from 'mongodb'
 import dotenv from 'dotenv';
 dotenv.config();
@@ -34,6 +35,7 @@ MongoClient.connect(
     .then(async client => {
         //Send database connection to CodeInDao
         await CodeInDAO.injectDB(client)
+        await CommentsDao.injectDB(client)
         //start the server
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`)

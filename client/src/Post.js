@@ -48,7 +48,7 @@ export default function Post() {
             postId: uuidv4(),
             socials: {
                 likes: 0,
-                comments: [],
+                comments: 0,
                 shares: 0
             }
         }

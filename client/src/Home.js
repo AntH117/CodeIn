@@ -14,9 +14,8 @@ export default function Home() {
     const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-     
-    const [posts, setPosts] = React.useState([])
 
+    const [posts, setPosts] = React.useState([])
     //Temp looking for posts with Anthony
     // const APILINK = user ? `http://localhost:5000/api/v1/codeIn/user/${user.uid}` : `http://localhost:5000/api/v1/codeIn/user/Anthony`
     const APILINK = 'http://localhost:5000/api/v1/codeIn/posts/'
@@ -138,15 +137,15 @@ export default function Home() {
             <div className='IP-socials'>
                 <div className='IP-socials-individual'>
                     <Icons.Heart />
-                    {data.postContent.socials.likes}
+                    {data.likeCount}
                 </div>
                 <div className='IP-socials-individual'>
                     <Icons.Comment />
-                    {data.postContent.socials.comments.length}
+                    {data.commentCount}
                 </div>
                 <div className='IP-socials-individual'>
                     <Icons.Share />
-                    {data.postContent.socials.shares}
+                    {data.shareCount}
                 </div>
             </div>
             <div className='IP-interact'>

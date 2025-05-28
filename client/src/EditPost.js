@@ -8,11 +8,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { auth, db } from './firebase';
 import Icons from './icons/Icons';
 import { useAuth } from "./AuthContext";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export default function EditPost() {
     const [post, setPost] = React.useState()
     const [editedPost, setEditedPost] = React.useState()
     const [deletedFiles, setDeletedFiles] = React.useState([])
+    const [userInfo, setUserInfo] = React.useState()
     const APILINK = `http://localhost:5000/api/v1/codeIn`
     const navigate = useNavigate()
     const location = useLocation()
@@ -48,6 +50,29 @@ export default function EditPost() {
     React.useEffect(() => {
         getPost()
     }, [])
+
+    //get user info
+    async function getUserInfo(uid) {
+        const docRef = doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            return docSnap.data(); // { displayName, photoURL, email }
+        } else {
+            return null;
+        }
+    }
+    async function getuserInfo() {
+        const userInfo = await getUserInfo(post.user)
+        setUserInfo(userInfo)
+    }
+
+    //get comment posters info
+    React.useEffect(() => {
+        if (post) {
+            getuserInfo()
+        }
+    }, [post])
 
     function convertTime(time) {
         const date = new Date(time);
@@ -209,9 +234,9 @@ export default function EditPost() {
                             <div className='IP-author-visibility'>
                                 <div className='IP-author-date'>
                                     <div className='IP-author-image'>
-                                        <img src={testImage}></img>
+                                        <img src={userInfo?.photoURL}></img>
                                     </div>
-                                    <h4><span style={{cursor: 'pointer'}}>{post.user}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(post.postContent.time)}</span></h4>
+                                    <h4><span style={{cursor: 'pointer'}}>{userInfo?.displayName || userInfo.displayTag}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(post.postContent.time)}</span></h4>
                                 </div>
                                 <div className='IP-visibility'>
                                         <select name='visibility' onChange={handleChange}>

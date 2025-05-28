@@ -19,7 +19,10 @@ export default class CodeInDAO {
         try {
             const postDoc = {
                 postContent: postContent,
-                user: user
+                user: user,
+                commentCount: 0,
+                likeCount: 0,
+                shareCount: 0,
             }
             return await posts.insertOne(postDoc)
         } catch (e) {
