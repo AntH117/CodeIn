@@ -51,4 +51,10 @@ export default class CommentsDao {
     static async getUserComments(userId) {
         return await comments.find({ userId }).sort({ timestamp: -1 }).toArray();
     }
+
+    static async deleteAllComments(postId) {
+        const deleteResult = await comments.deleteMany({ postId: postId })
+        console.log("Delete Result: deleted All");
+        return deleteResult;
+    }
 }

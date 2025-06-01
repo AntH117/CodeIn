@@ -77,12 +77,13 @@ export default function Post() {
       };
     //validate if all post conditions are met
     function validatePost(postData) {
-        setSubmissionConditions({
+        const conditions = {
             titleLengthMin: postData.title?.length > 0,
             titleLengthMax: postData.title?.length <= 30,
             titleCharacters: /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(postData?.title),
-        })
-        const allTrue = Object.values(submissionConditions).every(value => value === true);
+        }
+        setSubmissionConditions(conditions)
+        const allTrue = Object.values(conditions).every(value => value === true);
         if (allTrue) {
             savePost(formData)
         } else {

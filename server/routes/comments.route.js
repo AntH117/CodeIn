@@ -8,7 +8,8 @@ const router = express.Router();
 router.route('/add')
     .post(CommentsCtrl.apiAddComment);
 router.route('/post/:postId')
-    .get(CommentsCtrl.apiGetCommentsByPost);
+    .get(CommentsCtrl.apiGetCommentsByPost)
+    .delete(CommentsCtrl.apiDeleteAllComments)
 router.route('/:commentId')
     .delete(CommentsCtrl.apiDeleteComment);
 router.route('/user/:userId')

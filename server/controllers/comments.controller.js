@@ -42,7 +42,7 @@ class CommentsCtrl {
             const commentId = req.params.commentId
             const {postId} = req.body
             console.log(commentId)
-            const commentResponse = CommentsDao.deleteComment(
+            const commentResponse = await CommentsDao.deleteComment(
                 commentId,
                 postId
             )
@@ -54,9 +54,21 @@ class CommentsCtrl {
 
     static async apiGetCommentsByUser (req, res) {
         try {
-            const { userId  } = req.body
-            const commentResponse = CommentsDao.getUserComments(
+            const userId = req.params.userId
+            const commentResponse = await CommentsDao.getUserComments(
                 userId
+            )
+            res.json(commentResponse)
+        } catch (e) {
+            res.status(500).json({error: e.message})
+        }
+    }
+
+    static async apiDeleteAllComments (req, res) {
+        try {
+            const postId = req.params.postId
+            const commentResponse = await CommentsDao.deleteAllComments(
+                postId
             )
             res.json({ status: "success" })
         } catch (e) {

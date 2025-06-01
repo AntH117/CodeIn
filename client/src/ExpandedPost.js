@@ -33,9 +33,9 @@ export default function ExpandedPost () {
         }
     }
     const location  = useLocation()
-    const id = location.pathname.split('/').at(-1)
+    const postId = location.pathname.split('/').at(-1)
     const navigate = useNavigate();
-    const APILINK = `http://localhost:5000/api/v1/codeIn/posts/${id}`
+    const APILINK = `http://localhost:5000/api/v1/codeIn/posts/${postId}`
 
     const getPost = async () => {
         try {
@@ -81,6 +81,7 @@ export default function ExpandedPost () {
     function handleDeletePost() {
         if (window.confirm("Are you sure you want to delete this post?")) {
             // Perform deletion
+            handleDeleteAllComments(post._id)
             deletePost();
           }
     }
@@ -105,6 +106,8 @@ export default function ExpandedPost () {
             console.error(`Unable to load post:`, e)
         }
     }
+
+
 
     function convertTime(time) {
         const date = new Date(time);
@@ -214,6 +217,22 @@ export default function ExpandedPost () {
             console.error('failed to delete comment:', e)
         }
       };
+
+      const handleDeleteAllComments = async (postId) => {
+        try {
+            const response = await fetch(`${CommentAPILINK}/post/${postId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            
+            const result = await response.json();
+        } catch (e) {
+            console.error('failed to delete all comments:', e)
+        }
+      }
+      
       //get comments by post
       const getComments = async () => {
         try {
@@ -240,52 +259,55 @@ export default function ExpandedPost () {
             getComments()
         }
       }, [post])
+
+      //display individual comment
+    function IndividualComment({data}) {
+        const [userInfo, setUserInfo] = React.useState()
+        //get User Info
+        async function getUserInfo(uid) {
+            const docRef = doc(db, "users", uid);
+            const docSnap = await getDoc(docRef);
+            
+            if (docSnap.exists()) {
+                return docSnap.data(); // { displayName, photoURL, email }
+            } else {
+                return null;
+            }
+        }
+        async function getuserInfo() {
+            const userInfo = await getUserInfo(data.userId)
+            setUserInfo(userInfo)
+        }
+
+        //get comment posters info
+        React.useEffect(() => {
+            getuserInfo()
+        }, [])
+        //If user, allow delete post
+        return (
+
+            <div className='IC-body'>
+                {user?.uid === userInfo?.uid &&<div className='IC-delete' onClick={() => handleDeleteComment(data._id, post._id)}>
+                    <Icons.Trash />
+                </div>}
+                <div className='IC-user-info'>
+                    <div className='IC-user-image'>
+                        <img src={userInfo?.photoURL || null}></img>
+                    </div>
+                    <div className='IC-user-name-date'>
+                     <h4><span style={{cursor: 'pointer'}}>{userInfo?.displayName || userInfo?.displayTag}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.comment.timestamp)}</span></h4>
+                    </div>
+                </div>
+                <div className='IC-comment'>
+                    <p>{data.comment.text}</p>
+                </div>
+            </div>
+        )
+    }
+
     function Comments() {
         const [commentLimit, setCommentLimit] = React.useState(5)
         const [currentComment, setCurrentComment] = React.useState('')
-        //display each comment
-        function IndividualComment({data}) {
-            const [userInfo, setUserInfo] = React.useState()
-            //get User Info
-            async function getUserInfo(uid) {
-                const docRef = doc(db, "users", uid);
-                const docSnap = await getDoc(docRef);
-                
-                if (docSnap.exists()) {
-                    return docSnap.data(); // { displayName, photoURL, email }
-                } else {
-                    return null;
-                }
-            }
-            async function getuserInfo() {
-                const userInfo = await getUserInfo(data.userId)
-                setUserInfo(userInfo)
-            }
-
-            //get comment posters info
-            React.useEffect(() => {
-                getuserInfo()
-            }, [])
-            //If user, allow delete post
-            return (
-                <div className='IC-body'>
-                    {user?.uid === userInfo?.uid &&<div className='IC-delete' onClick={() => handleDeleteComment(data._id, post._id)}>
-                        <Icons.Trash />
-                    </div>}
-                    <div className='IC-user-info'>
-                        <div className='IC-user-image'>
-                            <img src={userInfo?.photoURL || null}></img>
-                        </div>
-                        <div className='IC-user-name-date'>
-                         <h4><span style={{cursor: 'pointer'}}>{userInfo?.displayName || userInfo?.displayTag}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.comment.timestamp)}</span></h4>
-                        </div>
-                    </div>
-                    <div className='IC-comment'>
-                        <p>{data.comment.text}</p>
-                    </div>
-                </div>
-            )
-        }
         
         //must be signed in to comment
         return (

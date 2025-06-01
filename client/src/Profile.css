@@ -100,17 +100,13 @@
 
 .user-posts-body {
     width: 100%;
-    min-height: 300px;
-    max-height: 600px;
-    height: fit-content;
+    height: 600px;
     display: flex;
     flex-direction: column;
     align-items: center;
     overflow-y: scroll;
     gap: 15px;
-    border-top: 1px solid rgb(207, 207, 207);
     padding-bottom: 50px;
-    margin-top: 20px;
 }
 
 .individual-user-post-body {
@@ -122,4 +118,88 @@
     align-items: center;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1), 0px 0px 10px rgba(0, 0, 0, 0.05);
     position: relative;
+}
+
+.user-profile-toggle {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid rgb(207, 207, 207);
+    margin-top: 5px;
+}
+
+.user-toggle-option {
+    width: 25%;
+    height: 100%;
+    background-color: 	#f0f0f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s all ease-out;
+    position: relative;
+}
+
+.user-toggle-option:hover {
+    background-color: 	#aad6ff;
+    box-shadow: 0 0 4px #c8a8ff;
+}
+
+
+.user-toggle-option.selected {
+    background-color: #c0e7ff;
+}
+
+.user-toggled {
+    position: absolute;
+    width: 40%;
+    height: 7px;
+    background-color: #68bdfa;
+    border-radius: 20%;
+    bottom: 0;
+}
+
+.user-toggle-outlet {
+    width: 100%;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    gap: 15px;
+}
+
+.individual-comment-body {
+    width: 100%;
+    min-height: 80px;
+    height: fit-content;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.425);
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.7rem;
+    position: relative;
+    align-items: center;
+}
+
+.individual-comment-user-info {
+    width: 90%;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.individual-comment-comment {
+    width: 90%;
+    height: fit-content;
+}
+
+.individual-comment-navigate {
+    width: fit-content;
+    height: fit-content;
+    position: absolute;
+    right: 7px;
+    bottom: 25%;
+    cursor: pointer;
 }

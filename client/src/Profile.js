@@ -13,10 +13,10 @@ export default function Profile () {
 
     const [profileInfo, getProfileInfo] = React.useState()
     const location = useLocation();
-    const userId = location.pathname.split('/').at(-1)
+    const profileId = location.pathname.split('/').at(-1)
     const navigate = useNavigate()
 
-    const isUser = user?.uid == userId
+    const isUser = user?.uid == profileId
 
     async function getUserInfo(uid) {
         const docRef = doc(db, "users", uid);
@@ -30,7 +30,7 @@ export default function Profile () {
         }
 
     async function getAuthorInfo() {
-        const profileInfo = await getUserInfo(userId)
+        const profileInfo = await getUserInfo(profileId)
         getProfileInfo(profileInfo)
     }
 
@@ -51,7 +51,7 @@ export default function Profile () {
 
     const getPosts = async () => {
         try {
-            const response = await fetch(`${APILINK}/user/${userId}`, {
+            const response = await fetch(`${APILINK}/user/${profileId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -168,11 +168,171 @@ export default function Profile () {
             </div>
         }
 
-        return <div className='user-posts-body'>
+        return <>
             {userPosts && userPosts.map((post) => 
                 <IndividualUserPost data={post} />
             )}
-        </div>
+        </>
+    }
+
+    function convertTime(time) {
+        const date = new Date(time);
+        const options = {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+          };
+          const formatted = new Intl.DateTimeFormat('en-US', options).format(date);
+          return formatted
+    }
+
+    //display user only comments
+    function UserComments() {
+        const [userComments, setUserComments] = React.useState([])
+            const CommentAPILINK = `http://localhost:5000/api/v1/comments`
+        const getUserComments = async() => {
+            try {
+                const response = await fetch(`${CommentAPILINK}/user/${profileId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                const result = await response.json();
+                if (result) {
+                    setUserComments(result)
+                } else {
+                    console.error('failed to receive comments')
+                }
+            } catch (e) {
+                console.error('failed to receive comments:', e)
+            }
+        }
+
+        React.useEffect(() => {
+            getUserComments()
+        }, [])
+        console.log(userComments)
+
+        //individual comments
+        function IndividualComment({data}) {
+            const [userInfo, setUserInfo] = React.useState()
+            //get User Info
+            async function getUserInfo(uid) {
+                const docRef = doc(db, "users", uid);
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    return docSnap.data(); // { displayName, photoURL, email }
+                } else {
+                    return null;
+                }
+            }
+            async function getuserInfo() {
+                const userInfo = await getUserInfo(data.userId)
+                setUserInfo(userInfo)
+            }
+
+            //handle delete comments
+            function handleDeleteComment(commentId, postId) {
+                if (window.confirm('Are you sure you want to delete this comment?')) {
+                    deleteComment(commentId, postId)
+                }
+              }
+              const deleteComment = async (commentId, postId) => {
+                try {
+                    const response = await fetch(`${CommentAPILINK}/${commentId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({postId})
+                    });
+                    
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        alert('Comment deleted')
+                        window.location.reload()
+                    } else {
+                        console.error('Backend Error', result.error)
+                    }
+                } catch (e) {
+                    console.error('failed to delete comment:', e)
+                }
+              };
+
+            //get comment posters info
+            React.useEffect(() => {
+                getuserInfo()
+            }, [])
+            //If user, allow delete post
+            return (
+                <div className='individual-comment-body'>
+                    {user?.uid === userInfo?.uid &&<div className='IC-delete' onClick={() => handleDeleteComment(data._id, data.postId)}>
+                        <Icons.Trash />
+                    </div>}
+                    <div className='individual-comment-navigate' onClick={() => navigate(`/posts/${data.postId}`)}>
+                        <Icons.ArrowRight />
+                    </div>
+                    <div className='individual-comment-user-info'>
+                        <div className='IC-user-image'>
+                            <img src={userInfo?.photoURL || null}></img>
+                        </div>
+                        <div className='IC-user-name-date'>
+                         <h4><span style={{cursor: 'pointer'}}>{userInfo?.displayName || userInfo?.displayTag}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.comment.timestamp)}</span></h4>
+                        </div>
+                    </div>
+                    <div className='individual-comment-comment'>
+                        <p>{data.comment.text}</p>
+                    </div>
+                </div>
+            )
+        }
+
+
+        return <>
+            {userComments.map((comment) => {
+                return <IndividualComment data={comment}/>
+            })}
+        </>
+    }
+
+
+    function UserProfileToggle () {
+        const [selectToggle, setSelectToggle] = React.useState('Posts')
+
+        function ToggleOption({name}) {
+
+            return <div className={`user-toggle-option ${name === selectToggle ? 'selected' : ''}`} onClick={() => setSelectToggle(name)}>
+                {name}
+                {name === selectToggle && <div className='user-toggled'>
+                    
+                </div>}
+            </div>
+        }
+        const toggleDisplay = () => {
+            switch(selectToggle) {
+                case 'Posts': 
+                    return <UserPosts />;
+                case 'Comments':
+                    return <UserComments />
+        }
+        }
+
+        return (<>
+            <div className='user-profile-toggle'>
+                <ToggleOption name={'Posts'}/>
+                <ToggleOption name={'Comments'}/>
+            </div>
+            <div className='user-toggle-outlet'>
+             {toggleDisplay()}
+            </div>
+        </>
+        )
     }
 
     return <div className='user-profile-outer-body'>
@@ -198,7 +358,7 @@ export default function Profile () {
                    <Icons.Calendar /> Joined {convertDate(profileInfo?.creationDate)}
                 </div>
             </div>
-            <UserPosts />
+            <UserProfileToggle />
         </div>}
     </div>
 }

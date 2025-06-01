@@ -225,6 +225,8 @@ export default function EditPost() {
         navigate(-1)
     }
 
+    console.log(editedPost)
+
     return <div className='EP-outer-body'>
       {editedPost && <div className='EP-inner-body'>
                          <div className='edit-post-title'>Edit Post</div>
@@ -236,7 +238,7 @@ export default function EditPost() {
                                     <div className='IP-author-image'>
                                         <img src={userInfo?.photoURL}></img>
                                     </div>
-                                    <h4><span style={{cursor: 'pointer'}}>{userInfo?.displayName || userInfo.displayTag}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(post.postContent.time)}</span></h4>
+                                    <h4><span style={{cursor: 'pointer'}}>{userInfo?.displayName || userInfo?.displayTag}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(post.postContent.time)}</span></h4>
                                 </div>
                                 <div className='IP-visibility'>
                                         <select name='visibility' onChange={handleChange}>
