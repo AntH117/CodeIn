@@ -142,7 +142,7 @@ export default function ExpandedPost () {
             </div>}
         </>
     }
-
+console.log(post)
     function Socials() {
         return (
         <div className='IP-socials'>

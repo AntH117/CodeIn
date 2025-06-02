@@ -27,7 +27,7 @@ export default function Profile () {
         } else {
             return null;
         }
-        }
+    }
 
     async function getAuthorInfo() {
         const profileInfo = await getUserInfo(profileId)

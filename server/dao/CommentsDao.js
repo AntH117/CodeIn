@@ -38,7 +38,6 @@ export default class CommentsDao {
     }
 
     static async deleteComment(commentId, postId) {
-
         const deleteResult = await comments.deleteOne({ _id: new ObjectId(commentId) })
         await posts.updateOne(
             { _id: new ObjectId(postId) },
@@ -54,7 +53,6 @@ export default class CommentsDao {
 
     static async deleteAllComments(postId) {
         const deleteResult = await comments.deleteMany({ postId: postId })
-        console.log("Delete Result: deleted All");
         return deleteResult;
     }
 }

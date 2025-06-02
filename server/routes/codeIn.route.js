@@ -41,5 +41,11 @@ router.route('/user/:name')
 //Get all public posts
 router.route('/posts')
     .get(CodeInCtrl.apiGetPublicPosts)
-
+//Liking a post
+router.route('/socials/like/:postId')
+    .put(CodeInCtrl.apiLikePost)
+//unliking a post
+//Liking a post
+router.route('/socials/unlike/:postId')
+    .put(CodeInCtrl.apiUnlikePost)
 export default router

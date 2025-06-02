@@ -83,4 +83,30 @@ export default class CodeInDAO {
             return {error: e}
         }
     }
+
+    static async likePost(postId) {
+        try {
+            const postResponse = await posts.updateOne(
+                { _id: new ObjectId(postId) },
+                { $inc: { likeCount: 1 } }
+            );
+
+            return postResponse
+        } catch (e) {
+            console.error(`Unable to like post: ${e}`)
+            return {error: e}
+        }
+    }
+    static async unlikePost(postId) {
+        try {
+            const postResponse = await posts.updateOne(
+                { _id: new ObjectId(postId) },
+                { $inc: { likeCount: -1 } }
+            );          
+            return postResponse
+        } catch (e) {
+            console.error(`Unable to like post: ${e}`)
+            return {error: e}
+        }
+    }
 }
