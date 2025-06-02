@@ -16,16 +16,16 @@ export default function ExpandedPost () {
     const [post, setPost] = React.useState(null)
     const [imageFiles, setImageFiles] = React.useState(null)
     const [otherFiles, setOtherFiles] = React.useState(null)
-    const [authorInfo, setAuthorInfo] = React.useState()
+    const [authorInfo, setAuthorInfo] = React.useState(null)
     const [comments, setComments] = React.useState([])
 
     //handle loading
     const [loading, setLoading] = React.useState(true)
     React.useEffect(() => {
-        setTimeout(() => {
+        if (post && authorInfo) {
             setLoading(false)
-        }, 2000)
-    }, [])
+        }
+    }, [authorInfo])
  
     //Get user data --> user liked post
     const [tempLikeCount, setTempLikeCount] = React.useState(0)
@@ -81,6 +81,8 @@ export default function ExpandedPost () {
             setPost(data)
         } catch (e) {
             console.error(`Unable to load post:`, e)
+        } finally {
+            setLoading(false)
         }
     }
     React.useEffect(() => {
@@ -91,6 +93,7 @@ export default function ExpandedPost () {
         setFiles()
         getAuthorInfo()
     }, [post])
+
     //Get Author details
     async function getUserInfo(uid) {
         const docRef = doc(db, "users", uid);
@@ -104,8 +107,12 @@ export default function ExpandedPost () {
     }
     async function getAuthorInfo() {
         if (post) {
-            const authorInfo = await getUserInfo(post?.user)
-            setAuthorInfo(authorInfo)
+            try{
+                const authorInfo = await getUserInfo(post?.user)
+                setAuthorInfo(authorInfo)
+            } catch (e) {
+                console.error('Error loading author')
+            }
         }
     }
     //Delete post

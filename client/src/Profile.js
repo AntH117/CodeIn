@@ -10,18 +10,17 @@ import Icons from './icons/Icons';
 
 export default function Profile () {
     const { user } = useAuth();
-    //handle loading
-    const [loading, setLoading] = React.useState(true)
-    React.useEffect(() => {
-        setTimeout(() => {
-            setLoading(false)
-        }, 2000)
-    }, [])
  
-    const [profileInfo, getProfileInfo] = React.useState()
+    const [profileInfo, setProfileInfo] = React.useState()
     const location = useLocation();
     const profileId = location.pathname.split('/').at(-1)
     const navigate = useNavigate()
+    
+    //handle loading
+    const [loading, setLoading] = React.useState(true)
+    React.useEffect(() => {
+        getPosts()
+    }, [location])
 
     const isUser = user?.uid == profileId
 
@@ -37,8 +36,14 @@ export default function Profile () {
     }
 
     async function getAuthorInfo() {
-        const profileInfo = await getUserInfo(profileId)
-        getProfileInfo(profileInfo)
+        try {
+            const profileInfo = await getUserInfo(profileId)
+            setProfileInfo(profileInfo)
+        } catch (e) {
+            console.error('Error getting profile info')
+        } finally {
+            setLoading(false)
+        }
     }
 
     function convertDate(date) {
@@ -71,9 +76,6 @@ export default function Profile () {
         }
       };
 
-    React.useEffect(() => {
-        getPosts()
-    }, [location])
 
     //display user only posts
     function UserPosts() {

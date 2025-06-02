@@ -21,9 +21,7 @@ export default function Home() {
     //handle loading
     const [loading, setLoading] = React.useState(true)
     React.useEffect(() => {
-        setTimeout(() => {
-            setLoading(false)
-        }, 2000)
+        getPosts()
     }, [])
 
     //Get logged in user into
@@ -68,12 +66,10 @@ export default function Home() {
             setPosts(data)
         } catch (e) {
             console.error('Unable to load posts:', e)
+        } finally {
+            setLoading(false)
         }
       };
-
-    React.useEffect(() => {
-        getPosts()
-    }, [location])
     
     function handleSignOut() {
         if (window.confirm('Are you sure you want to sign out?')) {
