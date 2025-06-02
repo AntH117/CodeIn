@@ -1,4 +1,5 @@
 import React from 'react';
+import './Icons.css';
 
 const TrashIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">

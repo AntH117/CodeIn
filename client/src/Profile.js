@@ -10,7 +10,14 @@ import Icons from './icons/Icons';
 
 export default function Profile () {
     const { user } = useAuth();
-
+    //handle loading
+    const [loading, setLoading] = React.useState(true)
+    React.useEffect(() => {
+        setTimeout(() => {
+            setLoading(false)
+        }, 2000)
+    }, [])
+ 
     const [profileInfo, getProfileInfo] = React.useState()
     const location = useLocation();
     const profileId = location.pathname.split('/').at(-1)
@@ -336,7 +343,10 @@ export default function Profile () {
     }
 
     return <div className='user-profile-outer-body'>
-        {profileInfo && <div className='user-profile-inner-body'>
+        {loading && <div className='loading-body'>
+            <span class="loader"></span>
+        </div>}
+        {!loading && <div className='user-profile-inner-body'>
             <div className='user-background'>
                 <img className='user-background-image' src={profileInfo?.backgroundURL || null}>
 

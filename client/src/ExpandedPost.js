@@ -7,7 +7,9 @@ import Icons from './icons/Icons';
 import { useAuth } from "./AuthContext";
 import { auth } from './firebase';
 import { db } from "./firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { arrayUnion, arrayRemove  } from "firebase/firestore";
+
 
 export default function ExpandedPost () {
     const { user } = useAuth();
@@ -16,6 +18,36 @@ export default function ExpandedPost () {
     const [otherFiles, setOtherFiles] = React.useState(null)
     const [authorInfo, setAuthorInfo] = React.useState()
     const [comments, setComments] = React.useState([])
+
+    //handle loading
+    const [loading, setLoading] = React.useState(true)
+    React.useEffect(() => {
+        setTimeout(() => {
+            setLoading(false)
+        }, 2000)
+    }, [])
+ 
+    //Get user data --> user liked post
+    const [tempLikeCount, setTempLikeCount] = React.useState(0)
+    const [loggedUserData, setLoggedUserData] = React.useState(null)
+    const [likeCooldown, setLikeCooldown] = React.useState(false)
+    async function awaitUserData() {
+        const response = await getUserInfo(user?.uid)
+        setLoggedUserData(response)
+    }
+    React.useEffect(() => {
+        if (user) {
+            awaitUserData()
+        }
+    },[user])
+    //set temp like count
+    React.useEffect(() => {
+    if (!post) {
+        return
+    } else {
+        setTempLikeCount(post?.likeCount)
+    }
+    }, [post])
 
     function setFiles () {
         if (post?.postContent.files.length > 0) {
@@ -51,7 +83,6 @@ export default function ExpandedPost () {
             console.error(`Unable to load post:`, e)
         }
     }
-    //icons
     React.useEffect(() => {
         getPost()
     }, [])
@@ -142,13 +173,12 @@ export default function ExpandedPost () {
             </div>}
         </>
     }
-console.log(post)
     function Socials() {
         return (
         <div className='IP-socials'>
                 <div className='IP-socials-individual'>
-                    <Icons.Heart />
-                    {post.likeCount}
+                    {user ? loggedUserData?.likes?.includes(post._id) ? <Icons.HeartFilled /> : <Icons.Heart /> : <Icons.Heart />}
+                    {tempLikeCount}
                 </div>
                 <div className='IP-socials-individual'>
                     <Icons.Comment />
@@ -362,9 +392,82 @@ console.log(post)
             </p>
         </div>
     }
+
+    //liking a post logic
+        async function addUserLikes(postId) {
+            const userRef = doc(db, "users", user.uid);
+            
+            await updateDoc(userRef, {
+                likes: arrayUnion(postId)
+              });
+        }
+    
+        async function removeUserLikes(postId) {
+            const userRef = doc(db, "users", user.uid);
+            
+            await updateDoc(userRef, {
+                likes: arrayRemove(postId)
+              });
+        }
+        async function handleUserLikes(postId) {
+            const containsPostId = loggedUserData?.likes?.includes(postId)
+            if (containsPostId) {
+                removeUserLikes(postId)
+                setTempLikeCount((preVal) => preVal - 1)
+                unlikePost(postId)
+            } else if (!containsPostId) {
+                addUserLikes(postId)
+                setTempLikeCount((preVal) => preVal + 1)
+                likePost(postId)
+            }
+            awaitUserData()
+        }
+    
+        const likePost = async(postId) => {
+            const likesAPILINK = `http://localhost:5000/api/v1/codeIn/socials/like/${postId}`
+            try {
+                const response = await fetch(likesAPILINK, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const result = await response.json();
+            } catch (e) {
+                console.error('Unable to like post:', e)
+            }
+        }
+    
+        const unlikePost = async(postId) => {
+            const likesAPILINK = `http://localhost:5000/api/v1/codeIn/socials/unlike/${postId}`
+            try {
+                const response = await fetch(likesAPILINK, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const result = await response.json();
+            } catch (e) {
+                console.error('Unable to like post:', e)
+            }
+        }
+        //Prevent spamming
+        async function handleLike(postId) {
+        if (likeCooldown) return;
+        setLikeCooldown(true);
+        try {
+        await handleUserLikes(postId);
+        } finally {
+        setTimeout(() => setLikeCooldown(false), 1500);
+        }
+    }
     return (<div className='EP-outer-body'>
             <Outlet />
-    {post && <div className='EP-inner-body'>
+    {loading && <div className='loading-body'>
+        <span class="loader"></span>
+    </div>}
+    {!loading && <div className='EP-inner-body'>
                     {user?.uid == post.user && <DropDownMenu />}
                     <div className='IP-title'>
                             <h2>{post?.postContent.title}</h2>
@@ -389,7 +492,7 @@ console.log(post)
                         </div>}
                         <Socials />
                         <div className='IP-interact' style={{marginBottom: '1rem'}}>
-                            <h5>Like</h5>
+                            {user && <h5 onClick={() => handleLike(post._id)}>{loggedUserData?.likes.includes(post._id) ? 'Unlike' : 'Like'}</h5>}
                             <h5>Share</h5>
                         </div>
                         <Comments />

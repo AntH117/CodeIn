@@ -15,11 +15,12 @@ export default function IndividualPost({data}) {
     const location = useLocation();
 
     const [likeCooldown, setLikeCooldown] = React.useState(false);
+
+    //get liked posts
     async function awaitUserData() {
         const response = await getUserInfo(user?.uid)
         setLoggedUserData(response)
     }
-    //get liked posts
     const [loggedUserData, setLoggedUserData] = React.useState(null)
     React.useEffect(() => {
         if (user) {

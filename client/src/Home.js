@@ -12,10 +12,19 @@ import { arrayUnion, arrayRemove  } from "firebase/firestore";
 import IndividualPost from './IndividualPost';
 
 export default function Home() {
+    
     //user
     const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+
+    //handle loading
+    const [loading, setLoading] = React.useState(true)
+    React.useEffect(() => {
+        setTimeout(() => {
+            setLoading(false)
+        }, 2000)
+    }, [])
 
     //Get logged in user into
     async function getUserInfo(uid) {
@@ -88,18 +97,21 @@ export default function Home() {
             user && <div onClick={handleSignOut} style={{cursor: 'pointer'}}>Sign Out</div>
             }
         </div>
-        <div className='news-feed-body'>
-                <div className='news-feed'>
-                {(location.pathname == '/' || location.pathname == '/post') && reversedPosts.map((data) => {
-                        return <IndividualPost data={data} key={data._id}/>
-                    })}
-                    {
-                    location.pathname == '/' && <div className='create-post'>
-                    {user && <button className='create-post-button'>
-                        <Link to={'/post'} style={{color: 'white', textDecoration: 'none'}}>Create Post</Link>
-                    </button>}
-                </div>
-                    }
+            <div className='news-feed-body'>
+                 <div className='news-feed'>
+                 {loading &&
+                        <span class="loader"></span>
+                 }
+                    {!loading && <div className='individual-post-bodies'>
+                        {(location.pathname == '/' || location.pathname == '/post') && reversedPosts.map((data) => {
+                            return <IndividualPost data={data} key={data._id}/>
+                        })}
+                        { location.pathname == '/' && <div className='create-post'>
+                        {user && <button className='create-post-button'>
+                            <Link to={'/post'} style={{color: 'white', textDecoration: 'none'}}>Create Post</Link>
+                        </button>}
+                        </div>}
+                    </div>}
                 </div>
                 {
                 location.pathname !== '/' && 
