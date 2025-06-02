@@ -21,6 +21,9 @@ const tempStorage = multer.diskStorage({
 
 const upload = multer({ storage: tempStorage });
 
+//Get Posts based on multiple Id's
+router.route('/posts/batch')
+    .post(CodeInCtrl.apiGetMultiplePosts)
 //See and Edit Posts
 router.route('/posts/:id')
     .get(CodeInCtrl.apiGetPost)
@@ -48,4 +51,5 @@ router.route('/socials/like/:postId')
 //Liking a post
 router.route('/socials/unlike/:postId')
     .put(CodeInCtrl.apiUnlikePost)
+
 export default router

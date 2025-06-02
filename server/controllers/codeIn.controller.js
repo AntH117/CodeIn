@@ -251,4 +251,18 @@ export default class CodeInController {
             res.status(500).json({error: e})
         }
     }
+
+    static async apiGetMultiplePosts (req, res) {
+        try {
+            const { postIds } = req.body;
+            let posts = await CodeInDAO.getMultiplePosts(postIds)
+            if (!posts) {
+                res.status(404).json({error: "Not Found"})
+                return
+            }
+            res.json(posts)
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to fetch posts' });
+        }
+    }
 }

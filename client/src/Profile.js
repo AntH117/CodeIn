@@ -7,6 +7,7 @@ import { auth, db } from './firebase';
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import testImage from './images/Temp-profile-pic.png'
 import Icons from './icons/Icons';
+import IndividualPost from './IndividualPost';
 
 export default function Profile () {
     const { user } = useAuth();
@@ -15,13 +16,9 @@ export default function Profile () {
     const location = useLocation();
     const profileId = location.pathname.split('/').at(-1)
     const navigate = useNavigate()
-    
+
     //handle loading
     const [loading, setLoading] = React.useState(true)
-    React.useEffect(() => {
-        getPosts()
-    }, [location])
-
     const isUser = user?.uid == profileId
 
     async function getUserInfo(uid) {
@@ -57,9 +54,12 @@ export default function Profile () {
     },[location])
 
 
-    //get user only posts
+    //display user only posts
+    function UserPosts({onLoaded}) {
+         //get user only posts
     const [userPosts, setUserPosts] = React.useState()  
     const APILINK = 'http://localhost:5000/api/v1/codeIn'
+
 
     const getPosts = async () => {
         try {
@@ -73,113 +73,19 @@ export default function Profile () {
             setUserPosts(data)
         } catch (e) {
             console.error('Unable to load posts:', e)
+        } finally {
+            onLoaded()
         }
       };
 
-
-    //display user only posts
-    function UserPosts() {
-        
-        function IndividualUserPost({data}) {
-
-            function convertTime(time) {
-                const date = new Date(time);
-                const options = {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    hour12: true,
-                  };
-                  const formatted = new Intl.DateTimeFormat('en-US', options).format(date);
-                  return formatted
-            }
-
-            let imageFiles = [];
-            let otherFiles = [];
+        React.useEffect(() => {
+            getPosts()
+        }, [location])
     
-            if (data.postContent.files.length > 0) {
-                const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.svg'];
-                 imageFiles = data.postContent.files.filter(file => {
-                    const ext = file.slice(file.lastIndexOf('.')).toLowerCase();
-                    return imageExtensions.includes(ext);
-                  });
-                otherFiles = data.postContent.files.filter(file => {
-                    const ext = file.slice(file.lastIndexOf('.')).toLowerCase();
-                    return !imageExtensions.includes(ext);
-                  });
-            }
-    
-            function ImageGrid({ imageFiles }) {
-                const columns = Math.min(imageFiles.length, 4);
-                const gridStyle = {
-                  display: 'grid',
-                  gridTemplateColumns: `repeat(${columns}, 1fr)`,
-                  gap: '10px',
-                };
-              
-                return (
-                    <div style={imageFiles.length === 1 ? {} : gridStyle} className={`IP-image-container ${imageFiles.length === 1 ? 'single' : ''}`}  onClick={() => navigate(`/posts/${data._id}`)}>
-                    {imageFiles.map((src, idx) => (
-                      <img
-                        className='IP-image'
-                        key={idx}
-                        src={`http://localhost:5000/${src}`}
-                        alt={`Image ${idx + 1}`}
-                      />
-                    ))}
-                  </div>
-                );
-              }
-    
-            return <div className='individual-user-post-body'>
-                <div className='IP-title'>
-                    <h2 onClick={() => navigate(`/posts/${data._id}`)}>{data.postContent.title}</h2>
-                </div>
-                    <div className='IP-author-date'>
-                        <div className='IP-author-image' onClick={() => navigate(`/users/${data.user}`)}>
-                            <img src={profileInfo?.photoURL}></img>
-                        </div>
-                        <h4><span style={{cursor: 'pointer'}} onClick={() => navigate(`/users/${data.user}`)}>{ 
-                        profileInfo?.displayName || `@${profileInfo?.displayTag}`
-                        }</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.postContent.time)}</span></h4>
-                        <span style={{fontWeight: '400', marginLeft: '5px'}}>{data.postContent?.edited ? ' (Edited)' : ''}</span>
-                    </div>
-                {data.postContent.paragraph && <div className='IP-paragraph'>
-                    <p>{data.postContent.paragraph}</p>
-                </div>}
-                {imageFiles?.length > 0 && <ImageGrid imageFiles={imageFiles} />}
-                {otherFiles?.length > 0 && 
-                <div className='IP-attachments' style={{marginTop: '1rem'}}>
-                    + {otherFiles.length} attachment{otherFiles.length > 1 && 's'}
-                </div>
-                }
-                <div className='IP-socials'>
-                    <div className='IP-socials-individual'>
-                        <Icons.Heart />
-                        {data.likeCount}
-                    </div>
-                    <div className='IP-socials-individual'>
-                        <Icons.Comment />
-                        {data.commentCount}
-                    </div>
-                    <div className='IP-socials-individual'>
-                        <Icons.Share />
-                        {data.shareCount}
-                    </div>
-                </div>
-                <div className='IP-interact'>
-                    <h5>Like</h5>
-                    <h5 onClick={() => navigate(`/posts/${data._id}`)}>Comment</h5>
-                    <h5>Share</h5>
-                </div>
-            </div>
-        }
 
         return <>
             {userPosts && userPosts.map((post) => 
-                <IndividualUserPost data={post} />
+                <IndividualPost data={post} />
             )}
         </>
     }
@@ -199,7 +105,7 @@ export default function Profile () {
     }
 
     //display user only comments
-    function UserComments() {
+    function UserComments({onLoaded}) {
         const [userComments, setUserComments] = React.useState([])
             const CommentAPILINK = `http://localhost:5000/api/v1/comments`
         const getUserComments = async() => {
@@ -219,6 +125,8 @@ export default function Profile () {
                 }
             } catch (e) {
                 console.error('failed to receive comments:', e)
+            } finally {
+                onLoaded()
             }
         }
 
@@ -301,8 +209,6 @@ export default function Profile () {
                 </div>
             )
         }
-
-
         return <>
             {userComments.map((comment) => {
                 return <IndividualComment data={comment}/>
@@ -310,12 +216,69 @@ export default function Profile () {
         </>
     }
 
+    //User likes
+    function UserLikes({onLoaded}) {
+        //get liked posts
+        const [loggedUserData, setLoggedUserData] = React.useState(null)
+        const [likedPosts, setLikedPosts] = React.useState(null)
+        async function getUserInfo(uid) {
+            const docRef = doc(db, "users", uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                return docSnap.data(); // { displayName, photoURL, email }
+            } else {
+                return null;
+            }
+        }
+        async function awaitUserData() {
+            const response = await getUserInfo(user?.uid)
+            getLikedPosts(response.likes)
+        }
+        React.useEffect(() => {
+            if (user) {
+                awaitUserData()
+            }
+        },[user])
+        
+        const getLikedPosts = async(postIds) => {
+            const APILINK = `http://localhost:5000/api/v1/codeIn/posts/batch`
+            try {
+                const response = await fetch(APILINK, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ postIds }), // send array of IDs
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                setLikedPosts(data); 
+            } catch (e) {
+                console.error('Unable to load posts:', e);
+            } finally {
+                onLoaded();
+            }
+    }
+
+    return (
+        <div className='individual-post-body'>
+            {likedPosts && likedPosts.map((post) => {
+            return <IndividualPost data={post}/>
+        })}
+        </div>
+    )
+}
+        
 
     function UserProfileToggle () {
         const [selectToggle, setSelectToggle] = React.useState('Posts')
-
+        const [toggleLoading, setToggleLoading] = React.useState(true)
+        React.useEffect(() => {
+            setToggleLoading(true)
+        }, [selectToggle])
         function ToggleOption({name}) {
-
             return <div className={`user-toggle-option ${name === selectToggle ? 'selected' : ''}`} onClick={() => setSelectToggle(name)}>
                 {name}
                 {name === selectToggle && <div className='user-toggled'>
@@ -326,18 +289,23 @@ export default function Profile () {
         const toggleDisplay = () => {
             switch(selectToggle) {
                 case 'Posts': 
-                    return <UserPosts />;
+                    return <UserPosts onLoaded={() => setToggleLoading(false)}/>;
                 case 'Comments':
-                    return <UserComments />
+                    return <UserComments onLoaded={() => setToggleLoading(false)}/>
+                case 'Likes':
+                    return <UserLikes  onLoaded={() => setToggleLoading(false)} />
         }
         }
-
         return (<>
             <div className='user-profile-toggle'>
                 <ToggleOption name={'Posts'}/>
                 <ToggleOption name={'Comments'}/>
+                <ToggleOption name={'Likes'}/>
             </div>
             <div className='user-toggle-outlet'>
+            {toggleLoading && <div className='toggle-loader'>
+                <span class="loader"></span>
+            </div>}
              {toggleDisplay()}
             </div>
         </>

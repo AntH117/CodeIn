@@ -109,4 +109,9 @@ export default class CodeInDAO {
             return {error: e}
         }
     }
+    static async getMultiplePosts(postIds) {
+            const objectIds = postIds.map(id => new ObjectId(id));
+            const postResponse = await posts.find({ _id: { $in: objectIds } }).toArray();
+            return postResponse;
+    }
 }

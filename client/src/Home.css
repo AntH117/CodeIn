@@ -4,9 +4,6 @@
     background: #2BC0E4;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #EAECC6, #2BC0E4);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #EAECC6, #2BC0E4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    
-    
-
     position: relative;
     display: flex;
     overflow-x: hidden;
@@ -52,24 +49,24 @@
     padding-top: 20px;
     gap: 20px;
     justify-content: center;
-    
+    overflow-y: scroll;
 }
 
 .individual-post-bodies::after {
     content: "";
+    width: 100%;
     display: block;
     height: 20px;
     flex-shrink: 0;
 }
 
 .individual-post-bodies {
-    width: 100%;
+    width: 70%;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
-    overflow-y: scroll;
     padding-top: 20px;
     gap: 20px;
 }
@@ -102,7 +99,7 @@
 }
 
 .IP-body {
-    width: 70%;
+    width: 100%;
     height: fit-content;
     background-color: rgba(253,245,234,255);
     border-radius: 25px;
