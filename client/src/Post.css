@@ -9,13 +9,12 @@
     color: white;
     display: flex;
     justify-content: center;
-    align-items: center;
     z-index: 5;
 }
 
 .post-body {
     width: 80%;
-    height: 50%;
+    height: fit-content;
     min-width: 400px;
     background-color: #fffaf5;
     border-radius: 16px;
@@ -83,8 +82,6 @@
     height: fit-content;
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
-
 }
 /* 
 @media (max-width: 760px) {
@@ -102,7 +99,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-left: 10px;
     position: relative;
 }
 
@@ -124,6 +120,8 @@
     background-color: #fefefe;
     border: 1px solid #bbb;
     color: #333;
+    box-sizing: border-box;
+    padding-left: 0.5rem;
 }
 
 .form-title-input:focus {
@@ -137,7 +135,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-left: 10px;
+}
+.form-visibility-title {
+    margin-top: 0;
 }
 
 .form-visibility select {
@@ -153,7 +153,7 @@
 }
 
 
-.form-middle {
+.form-description {
     width: 90%;
     height: fit-content;
     display: flex;
@@ -162,15 +162,83 @@
     position: relative;
     flex-direction: column;
 }
+.form-description-title {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.form-description-toggle {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.form-toggle-button {
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 2px;
+    border: 1px solid #bbb;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    background-color: white;
+}
+
+.form-toggle-button svg {
+    width: 100px;
+}
+
+svg {
+    pointer-events: none;
+  }
 
 .form-paragraph {
     width: 100%;
     resize: none;
-    min-height: 150px;
+    height: 0px;
     border-radius: 10px;
     background-color: #fefefe;
     border: 1px solid #bbb;
     color: #333;
+    box-sizing: border-box;
+    padding-left: 0.5rem;
+    transition: all 0.5s ease-in-out;
+    opacity: 0;
+    margin-bottom: 1rem;
+}
+
+.form-paragraph.open {
+    animation: toggleOpen 0.5s forwards;
+}
+
+.form-paragraph.closed {
+    animation: toggleClosed 0.5s forwards;
+}
+
+@keyframes toggleOpen {
+    0% {
+        height: 0px;
+        opacity: 0;
+    }
+    100% {
+        height: 100px;
+        opacity: 100%;
+    }
+}
+
+@keyframes toggleClosed {
+    0% {
+        height: 100px;
+        opacity: 100%;
+    }
+    100% {
+        height: 0px;
+        opacity: 0%;
+    }
 }
 
 .form-paragraph-error {
@@ -285,4 +353,43 @@
     border: 1px solid transparent;
     color: white;
     background-color: rgb(255, 68, 68);
+}
+
+.form-code-editor {
+    width: 100%;
+    height: 100%; /* Makes it a square */
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    overflow-y: scroll;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-code-editor.open {
+    animation: editorToggleOpen 0.5s forwards;
+}
+
+.form-code-editor.closed {
+    animation: EditorToggleClosed 0.5s forwards;
+}
+
+@keyframes editorToggleOpen {
+    0% {
+        height: 0px;
+        opacity: 0;
+    }
+    100% {
+        height: 250px;
+        opacity: 100%;
+    }
+}
+
+@keyframes EditorToggleClosed {
+    0% {
+        height: 250px;
+        opacity: 100%;
+    }
+    100% {
+        height: 0px;
+        opacity: 0%;
+    }
 }

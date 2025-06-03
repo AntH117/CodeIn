@@ -83,11 +83,11 @@ export default function Profile () {
         }, [location])
     
 
-        return <>
+        return <div className='individual-post-body'>
             {userPosts && userPosts.map((post) => 
                 <IndividualPost data={post} />
             )}
-        </>
+        </div>
     }
 
     function convertTime(time) {
@@ -133,7 +133,6 @@ export default function Profile () {
         React.useEffect(() => {
             getUserComments()
         }, [])
-        console.log(userComments)
 
         //individual comments
         function IndividualComment({data}) {
@@ -210,9 +209,10 @@ export default function Profile () {
             )
         }
         return <>
-            {userComments.map((comment) => {
+            {userComments.length > 0 && userComments.map((comment) => {
                 return <IndividualComment data={comment}/>
             })}
+            {userComments.length == 0 && <p>No comments yet!</p>}
         </>
     }
 

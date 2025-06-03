@@ -102,12 +102,12 @@ export default function Home() {
                         {(location.pathname == '/' || location.pathname == '/post') && reversedPosts.map((data) => {
                             return <IndividualPost data={data} key={data._id}/>
                         })}
-                        { location.pathname == '/' && <div className='create-post'>
-                        {user && <button className='create-post-button'>
+                    </div>}
+                    {location.pathname == '/' && <div className='create-post'>
+                        {(!loading && user) && <button className='create-post-button'>
                             <Link to={'/post'} style={{color: 'white', textDecoration: 'none'}}>Create Post</Link>
                         </button>}
                         </div>}
-                    </div>}
                 </div>
                 {
                 location.pathname !== '/' && 

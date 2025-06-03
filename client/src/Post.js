@@ -6,7 +6,8 @@ import file_upload from './images/file-upload.png'
 import { v4 as uuidv4 } from 'uuid';
 import Icons from './icons/Icons';
 import { useAuth } from "./AuthContext";
-
+import Editor from "@monaco-editor/react";
+import CodeEditor from './CodeEditor';
 
 export default function Post() {
     const { user } = useAuth();
@@ -17,6 +18,7 @@ export default function Post() {
         title: '',
         visibility: 'Public',
         paragraph: '',
+        codeSnippet: '',
         files: []
     })
 
@@ -138,6 +140,13 @@ export default function Post() {
         }))
       };
 
+    const handleCodeChange = (value) => {
+        setFormData((preVal) => ({
+            ...preVal,
+            ['codeSnippet']: value
+        }))
+    }
+
     const visibilityTypes = ['Public', 'Friends', 'Private']
     const imageInputRef = React.useRef();
     const fileInputRef = React.useRef();
@@ -205,6 +214,21 @@ export default function Post() {
             await Promise.all(deleteRequests);
         }
     }
+    
+    const [toggle, setToggle] = React.useState({
+        description: null,
+        codeSnippet: null
+    })
+    const handleToggle = (e) => {
+       const {name} = e.target;
+       e.preventDefault()
+       setToggle((preVal) => {
+        return {
+            ...preVal,
+            [name]: toggle[name] == null ? true : !toggle[name]
+        }
+       })
+    }
 
     return <div className='post-outer-body'>
         <div className='post-body'>
@@ -215,7 +239,7 @@ export default function Post() {
             <Icons.X />
         </button>
         <form className='form-body'>
-            <h2 style={{margin: 0}}>Create a New Post</h2>
+            <h2>Create a New Post</h2>
             <div className='form-top'>
                 <div className='form-title'>
                     <h3>Title</h3>
@@ -227,7 +251,7 @@ export default function Post() {
                     </div>
                 </div>
                 <div className='form-visibility'>
-                    <h3>Visibility</h3>
+                    <h3 className='form-visibility-title'>Visibility</h3>
                    <select name='visibility' onChange={handleChange}>
                         {visibilityTypes.map((x) => (
                             <option key={x} value={x}>
@@ -237,10 +261,29 @@ export default function Post() {
                    </select>
                 </div>
             </div>
-            <div className='form-middle'>
-                <textarea className='form-paragraph' name='paragraph' onChange={handleChange}>
-
+            <div className='form-description'>
+                <div className='form-description-toggle'>
+                    <h3 className='form-description-title'>Description</h3>
+                    <button className='form-toggle-button' name='description' onClick={handleToggle}>
+                        {toggle.description ? <Icons.Minus /> : <Icons.Plus />}
+                    </button>
+                </div>
+                <textarea className={`form-paragraph ${toggle.description !== null ? toggle.description ? 'open' : 'closed' : ''}`} name='paragraph' onChange={handleChange} disabled={!toggle.description}>
                 </textarea>
+                {submissionConditions.paragraphCharacters === false && <div className='form-paragraph-error'>
+                    <p>{errorMessages.paragraphCharacters}</p>
+                </div>}
+            </div>
+            <div className='form-description'>
+                <div className='form-description-toggle'>
+                    <h3 className='form-description-title'>Code snippet</h3>
+                    <button className='form-toggle-button' name='codeSnippet' onClick={handleToggle}>
+                        {toggle.codeSnippet ? <Icons.Minus /> : <Icons.Plus />}
+                    </button>
+                </div>
+                <div className={`form-code-editor ${toggle.codeSnippet !== null ? toggle.codeSnippet ? 'open' : 'closed' : ''}`}>
+                 <CodeEditor handleChange={handleCodeChange} value={formData.codeSnippet}/>  
+                </div>
                 {submissionConditions.paragraphCharacters === false && <div className='form-paragraph-error'>
                     <p>{errorMessages.paragraphCharacters}</p>
                 </div>}

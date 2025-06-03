@@ -219,6 +219,5 @@
     align-items: center;
     position: relative;
     overflow-y: scroll;
-    padding-top: 20px;
     gap: 20px;
 }
