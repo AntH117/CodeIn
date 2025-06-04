@@ -30,7 +30,7 @@
     width: 30px;
     height: 30px;
     position: absolute;
-    top: 2%;
+    top: 1.2rem;
     right: 2%;
     border-radius: 100%;
     border: 0px solid black;
@@ -52,7 +52,7 @@
     width: 70px;
     height: 30px;
     position: absolute;
-    bottom: 3%;
+    bottom: 1.2rem;
     right: 3%;
     background-color: rgba(112,94,218,255);
     color: white;
@@ -106,7 +106,7 @@
 .form-title-error {
     position: absolute;
     width: 70%;
-    height: 20px;
+    height: fit-content;
     right: 0;
     top: 40px;
     display: flex;
@@ -118,7 +118,7 @@
     border-radius: 3px;
     width: 70%;
     background-color: #fefefe;
-    border: 1px solid #bbb;
+    border: 1px solid #e2e2e2;
     color: #333;
     box-sizing: border-box;
     padding-left: 0.5rem;
@@ -144,7 +144,7 @@
     border-radius: 3px;
     font-family: 'Sansation' ;
     background-color: #fefefe;
-    border: 1px solid #bbb;
+    border: 1px solid #e2e2e2;
     color: #333;
 }
 
@@ -178,8 +178,8 @@
 .form-toggle-button {
     height: 1.5rem;
     width: 1.5rem;
-    border-radius: 2px;
-    border: 1px solid #bbb;
+    border-radius: 50%;
+    border: 1px solid #e2e2e2;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -202,7 +202,7 @@ svg {
     height: 0px;
     border-radius: 10px;
     background-color: #fefefe;
-    border: 1px solid #bbb;
+    border: 1px solid #e2e2e2;
     color: #333;
     box-sizing: border-box;
     padding-left: 0.5rem;
@@ -292,7 +292,7 @@ svg {
     margin-right: 10px;
     border-radius: 20px;
     background-color: #fefefe;
-    border: 1px solid #bbb;
+    border: 1px solid #e2e2e2;
     color: #333;
     cursor: pointer;
     display: flex;
@@ -357,11 +357,12 @@ svg {
 
 .form-code-editor {
     width: 100%;
-    height: 100%; /* Makes it a square */
     border: 1px solid #ccc;
     border-radius: 12px;
     overflow-y: scroll;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    height: 0px;
+    opacity: 0;
 }
 
 .form-code-editor.open {

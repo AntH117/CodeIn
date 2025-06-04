@@ -5,6 +5,7 @@ import { Link, Outlet, Navigate, useLocation, useNavigate} from 'react-router-do
 export default function ExpandedImage() {
     const navigate = useNavigate()
     const location  = useLocation()
+    
     const id = location.pathname.split('/').at(-1)
     return <div className='expanded-image-body' onClick={() => navigate(-1)}>
         <div className='expanded-image-container'>

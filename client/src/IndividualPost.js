@@ -1,4 +1,5 @@
 import React from 'react';
+import './IndividualPost.css';
 import { Link, Outlet, Navigate, useLocation, useNavigate} from 'react-router-dom';
 import testImage from './images/Temp-profile-pic.png'
 import Icons from './icons/Icons';
@@ -8,6 +9,8 @@ import { auth } from './firebase';
 import { db } from "./firebase";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { arrayUnion, arrayRemove  } from "firebase/firestore";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 export default function IndividualPost({data}) {
     const { user } = useAuth();
@@ -174,6 +177,15 @@ export default function IndividualPost({data}) {
         );
       }
 
+    function CodeBlock({ code, language}) {
+
+        return (
+            <SyntaxHighlighter language={language} style={vscDarkPlus}>
+              {code}
+            </SyntaxHighlighter>
+          );
+    }
+    console.log(data)
 
     return <div className='IP-body'>
         <div className='IP-title'>
@@ -191,6 +203,11 @@ export default function IndividualPost({data}) {
         {data.postContent.paragraph && <div className='IP-paragraph'>
             <p>{data.postContent.paragraph}</p>
         </div>}
+        
+        <div className='IP-code-display'>
+            {data?.postContent?.codeSnippet && <CodeBlock language={data.postContent.codeLanguage} code={data.postContent.codeSnippet}/>}
+        </div>
+
         {imageFiles?.length > 0 && <ImageGrid imageFiles={imageFiles} />}
         {otherFiles?.length > 0 && 
         <div className='IP-attachments' style={{marginTop: '1rem'}}>

@@ -9,6 +9,8 @@ import { auth } from './firebase';
 import { db } from "./firebase";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { arrayUnion, arrayRemove  } from "firebase/firestore";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 
 export default function ExpandedPost () {
@@ -469,11 +471,22 @@ export default function ExpandedPost () {
         setTimeout(() => setLikeCooldown(false), 1500);
         }
     }
-    return (<div className='EP-outer-body'>
-            <Outlet />
+
+    function CodeBlock({ code, language}) {
+
+        return (
+            <SyntaxHighlighter language={language} style={vscDarkPlus}>
+              {code}
+            </SyntaxHighlighter>
+          );
+    }
+
+    const imageChecker = location.pathname.split('/').includes('image')
+    return (<div className='EP-outer-body' style={imageChecker ? {overflowY: 'hidden'} : {}}>
     {loading && <div className='loading-body'>
         <span class="loader"></span>
     </div>}
+    <Outlet />
     {!loading && <div className='EP-inner-body'>
                     {user?.uid == post.user && <DropDownMenu />}
                     <div className='IP-title'>
@@ -491,6 +504,9 @@ export default function ExpandedPost () {
                        {post.postContent.paragraph && <div className='IP-paragraph'>
                             <p>{post.postContent.paragraph}</p>
                         </div>}
+                        <div className='IP-code-display'>
+                              {post?.postContent?.codeSnippet && <CodeBlock language={post.postContent.codeLanguage} code={post.postContent.codeSnippet}/>}
+                        </div>
                         {imageFiles && <ImageGrid imageFiles={imageFiles}/>}
                         {otherFiles && <div className='IP-attachments'>
                             {otherFiles.map((x) => {

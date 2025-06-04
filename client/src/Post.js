@@ -18,10 +18,11 @@ export default function Post() {
         title: '',
         visibility: 'Public',
         paragraph: '',
-        codeSnippet: '',
+        codeSnippet: null,
+        codeLanguage: 'javascript',
         files: []
     })
-
+    console.log(formData)
     const [submissionConditions, setSubmissionConditions] = React.useState({
         titleLengthMin: null,
         titleLengthMax: null,
@@ -102,7 +103,14 @@ export default function Post() {
             "image/png",
             "image/gif",
             "image/webp",
-            "application/pdf"]
+            "image/gif",
+            "application/pdf",
+            "application/javascript",   // for .js
+            "text/javascript",          // sometimes also used for .js
+            "text/css",                 // for .css
+            "text/html",                // for .html
+            "application/json",         // for .json
+            "text/plain",    ]
             const maxFileSizeMb = 35;
         
         const valid = {
@@ -282,7 +290,7 @@ export default function Post() {
                     </button>
                 </div>
                 <div className={`form-code-editor ${toggle.codeSnippet !== null ? toggle.codeSnippet ? 'open' : 'closed' : ''}`}>
-                 <CodeEditor handleChange={handleCodeChange} value={formData.codeSnippet}/>  
+                 <CodeEditor handleCodeChange={handleCodeChange} value={formData.codeSnippet} handleLanguageChange={handleChange}/>  
                 </div>
                 {submissionConditions.paragraphCharacters === false && <div className='form-paragraph-error'>
                     <p>{errorMessages.paragraphCharacters}</p>

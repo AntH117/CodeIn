@@ -22,7 +22,7 @@ export default function Home() {
     const [loading, setLoading] = React.useState(true)
     React.useEffect(() => {
         getPosts()
-    }, [])
+    }, [location])
 
     //Get logged in user into
     async function getUserInfo(uid) {
