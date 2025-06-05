@@ -115,3 +115,13 @@
     margin-bottom: 0.5rem;
     font-size: 1.5rem;
 }
+
+.edit-code-snippet {
+    width: 80%;
+    height: fit-content;
+}
+
+.edit-code-snippet section {
+    margin-top: 5px;
+    border: 1px solid #bbb;
+}

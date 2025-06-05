@@ -40,6 +40,7 @@ export default function Register () {
         confirmEmail: '',
         password: ''
     })
+    const [hiddenPassword, setHiddenPassword] = React.useState(true)
     
     const [submitConditions, setSubmitConditions] = React.useState()
     const errors = {
@@ -87,14 +88,20 @@ function handleSignUp({email, password}) {
             }
         })
     }
-
+    
     return <div className='register-body'>
                 <div className='form-data'>
                     <h2>Register</h2>
                     <form className='credentials-form' onSubmit={handleSubmit}>
                         <input className='credentials-input' placeholder='Email' name={'email'} onChange={handleChange} value={userDetail.email}></input>
                         <input className='credentials-input' placeholder='Confirm Email' name={'confirmEmail'} onChange={handleChange} value={userDetail.confirmEmail}></input>
-                        <input className='credentials-input' placeholder='Password' name={'password'} onChange={handleChange} value={userDetail.password}></input>
+                        <input className='credentials-input' placeholder='Password' name={'password'} onChange={handleChange} value={userDetail.password} autoComplete="off"
+                         type={hiddenPassword ? "password" : "text"}
+                        ></input>
+                        <div className='credentials-hide-password'>
+                            <input type="checkbox" id='hidePassword' onChange={(e) => setHiddenPassword(!e.target.checked)}></input>
+                            <label for='hidePassword'>Show Password</label>
+                        </div>
                         {submitConditions && <div className='creditials-form-errors'>
                                 {Object.keys(submitConditions).map((x) => {
                                     return !submitConditions[x] ? <div className='error-message'>{errors[x]}</div> : ''

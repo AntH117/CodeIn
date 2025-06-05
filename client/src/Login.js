@@ -23,7 +23,7 @@ export default function Login() {
         email: '',
         password: ''
     })
-
+    const [hiddenPassword, setHiddenPassword] = React.useState(true)
 
     const [submitConditions, setSubmitConditions] = React.useState()
 
@@ -74,7 +74,13 @@ export default function Login() {
                 <h2>Login</h2>
                 <form className='credentials-form' onSubmit={handleSubmit}>
                     <input className='credentials-input' placeholder='Email' name='email' onChange={handleChange}></input>
-                    <input className='credentials-input' placeholder='Password' name='password' onChange={handleChange}></input>
+                    <input className='credentials-input' placeholder='Password' name='password' onChange={handleChange}
+                    type={hiddenPassword ? "password" : "text"}
+                    ></input>
+                    <div className='credentials-hide-password'>
+                        <input type="checkbox" id='hidePassword' onChange={(e) => setHiddenPassword(!e.target.checked)}></input>
+                        <label for='hidePassword'>Show Password</label>
+                    </div>
                     {submitConditions && <div className='creditials-form-errors'>
                                 {Object.keys(submitConditions).map((x) => {
                                     return !submitConditions[x] ? <div className='error-message'>{errors[x]}</div> : ''

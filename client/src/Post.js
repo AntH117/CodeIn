@@ -22,7 +22,6 @@ export default function Post() {
         codeLanguage: 'javascript',
         files: []
     })
-    console.log(formData)
     const [submissionConditions, setSubmissionConditions] = React.useState({
         titleLengthMin: null,
         titleLengthMax: null,
@@ -43,10 +42,18 @@ export default function Post() {
         fileType: 'Invalid file format',
         paragraphCharacters: 'Paragraph contains invalid characters'
     }
-    
+    function sanitiseCode(code) {
+        return code
+          .replace(/\s+$/gm, '')
+          .replace(/\n{3,}/g, '\n\n');
+      }
     const savePost = async (newPost) => {
+        let finalPost = newPost
+        if (finalPost.codeSnippet) {
+            finalPost.codeSnippet = sanitiseCode(finalPost.codeSnippet)
+        }
         const postWithTime = {
-            ...newPost,
+            ...finalPost,
             time: new Date().toISOString(),
             postId: uuidv4(),
             socials: {

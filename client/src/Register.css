@@ -62,3 +62,11 @@
     flex-direction: column;
     gap: 0.5rem
 }
+
+.credentials-hide-password {
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    align-items: center;
+}

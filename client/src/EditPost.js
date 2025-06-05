@@ -9,6 +9,7 @@ import { auth, db } from './firebase';
 import Icons from './icons/Icons';
 import { useAuth } from "./AuthContext";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import CodeEditor from './CodeEditor';
 
 export default function EditPost() {
     const [post, setPost] = React.useState()
@@ -186,6 +187,10 @@ export default function EditPost() {
     }))
     }
     const editPost = async () => {
+            let finalEdit = editedPost;
+            if (finalEdit?.codeSnippet) {
+                finalEdit.codeSnippet = sanitiseCode(finalEdit?.codeSnippet)
+            }
             const newPost = {
                 ...editedPost,
                 time: new Date().toISOString(),
@@ -224,7 +229,17 @@ export default function EditPost() {
         }
         navigate(-1)
     }
-
+    const handleCodeChange = (value) => {
+        setEditedPost((preVal) => ({
+            ...preVal,
+            ['codeSnippet']: value
+        }))
+    }
+    function sanitiseCode(code) {
+        return code
+          .replace(/\s+$/gm, '')
+          .replace(/\n{3,}/g, '\n\n');
+      }
     console.log(editedPost)
 
     return <div className='EP-outer-body'>
@@ -252,6 +267,9 @@ export default function EditPost() {
                             </div>
                             <div className='IP-paragraph'>
                                 <textarea className='IP-paragraph-textarea' value={editedPost.paragraph} onChange={handleChange} name='paragraph'></textarea>
+                            </div>
+                            <div className='edit-code-snippet'>
+                                <CodeEditor handleCodeChange={handleCodeChange} value={editedPost?.codeSnippet} handleLanguageChange={handleChange}/>  
                             </div>
                             <button className='cancel-button' onClick={() => handleCancelEdits()}>
                                 <Icons.X />
