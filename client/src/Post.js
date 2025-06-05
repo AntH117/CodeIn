@@ -19,7 +19,8 @@ export default function Post() {
         visibility: 'Public',
         paragraph: '',
         codeSnippet: null,
-        codeLanguage: 'javascript',
+        codeLanguage: '',
+        tags: [],
         files: []
     })
     const [submissionConditions, setSubmissionConditions] = React.useState({
@@ -27,20 +28,21 @@ export default function Post() {
         titleLengthMax: null,
         titleCharacters: null,
         paragraphCharacters: null,
+        codeLanguage: null,
     })
 
     const [fileConditions, setFileConditions] = React.useState({
         fileSize: null,
         fileType: null
     })
-
     const errorMessages = {
         titleLengthMin: 'Please include a title',
         titleLengthMax: 'Title must not be more than 30 characters',
         titleCharacters: 'Title contains invalid characters',
         fileSize: 'File must be less than 35mb',
         fileType: 'Invalid file format',
-        paragraphCharacters: 'Paragraph contains invalid characters'
+        paragraphCharacters: 'Paragraph contains invalid characters',
+        codeLanguage: 'Please select a language'
     }
     function sanitiseCode(code) {
         return code
@@ -91,6 +93,8 @@ export default function Post() {
             titleLengthMin: postData.title?.length > 0,
             titleLengthMax: postData.title?.length <= 30,
             titleCharacters: /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(postData?.title),
+            paragraphCharacters:  postData?.paragraph === '' || /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(postData?.paragraph),
+            codeLanguage: (postData.codeSnippet && postData.codeLanguage !== '') || (!postData.codeSnippet)
         }
         setSubmissionConditions(conditions)
         const allTrue = Object.values(conditions).every(value => value === true);
@@ -203,9 +207,7 @@ export default function Post() {
                 </p>
             </div>
             <div className='file-import-delete' onClick={() => deleteTempFile()}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                </svg>
+                <Icons.X />
             </div>
         </div>
     }
@@ -243,6 +245,64 @@ export default function Post() {
             [name]: toggle[name] == null ? true : !toggle[name]
         }
        })
+    }
+
+    function Tags() {
+
+        function IndividualTag({name}) {
+            function handleDeleteTag () {
+                setFormData((preVal) => {
+                    return {
+                        ...preVal,
+                        ['tags']: preVal.tags.filter((x) => x!== name)
+                    }
+                })
+            }
+            return <div className='form-individual-tag'>
+                {name}
+                <div className='form-tag-delete' onClick={handleDeleteTag}>
+                  <Icons.X />
+                </div>
+            </div>
+        }
+
+        function AddTag() {
+            const [expanded, setExpanded] = React.useState(false)
+            const [tag, setTag] = React.useState('')
+
+            const handleTagChange = (e) => {
+               const {value} = e.target
+               setTag(value)
+            }
+            function handleClick() {
+                if (!expanded) {
+                    setExpanded(true)
+                } else if (expanded && tag.length > 0) {
+                    setFormData((preVal) => {
+                        return {
+                            ...preVal,
+                            ['tags']: [...preVal.tags, tag]
+                        }
+                    })
+                    setTag('')
+                    setExpanded(false)
+                }
+            }
+            return <div className={`form-add-tag-body ${expanded ? 'expanded' : ''}`}>
+                <input className={`form-tag-input ${expanded ? 'expanded' : ''}`} type ='text' placeholder='Tag' value={tag} onChange={handleTagChange}></input>
+                <div className='form-add-tag' onClick={handleClick}>
+                  <Icons.Plus />
+                </div>
+            </div>
+        }
+
+        return <div className='form-tag-body'>
+            Tags
+            {formData.tags.length > 0 && formData.tags.map((tag) => {
+                return <IndividualTag name={tag}/>
+            })}
+            <AddTag />
+        </div>
     }
 
     return <div className='post-outer-body'>
@@ -297,14 +357,15 @@ export default function Post() {
                     </button>
                 </div>
                 <div className={`form-code-editor ${toggle.codeSnippet !== null ? toggle.codeSnippet ? 'open' : 'closed' : ''}`}>
-                 <CodeEditor handleCodeChange={handleCodeChange} value={formData.codeSnippet} handleLanguageChange={handleChange}/>  
+                 <CodeEditor handleCodeChange={handleCodeChange} value={formData.codeSnippet} handleLanguageChange={handleChange} languageValue={formData.codeLanguage}/>  
                 </div>
-                {submissionConditions.paragraphCharacters === false && <div className='form-paragraph-error'>
-                    <p>{errorMessages.paragraphCharacters}</p>
+                {submissionConditions.codeLanguage === false && <div className='form-language-error'>
+                    <p>{errorMessages.codeLanguage}</p>
                 </div>}
             </div>
-        
+            
             <div className='form-bottom'>
+                <Tags />
                 <div className='imported-content'>
                         {formData.files.length > 0 && formData.files.map((x) => {
                             return <FileImports name={x}/>

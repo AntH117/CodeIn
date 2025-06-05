@@ -2,14 +2,15 @@ import Editor from "@monaco-editor/react";
 import './CodeEditor.css';
 import React from "react";
 
-export default function CodeEditor({handleCodeChange, value, handleLanguageChange}) {
-    const [language, setLanguage] = React.useState()
-    
+export default function CodeEditor({handleCodeChange, value, handleLanguageChange, languageValue}) {
     return (
             <div className="code-section">
                 <div className="language-selection">
                     <label htmlFor="language">Language:</label>
-                    <select value={language} onChange={handleLanguageChange} name="codeLanguage">
+                    <select value={languageValue} onChange={handleLanguageChange} name="codeLanguage">
+                    <option value="" disabled>
+                      -- Select a language --
+                    </option>
                     <option value="javascript">JavaScript</option>
                     <option value="python">Python</option>
                     <option value="html">HTML</option>
@@ -19,7 +20,7 @@ export default function CodeEditor({handleCodeChange, value, handleLanguageChang
                 </div>
                 <Editor
                 height="300px"
-                defaultLanguage={language}
+                defaultLanguage={languageValue}
                 value={value}
                 onChange={handleCodeChange}
                 theme="vs-light"

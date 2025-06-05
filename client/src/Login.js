@@ -75,7 +75,7 @@ export default function Login() {
                 <form className='credentials-form' onSubmit={handleSubmit}>
                     <input className='credentials-input' placeholder='Email' name='email' onChange={handleChange}></input>
                     <input className='credentials-input' placeholder='Password' name='password' onChange={handleChange}
-                    type={hiddenPassword ? "password" : "text"}
+                    type={hiddenPassword ? "password" : "text"} autoComplete="off"
                     ></input>
                     <div className='credentials-hide-password'>
                         <input type="checkbox" id='hidePassword' onChange={(e) => setHiddenPassword(!e.target.checked)}></input>
