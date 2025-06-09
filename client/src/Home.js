@@ -55,6 +55,21 @@ export default function Home() {
         type: searchParams.get("type") || "",
       });
 
+    const applyFilters = () => {
+    const params = {};
+        if (filters.tag) params.tag = filters.tag;
+        if (filters.type) params.type = filters.type;
+        setSearchParams(params);
+    };
+
+    React.useEffect(() => {
+        applyFilters()
+    }, [filters])
+
+    function handleSearchParams(tag) {
+        setFilters({ ...filters, tag: tag })
+    }
+
     const APILINK = 'http://localhost:5000/api/v1/codeIn/posts/'
     
     const getPosts = async () => {
@@ -80,8 +95,27 @@ export default function Home() {
         }
     }
 
+    function FilterTag({tag}) {
+
+        return <div className='filter-tag-body'>
+                {tag}
+                <div className='form-tag-delete' onClick={() => setFilters((preVal) => {
+                    return {
+                        ...preVal,
+                        tag: ''
+                    }
+                })}>
+                  <Icons.X />
+                </div>
+        </div>
+    }
+    //simple filter, should change as website gets larger
+    const filteredPosts = filters.tag !== '' ?  posts.filter((post) => {
+        return post.postContent.tags.includes(filters.tag)
+    }) : posts
+    
     //reversed posts
-    const reversedPosts = React.useMemo(() => posts.slice().reverse(), [posts]);
+    const reversedPosts = React.useMemo(() => filteredPosts.slice().reverse(), [posts]);
     
 
     return <div className='home'>
@@ -104,8 +138,11 @@ export default function Home() {
                             <Link to={'/post'} style={{color: 'white', textDecoration: 'none'}}>Create Post</Link>
                         </button>
                         </div>}
-                        <div className='home-filter'>
-                            <Icons.Filter />
+                        <div className='home-filter-body'>
+                            <div className='home-filter'>
+                                <Icons.Filter />
+                            </div>
+                            {filters.tag !== '' && <FilterTag tag={filters.tag}/>}
                         </div>
                     </div>}
                 {loading &&
@@ -113,7 +150,7 @@ export default function Home() {
                 }
                 {!loading && <div className='individual-post-bodies'>
                     {(location.pathname == '/' || location.pathname == '/post') && reversedPosts.map((data) => {
-                        return <IndividualPost data={data} key={data._id}/>
+                        return <IndividualPost data={data} key={data._id} handleSearchParams={handleSearchParams}/>
                     })}
                 </div>}
             </div>

@@ -12,7 +12,7 @@ import { arrayUnion, arrayRemove  } from "firebase/firestore";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-export default function IndividualPost({data}) {
+export default function IndividualPost({data, handleSearchParams}) {
     const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -188,7 +188,7 @@ export default function IndividualPost({data}) {
 
     function IndividualTag({tagName}) {
 
-        return <div className='IP-individual-tag'>
+        return <div className='IP-individual-tag' onClick={() => handleSearchParams(tagName)}>
             {tagName}
         </div>
     }
