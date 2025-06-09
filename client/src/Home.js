@@ -1,6 +1,6 @@
 import './Home.css';
 import React from 'react';
-import { Link, Outlet, Navigate, useLocation, useNavigate} from 'react-router-dom';
+import { Link, Outlet, Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import testImage from './images/Temp-profile-pic.png'
 import Icons from './icons/Icons';
 import { useAuth } from "./AuthContext";
@@ -17,7 +17,6 @@ export default function Home() {
     const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-
     //handle loading
     const [loading, setLoading] = React.useState(true)
     React.useEffect(() => {
@@ -49,9 +48,13 @@ export default function Home() {
         }
     },[user])
 
-    
-    //Temp looking for posts with Anthony
-    // const APILINK = user ? `http://localhost:5000/api/v1/codeIn/user/${user.uid}` : `http://localhost:5000/api/v1/codeIn/user/Anthony`
+    //get filters based on search params
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [filters, setFilters] = React.useState({
+        tag: searchParams.get("tag") || "",
+        type: searchParams.get("type") || "",
+      });
+
     const APILINK = 'http://localhost:5000/api/v1/codeIn/posts/'
     
     const getPosts = async () => {
@@ -93,28 +96,33 @@ export default function Home() {
             user && <div onClick={handleSignOut} style={{cursor: 'pointer'}}>Sign Out</div>
             }
         </div>
-            <div className='news-feed-body'>
-                 <div className='news-feed'>
-                 {loading &&
-                        <span class="loader"></span>
-                 }
-                    {!loading && <div className='individual-post-bodies'>
-                        {(location.pathname == '/' || location.pathname == '/post') && reversedPosts.map((data) => {
-                            return <IndividualPost data={data} key={data._id}/>
-                        })}
-                    </div>}
-                    {location.pathname == '/' && <div className='create-post'>
-                        {(!loading && user) && <button className='create-post-button'>
+        <div className='news-feed-body'>
+                <div className='news-feed'>
+                    {location.pathname == '/' && <div className='home-interaction'>
+                        {(!loading && user) &&<div className='create-post'>
+                        <button className='create-post-button'>
                             <Link to={'/post'} style={{color: 'white', textDecoration: 'none'}}>Create Post</Link>
-                        </button>}
+                        </button>
                         </div>}
-                </div>
-                {
-                location.pathname !== '/' && 
-                <div className='outlet'>
-                    <Outlet />
-                </div>
+                        <div className='home-filter'>
+                            <Icons.Filter />
+                        </div>
+                    </div>}
+                {loading &&
+                    <span class="loader"></span>
                 }
+                {!loading && <div className='individual-post-bodies'>
+                    {(location.pathname == '/' || location.pathname == '/post') && reversedPosts.map((data) => {
+                        return <IndividualPost data={data} key={data._id}/>
+                    })}
+                </div>}
             </div>
+            {
+            location.pathname !== '/' && 
+            <div className='outlet'>
+                <Outlet />
+            </div>
+            }
+        </div>
     </div>
 }

@@ -185,7 +185,13 @@ export default function IndividualPost({data}) {
             </SyntaxHighlighter>
           );
     }
-    console.log(data)
+
+    function IndividualTag({tagName}) {
+
+        return <div className='IP-individual-tag'>
+            {tagName}
+        </div>
+    }
 
     return <div className='IP-body'>
         <div className='IP-title'>
@@ -214,6 +220,11 @@ export default function IndividualPost({data}) {
             + {otherFiles.length} attachment{otherFiles.length > 1 && 's'}
         </div>
         }
+        {data.postContent?.tags.length > 0 && <div className='IP-tags'>
+            {data.postContent.tags.map((tag) => {
+                return <IndividualTag tagName={tag}/>
+            })}
+        </div>}
         <div className='IP-socials'>
             <div className='IP-socials-individual'>
                 {user ? loggedUserData?.likes?.includes(data._id) ? <Icons.HeartFilled /> : <Icons.Heart /> : <Icons.Heart />}

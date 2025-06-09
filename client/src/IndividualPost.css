@@ -150,3 +150,37 @@
   .IP-code-display pre::-webkit-scrollbar-thumb:hover {
     background-color: rgba(100, 100, 100, 0.8);
   }
+
+  .IP-tags {
+    width: 80%;
+    min-height: 30px;
+    height: fit-content;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .IP-individual-tag {
+    display: flex;
+    width: fit-content;
+    height: 20px;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+    transition: 0.2s all ease-in-out;
+  }
+
+  .IP-individual-tag:hover {
+    background-color: rgb(87, 87, 255);
+    color: white;
+    border: 1px solid transparent
+  }
+
+  

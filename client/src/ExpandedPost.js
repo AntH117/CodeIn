@@ -481,6 +481,13 @@ export default function ExpandedPost () {
           );
     }
 
+    function IndividualTag({tagName}) {
+
+        return <div className='IP-individual-tag'>
+            {tagName}
+        </div>
+    }
+
     const imageChecker = location.pathname.split('/').includes('image')
     return (<div className='EP-outer-body' style={imageChecker ? {overflowY: 'hidden'} : {}}>
     {loading && <div className='loading-body'>
@@ -511,6 +518,11 @@ export default function ExpandedPost () {
                         {otherFiles && <div className='IP-attachments'>
                             {otherFiles.map((x) => {
                                 return <FileAttachment file={x}/>
+                            })}
+                        </div>}
+                        {post?.postContent?.tags.length > 0 && <div className='IP-tags'>
+                            {post?.postContent.tags.map((tag) => {
+                                return <IndividualTag tagName={tag}/>
                             })}
                         </div>}
                         <Socials />

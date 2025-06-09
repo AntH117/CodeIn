@@ -23,6 +23,22 @@ export default function Post() {
         tags: [],
         files: []
     })
+
+    //Add tag on language Change
+    React.useEffect(() => {
+        const currentLanguage = formData.codeLanguage;
+        const languages = ['javascript', 'python', 'html', 'css', 'java']
+        if (currentLanguage !== '') {
+            setFormData((preVal) => {
+                return {
+                    ...preVal,
+                    ['tags']: [...preVal.tags.filter((tag) => !languages.includes(tag)), currentLanguage]
+                }
+            })
+        }
+    }, [formData.codeLanguage])
+
+        
     const [submissionConditions, setSubmissionConditions] = React.useState({
         titleLengthMin: null,
         titleLengthMax: null,
@@ -304,6 +320,7 @@ export default function Post() {
             <AddTag />
         </div>
     }
+
 
     return <div className='post-outer-body'>
         <div className='post-body'>

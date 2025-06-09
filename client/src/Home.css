@@ -11,6 +11,7 @@
     overflow-y: hidden;
 }
 
+
 .nav-bar {
     width: 700px;
     height: 75px;
@@ -52,6 +53,18 @@
     overflow-y: scroll;
 }
 
+
+.home-interaction {
+    width: 90%;
+    height: 60px;
+    position: absolute;
+    top: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 10;
+  }
+
 .individual-post-bodies::after {
     content: "";
     width: 100%;
@@ -67,16 +80,13 @@
     flex-direction: column;
     align-items: center;
     position: relative;
-    padding-top: 20px;
+    padding-top: 100px;
     gap: 20px;
 }
 
 .create-post {
     width: fit-content;
     height: fit-content;
-    position: absolute;
-    right: 0;
-    top: 5%;
 }
 
 .create-post-button {
@@ -89,6 +99,19 @@
     font-size: 15px;
     cursor: pointer;
     
+}
+
+.home-filter {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: rgba(112,94,218,255);
+    color: white;
 }
 
 .outlet {
