@@ -311,7 +311,6 @@ export default function Profile () {
         </>
         )
     }
-
     return <div className='user-profile-outer-body'>
         {loading && <div className='loading-body'>
             <span class="loader"></span>
@@ -336,6 +335,9 @@ export default function Profile () {
                 </div>}
                 <div className='user-creation-date'>
                    <Icons.Calendar /> Joined {convertDate(profileInfo?.creationDate)}
+                </div>
+                <div className='user-info-description'>
+                    {profileInfo?.description || 'Nothing about this user yet!'}
                 </div>
             </div>
             <UserProfileToggle />

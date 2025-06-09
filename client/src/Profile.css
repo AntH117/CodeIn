@@ -221,3 +221,13 @@
     overflow-y: scroll;
     gap: 20px;
 }
+
+.user-info-description {
+    width: 100%;
+    min-height: 20px;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    font-size: 15px;
+}

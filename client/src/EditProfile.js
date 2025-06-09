@@ -119,6 +119,7 @@ export default function EditProfile() {
             displayTag: user.email.split('@').at(0),
             email: user.email,
             photoURL: user.photoURL || "",
+            description: user.description || "",
             backgroundURL: user.backgroundURL,
         }, { merge: true }); // merge keeps existing data
     }
@@ -232,7 +233,7 @@ export default function EditProfile() {
                     </input>
                 </div>
             </div>
-            <div className='user-info-name'>
+            <div className='user-edit-info-name'>
                 <span style={{fontWeight: 'bold', marginRight: "10px"}}>
                     <input placeholder={profileInfo.displayName || 'Display Name'} name='displayName' onChange={handleChange} value={profileInfo.displayName}>
                         
@@ -246,6 +247,11 @@ export default function EditProfile() {
                 </div>
                 <div className='user-creation-date'>
                    <Icons.Calendar /> Joined {convertDate(profileInfo?.creationDate)}
+                </div>
+                <div className='user-edit-description'>
+                    <textarea type='text' placeholder='No info yet!' name='description' onChange={handleChange} value={profileInfo.description}>
+                        
+                    </textarea>
                 </div>
                 <div className='user-save'>
                         <div className='user-edit-save' onClick={() => window.confirm('Save Edits?') && handleSaveEdits()}> Save</div>
