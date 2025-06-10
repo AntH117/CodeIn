@@ -102,7 +102,7 @@ export default function EditProfile() {
                 ...preval,
                 [type]: `http://localhost:5000/${data.filePath}`
             }
-        })
+        }) 
     }
     const handleImageClick =() => {
         userImageRef.current.click();

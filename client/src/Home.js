@@ -52,13 +52,13 @@ export default function Home() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [filters, setFilters] = React.useState({
         tag: searchParams.get("tag") || "",
-        type: searchParams.get("type") || "",
+        sort: searchParams.get("sort") || "",
       });
 
     const applyFilters = () => {
     const params = {};
         if (filters.tag) params.tag = filters.tag;
-        if (filters.type) params.type = filters.type;
+        if (filters.sort) params.sort = filters.sort;
         setSearchParams(params);
     };
 
@@ -109,6 +109,68 @@ export default function Home() {
                 </div>
         </div>
     }
+
+    function Filters() {
+        const [expand, setExpand] = React.useState()
+        const sortBy = ['newest', 'oldest', 'likes', 'comments']
+        const [temp, setTemp] = React.useState({
+            sort: filters.sort,
+            tag: filters.tag
+        })
+
+        function capitalizeFirstLetter(val) {
+            return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+        }
+
+        const handleApply = () => {
+            if (temp.sort) setFilters((preVal) => {return {...preVal, ['sort']: temp.sort}})
+        }
+
+        function FilterDropDownMenu({options}) {
+            const [open, setOpen] = React.useState(false)
+    
+            return <div className='filter-sort-dropdown'>
+            <button class="filter-drop-toggle" type="button" onClick={() => setOpen((preVal) => !preVal)}>
+                {temp.sort ? capitalizeFirstLetter(temp.sort) : 'Sort By'}
+            </button>
+            {open && <div class="filter-drop-down">
+                {options.map((item) => {
+                    return <button className='filter-drop-option' onClick={() => setTemp((preVal) => {return {...preVal, ['sort']: item}})}>
+                        {capitalizeFirstLetter(item)}
+                    </button>
+                })}
+            </div>}
+        </div>
+        }
+
+        React.useEffect(() => {
+            if (expand) {
+                setTimeout(() => {
+                    document.getElementById('home-filter').style.overflow = "";
+                }, [500])
+            } else {
+                document.getElementById('home-filter').style.overflow = 'hidden';
+            }
+        }, [expand])
+
+        return (
+        <div className='home-filter-body'>
+            <div className={`home-filter ${expand ? 'expanded' : ''}`} id='home-filter'>
+                <div className='home-filter-icon' onClick={() => setExpand((preVal) => preVal == null ? true : !preVal)}>
+                    <Icons.Filter />
+                </div>
+                <div className='home-filter-options'>
+                    <FilterDropDownMenu options={sortBy}/>
+                    <button className='filter-apply' onClick={handleApply}>
+                        Apply
+                    </button>
+                </div>
+            </div>
+            {filters.tag !== '' && <FilterTag tag={filters.tag}/>}
+        </div>
+        )
+    }
+
     //simple filter, should change as website gets larger
     const filteredPosts = filters.tag !== '' ?  posts.filter((post) => {
         return post.postContent.tags.includes(filters.tag)
@@ -138,12 +200,7 @@ export default function Home() {
                             <Link to={'/post'} style={{color: 'white', textDecoration: 'none'}}>Create Post</Link>
                         </button>
                         </div>}
-                        <div className='home-filter-body'>
-                            <div className='home-filter'>
-                                <Icons.Filter />
-                            </div>
-                            {filters.tag !== '' && <FilterTag tag={filters.tag}/>}
-                        </div>
+                        <Filters />
                     </div>}
                 {loading &&
                     <span class="loader"></span>
