@@ -49,15 +49,15 @@ export default function Home() {
     //get filters based on search params
     const [searchParams, setSearchParams] = useSearchParams();
     const [filters, setFilters] = React.useState({
-        tag: searchParams.get("tag") || "",
+        tag: searchParams.getAll("tag") || [],
         sort: searchParams.get("sort") || "",
       });
 
 
     const applyFilters = () => {
-        const params = {};
-        if (filters.tag) params.tag = filters.tag;
-        if (filters.sort) params.sort = filters.sort;
+        const params = new URLSearchParams();
+        filters.tag.forEach(tag => params.append('tag', tag));
+        if (filters.sort) params.set('sort', filters.sort);
         setSearchParams(params);
     };
 
@@ -66,10 +66,12 @@ export default function Home() {
 
     function filterPosts() {
         let filtered = posts;
-        if (filters.tag) {
-            filtered = filters.tag !== '' ?  posts.filter((post) => {
-                return post.postContent.tags.includes(filters.tag)
-            }) : posts
+        if (filters.tag.length > 0) {
+            filtered = posts.filter(post =>
+                filters.tag.every(tag =>
+                  post.postContent.tags.includes(tag)
+                )
+              )
         }
         if (filters.sort) {
             switch (filters.sort) {
@@ -102,7 +104,9 @@ export default function Home() {
     }, [filters])
 
     function handleSearchParams(tag) {
-        setFilters({ ...filters, tag: tag })
+        if (!filters.tag.includes(tag)) {
+            setFilters({ ...filters, tag: [...filters.tag, tag] })
+        }
     }
 
     const APILINK = 'http://localhost:5000/api/v1/codeIn/posts/'
@@ -133,11 +137,11 @@ export default function Home() {
     function FilterTag({tag}) {
 
         return <div className='filter-tag-body'>
-                {tag}
+                {tag || null}
                 <div className='form-tag-delete' onClick={() => setFilters((preVal) => {
                     return {
                         ...preVal,
-                        tag: ''
+                        tag: preVal.tag.filter(x => x!== tag)
                     }
                 })}>
                   <Icons.X />
@@ -189,6 +193,7 @@ export default function Home() {
         }, [expand])
 
         return (
+        <>
         <div className='home-filter-body'>
             <div className={`home-filter ${expand ? 'expanded' : ''}`} id='home-filter'>
                 <div className='home-filter-icon' onClick={() => setExpand((preVal) => preVal == null ? true : !preVal)}>
@@ -201,14 +206,38 @@ export default function Home() {
                     </button>
                 </div>
             </div>
-            {filters.tag !== '' && <FilterTag tag={filters.tag}/>}
         </div>
+        {filters.tag?.length > 0 && filters.tag.map((tag) => {return  <FilterTag tag={tag}/>})}
+        {filters.tag?.length > 1 && <div className='filter-clear-all' onClick={() => setFilters((preVal) => {
+            return {...preVal, tag: []}
+        })}> 
+            Clear All
+        </div>}
+        </>
         )
+    }
+
+    function FilterByTag() {
+        const handleAddTag = () => {
+            const tagName = document.getElementById('tag-name').value
+            if (tagName && !filters.tag.includes(tagName)) {
+                setFilters({ ...filters, tag: [...filters.tag, tagName] })
+            }
+        }
+        
+
+        return <div className='filter-by-tag'>
+            <input type='text' className='filter-by-tag-input' placeholder='Tags' id='tag-name'>
+            </input>
+            <button className='filter-by-tag-add' onClick={handleAddTag}>
+                <Icons.PlusLarge />
+            </button>
+        </div>
     }
 
     return <div className='home'>
         <div className='nav-bar'>
-            <Link to={'/'} style={{color: 'black', textDecoration: 'none'}} onClick={() => setFilters({tag: '', sort: ''})}>Home</Link>
+            <Link to={'/'} style={{color: 'black', textDecoration: 'none'}} onClick={() => setFilters({tag: [], sort: ''})}>Home</Link>
             {user ? 
             <Link to={`/users/${user.uid}`} style={{color: 'black', textDecoration: 'none'}}>Profile</Link>  
             : 
@@ -223,9 +252,10 @@ export default function Home() {
                     {location.pathname == '/' && <div className='home-interaction'>
                         {(!loading && user) &&<div className='create-post'>
                         <button className='create-post-button'>
-                            <Link to={'/post'} style={{color: 'white', textDecoration: 'none'}}>Create Post</Link>
+                            <Link to={'/post'} style={{textDecoration: 'none'}}>Create Post</Link>
                         </button>
                         </div>}
+                        <FilterByTag />
                         <Filters />
                     </div>}
                 {loading &&

@@ -95,7 +95,7 @@ export default function Post() {
             const result = await response.json();
             if (result.status === 'success') {
                 alert('Post successfully saved')
-                navigate('/')
+                navigate(-1)
             } else {
                 console.error('Backend Error', result.error)
             }
@@ -326,7 +326,7 @@ export default function Post() {
         <div className='post-body'>
         <button className='cancel-button' onClick={() => {
             cancelPost();
-            navigate('/')
+            navigate(-1)
         }}>
             <Icons.X />
         </button>

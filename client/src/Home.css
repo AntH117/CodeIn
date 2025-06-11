@@ -14,7 +14,7 @@
 
 .nav-bar {
     width: 700px;
-    height: 75px;
+    height: 4.5rem;
     position: absolute;
     top: 5px;
     background-color: rgba(247,238,226,255);
@@ -35,7 +35,7 @@
     flex-direction: column;
     align-items: center;
     position: relative;
-    padding-top: 75px;
+    padding-top: 4.5rem;
 }
 
 .news-feed {
@@ -47,7 +47,7 @@
     background-color: rgba(247,238,226,255);
     box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.137);
     position: relative;
-    padding-top: 20px;
+    padding-top: 3.5rem;
     gap: 20px;
     justify-content: center;
     overflow-y: scroll;
@@ -56,13 +56,13 @@
 
 .home-interaction {
     width: 90%;
-    height: 60px;
-    position: absolute;
+    height: fit-content;
     top: 0;
     display: flex;
     align-items: center;
     gap: 10px;
     z-index: 10;
+    flex-wrap: wrap;
   }
 
 .individual-post-bodies::after {
@@ -80,7 +80,6 @@
     flex-direction: column;
     align-items: center;
     position: relative;
-    padding-top: 100px;
     gap: 20px;
 }
 
@@ -92,18 +91,19 @@
 .create-post-button {
     width: 100px;
     height: 2rem;
-    color: white;
+    color: rgba(77,71,181,255);
     border: 0px;
-    background-color: rgba(112,94,218,255);
+    background-color: transparent;
     border-radius: 10px;
     font-size: 15px;
     cursor: pointer;
+    font-weight: 600;
     
 }
 
 .home-filter-body {
     width: fit-content;
-    height: 30px;
+    height: 2rem;
     display: flex;
     flex-direction: row;
     gap: 10px;
@@ -118,9 +118,25 @@
     align-items: center;
     background-color: rgba(112,94,218,255);
     color: white;
-    padding-left: 10px;
+    padding-left: 15px;
     padding-right: 5px;
     border-radius: 20px;
+}
+
+.filter-clear-all {
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+    height: 2rem;
+    align-items: center;
+    background-color: rgb(252, 128, 128);
+    color: white;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 20px;
+    border: 0px solid transparent;
+    cursor: pointer;
 }
 
 .home-filter {
@@ -257,3 +273,37 @@
     background-color: rgba(100, 100, 100, 0.8);
   }
   
+
+  .filter-by-tag {
+    width: fit-content;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0px;
+  }
+
+  .filter-by-tag-input {
+    height: 80%;
+    width: 3.5rem;
+    border: 0px solid transparent;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .filter-by-tag-input:focus {
+    outline: none;
+  }
+
+  .filter-by-tag-add {
+    height: 2rem;
+    width: 2rem;
+    border: 0px solid transparent;
+    background-color: transparent;
+    border-radius: 20px;
+    color:  rgba(112, 94, 218, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }

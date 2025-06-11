@@ -90,6 +90,12 @@ const filterIcon = () => (
 </svg>
 )
 
+const plusLargeIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+</svg>
+)
+
 // Export all as an object
 const Icons = {
   Trash: TrashIcon,
@@ -103,7 +109,8 @@ const Icons = {
   ArrowRight: ArrowRightIcon,
   Plus: plusIcon,
   Minus: minusIcon,
-  Filter: filterIcon
+  Filter: filterIcon,
+  PlusLarge: plusLargeIcon
 };
 
 export default Icons;

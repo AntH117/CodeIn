@@ -271,6 +271,7 @@ svg {
     flex-direction: row;
     align-items: center;
     position: relative;
+    padding-bottom: 10px;
 }
 
 .form-imports-error {
