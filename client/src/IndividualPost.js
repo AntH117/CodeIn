@@ -210,9 +210,9 @@ export default function IndividualPost({data, handleSearchParams}) {
             <p>{data.postContent.paragraph}</p>
         </div>}
         
-        <div className='IP-code-display'>
+        {data?.postContent?.codeSnippet && <div className='IP-code-display'>
             {data?.postContent?.codeSnippet && <CodeBlock language={data.postContent.codeLanguage} code={data.postContent.codeSnippet}/>}
-        </div>
+        </div>}
 
         {imageFiles?.length > 0 && <ImageGrid imageFiles={imageFiles} />}
         {otherFiles?.length > 0 && 

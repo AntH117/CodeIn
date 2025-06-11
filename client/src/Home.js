@@ -38,8 +38,6 @@ export default function Home() {
         const response = await getUserInfo(user?.uid)
         setLoggedUserData(response)
     }
-    const [posts, setPosts] = React.useState([])
-
     //get liked posts
     const [loggedUserData, setLoggedUserData] = React.useState(null)
     React.useEffect(() => {
@@ -55,12 +53,49 @@ export default function Home() {
         sort: searchParams.get("sort") || "",
       });
 
+
     const applyFilters = () => {
-    const params = {};
+        const params = {};
         if (filters.tag) params.tag = filters.tag;
         if (filters.sort) params.sort = filters.sort;
         setSearchParams(params);
     };
+
+    const [posts, setPosts] = React.useState([])
+    const [filteredPosts, setFilteredPosts] = React.useState(posts)
+
+    function filterPosts() {
+        let filtered = posts;
+        if (filters.tag) {
+            filtered = filters.tag !== '' ?  posts.filter((post) => {
+                return post.postContent.tags.includes(filters.tag)
+            }) : posts
+        }
+        if (filters.sort) {
+            switch (filters.sort) {
+                case 'newest':
+                    filtered = filtered.slice().reverse()
+                    break;
+                case 'oldest':
+                    //Default behaviour
+                    break;
+                case 'likes':
+                    filtered = filtered.sort((a,b) => b.likeCount - a.likeCount)
+                    break;
+                case 'comments':
+                    filtered = filtered.sort((a,b) => b.commentCount - a.commentCount)
+                    break;
+            }  
+        }
+        setFilteredPosts(filtered)
+    }
+    React.useEffect(() => {
+        filterPosts()
+    }, [searchParams, posts])
+    
+    //simple filter, should change as website gets larger
+    //reversed posts
+        
 
     React.useEffect(() => {
         applyFilters()
@@ -171,18 +206,9 @@ export default function Home() {
         )
     }
 
-    //simple filter, should change as website gets larger
-    const filteredPosts = filters.tag !== '' ?  posts.filter((post) => {
-        return post.postContent.tags.includes(filters.tag)
-    }) : posts
-    
-    //reversed posts
-    const reversedPosts = React.useMemo(() => filteredPosts.slice().reverse(), [posts]);
-    
-
     return <div className='home'>
         <div className='nav-bar'>
-            <Link to={'/'} style={{color: 'black', textDecoration: 'none'}}>Home</Link>
+            <Link to={'/'} style={{color: 'black', textDecoration: 'none'}} onClick={() => setFilters({tag: '', sort: ''})}>Home</Link>
             {user ? 
             <Link to={`/users/${user.uid}`} style={{color: 'black', textDecoration: 'none'}}>Profile</Link>  
             : 
@@ -206,7 +232,7 @@ export default function Home() {
                     <span class="loader"></span>
                 }
                 {!loading && <div className='individual-post-bodies'>
-                    {(location.pathname == '/' || location.pathname == '/post') && reversedPosts.map((data) => {
+                    {(location.pathname == '/' || location.pathname == '/post') && filteredPosts.map((data) => {
                         return <IndividualPost data={data} key={data._id} handleSearchParams={handleSearchParams}/>
                     })}
                 </div>}
