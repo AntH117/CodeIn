@@ -69,7 +69,9 @@ export default function Home() {
         if (filters.tag.length > 0) {
             filtered = posts.filter(post =>
                 filters.tag.every(tag =>
-                  post.postContent.tags.includes(tag)
+                  post.postContent.tags.some(t => 
+                    t.toLowerCase() === tag.toLowerCase()
+                  )
                 )
               )
         }
@@ -95,8 +97,6 @@ export default function Home() {
         filterPosts()
     }, [searchParams, posts])
     
-    //simple filter, should change as website gets larger
-    //reversed posts
         
 
     React.useEffect(() => {
@@ -265,6 +265,7 @@ export default function Home() {
                     {(location.pathname == '/' || location.pathname == '/post') && filteredPosts.map((data) => {
                         return <IndividualPost data={data} key={data._id} handleSearchParams={handleSearchParams}/>
                     })}
+                    {filteredPosts.length == 0 && <div>No posts found</div>}
                 </div>}
             </div>
             {
