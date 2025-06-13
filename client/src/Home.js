@@ -234,19 +234,50 @@ export default function Home() {
             </button>
         </div>
     }
+    // onClick={() => navigate(`/users/${user.uid}`)}
+    function NavBar () {
+        const [open, setOpen] = React.useState(false)
+        // user && <div onClick={handleSignOut} style={{cursor: 'pointer'}}>Sign Out</div>
+        function UserDisplay() {
+            return <>
+            <div className='nav-user-display'>
+                <div className='nav-user-image'>
+                    <img src={loggedUserData.photoURL}>
+                    </img>
+                </div>
+                <div className='nav-user-name'>
+                    <div className='nav-user-display-name'>
+                            {loggedUserData.displayName}
+                        </div>
+                    <div className='nav-user-display-tag'>
+                        @{loggedUserData.displayTag}
+                    </div>
+                </div>
+                <div className='nav-user-dropdown' onClick={() => setOpen((preVal) => !preVal)}>
+                    <Icons.ArrowDown />
+                </div>
+                {open && <div className='nav-user-options'>
+                    <div className='user-dropdown-option'onClick={() => navigate(`/users/${user.uid}`)}>Profile</div>
+                    <div className='user-dropdown-option' onClick={handleSignOut}>Sign Out</div>
+                </div>}
+            </div>
+            </>
+        }
+
+        return (
+            <div className='nav-bar'>
+                <Link to={'/'} style={{color: 'black', textDecoration: 'none'}} onClick={() => setFilters({tag: [], sort: ''})}>Home</Link>
+                {user ? 
+                <UserDisplay />
+                : 
+                <Link to={'/login'} style={{color: 'black', textDecoration: 'none'}}>Login</Link>  
+                }
+        </div>
+        )
+    }
 
     return <div className='home'>
-        <div className='nav-bar'>
-            <Link to={'/'} style={{color: 'black', textDecoration: 'none'}} onClick={() => setFilters({tag: [], sort: ''})}>Home</Link>
-            {user ? 
-            <Link to={`/users/${user.uid}`} style={{color: 'black', textDecoration: 'none'}}>Profile</Link>  
-            : 
-            <Link to={'/login'} style={{color: 'black', textDecoration: 'none'}}>Login</Link>  
-            }
-            {
-            user && <div onClick={handleSignOut} style={{cursor: 'pointer'}}>Sign Out</div>
-            }
-        </div>
+        <NavBar />
         <div className='news-feed-body'>
                 <div className='news-feed'>
                     {location.pathname == '/' && <div className='home-interaction'>
