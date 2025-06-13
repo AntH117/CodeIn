@@ -58,7 +58,10 @@ export default function Post() {
         fileSize: 'File must be less than 35mb',
         fileType: 'Invalid file format',
         paragraphCharacters: 'Paragraph contains invalid characters',
-        codeLanguage: 'Please select a language'
+        codeLanguage: 'Please select a language',
+        tagLengthMin: 'Please include a tag name',
+        tagLengthMax: 'Tag must not be more than 10 characters',
+        tagExisting: 'Tag already exists'
     }
     function sanitiseCode(code) {
         return code
@@ -262,9 +265,14 @@ export default function Post() {
         }
        })
     }
+    const tagConditionsRef = React.useRef({
+        lengthMin: null,
+        lengthMax: null,
+        notExisting: null
+    })
 
     function Tags() {
-
+        const [triggerRender, setTriggerRender] = React.useState(0);
         function IndividualTag({name}) {
             function handleDeleteTag () {
                 setFormData((preVal) => {
@@ -282,45 +290,59 @@ export default function Post() {
             </div>
         }
 
-        function AddTag() {
-            const [expanded, setExpanded] = React.useState(false)
-            const [tag, setTag] = React.useState('')
+        return <div className='form-tag-outer-body'>
+            <div className='form-tag-body'>
+            Tags
+            {formData.tags.length > 0 && formData.tags.map((tag) => {
+                return <IndividualTag name={tag}/>
+            })}
+            <AddTag forceRerender={() => setTriggerRender(prev => prev + 1)}/>
+        </div>
+        {tagConditionsRef.current.lengthMin === false && <div className='edit-error-message'>{errorMessages.tagLengthMin}</div>}
+        {tagConditionsRef.current.lengthMax === false && <div className='edit-error-message'>{errorMessages.tagLengthMax}</div>}
+        {tagConditionsRef.current.notExisting === false && <div className='edit-error-message'>{errorMessages.tagExisting}</div>}
+        </div>
+    }
 
-            const handleTagChange = (e) => {
-               const {value} = e.target
-               setTag(value)
-            }
-            function handleClick() {
-                if (!expanded) {
-                    setExpanded(true)
-                } else if (expanded && tag.length > 0) {
+    function AddTag({forceRerender}) {
+        const [expanded, setExpanded] = React.useState(false)
+        const [tag, setTag] = React.useState('')
+
+        const handleTagChange = (e) => {
+           const {value} = e.target
+           setTag(value)
+        }
+        function handleClick() {
+            if (!expanded) {
+                setExpanded(true)
+            } else if (expanded) {
+                tagConditionsRef.current = {
+                    lengthMin: tag.length > 0,
+                    lengthMax: tag.length < 10,
+                    notExisting: !formData.tags.includes(tag)
+                  };
+                // setTagConditions(conditions)
+                forceRerender()
+                const allTrue = Object.values(tagConditionsRef.current).every(value => value === true);
+                if (allTrue) {
                     setFormData((preVal) => {
                         return {
                             ...preVal,
                             ['tags']: [...preVal.tags, tag]
                         }
                     })
-                    setTag('')
-                    setExpanded(false)
+                } else {
+                    return
                 }
             }
-            return <div className={`form-add-tag-body ${expanded ? 'expanded' : ''}`}>
-                <input className={`form-tag-input ${expanded ? 'expanded' : ''}`} type ='text' placeholder='Tag' value={tag} onChange={handleTagChange}></input>
-                <div className='form-add-tag' onClick={handleClick}>
-                  <Icons.Plus />
-                </div>
-            </div>
         }
-
-        return <div className='form-tag-body'>
-            Tags
-            {formData.tags.length > 0 && formData.tags.map((tag) => {
-                return <IndividualTag name={tag}/>
-            })}
-            <AddTag />
+        return <div className={`form-add-tag-body ${expanded ? 'expanded' : ''}`}>
+            <input className={`form-tag-input ${expanded ? 'expanded' : ''}`} type ='text' placeholder='Tag' value={tag} onChange={handleTagChange}></input>
+            <div className='form-add-tag' onClick={handleClick}>
+              <Icons.Plus />
+            </div>
         </div>
     }
-
 
     return <div className='post-outer-body'>
         <div className='post-body'>

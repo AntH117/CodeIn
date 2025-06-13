@@ -168,9 +168,36 @@ export default function EditPost() {
         }))
       };
     
+
+
     const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    //validate file
+    const validFiles = [  
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+        "image/gif",
+        "application/pdf",
+        "application/javascript",   // for .js
+        "text/javascript",          // sometimes also used for .js
+        "text/css",                 // for .css
+        "text/html",                // for .html
+        "application/json",         // for .json
+        "text/plain",    ]
+        const maxFileSizeMb = 35;
+    
+    const valid = {
+        fileSize: file.size <= maxFileSizeMb * 1024 * 1024, 
+        fileType: validFiles.includes(file.type),
+    }
+    setFileConditions(valid)
+    const allTrue = Object.values(valid).every(value => value === true);
+    if (!allTrue) {
+        return
+    }
             
     const form = new FormData();
     form.append('file', file);
@@ -240,14 +267,155 @@ export default function EditPost() {
           .replace(/\s+$/gm, '')
           .replace(/\n{3,}/g, '\n\n');
       }
-    console.log(editedPost)
+
+    //toggles
+    const [toggle, setToggle] = React.useState({
+        description: null,
+        codeSnippet: null
+    })
+
+    const handleToggle = (e) => {
+        const {name} = e.target;
+        e.preventDefault()
+        setToggle((preVal) => {
+         return {
+             ...preVal,
+             [name]: toggle[name] == null ? true : !toggle[name]
+         }
+        })
+     }
+
+     //error checking for editing posts
+         const [submissionConditions, setSubmissionConditions] = React.useState({
+             titleLengthMin: null,
+             titleLengthMax: null,
+             titleCharacters: null,
+             paragraphCharacters: null,
+             codeLanguage: null,
+         })
+     
+         const [fileConditions, setFileConditions] = React.useState({
+             fileSize: null,
+             fileType: null
+         })
+         const errorMessages = {
+             titleLengthMin: 'Please include a title',
+             titleLengthMax: 'Title must not be more than 30 characters',
+             titleCharacters: 'Title contains invalid characters',
+             fileSize: 'File must be less than 35mb',
+             fileType: 'Invalid file format',
+             paragraphCharacters: 'Paragraph contains invalid characters',
+             codeLanguage: 'Please select a language',
+             tagLengthMin: 'Please include a tag name',
+             tagLengthMax: 'Tag must not be more than 10 characters',
+             tagExisting: 'Tag already exists'
+         }
+
+         function validatePost(postData) {
+            const conditions = {
+                titleLengthMin: postData.title?.length > 0,
+                titleLengthMax: postData.title?.length <= 30,
+                titleCharacters: /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(postData?.title),
+                paragraphCharacters:  postData?.paragraph === '' || /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(postData?.paragraph),
+                codeLanguage: (postData.codeSnippet && postData.codeLanguage !== '') || (!postData.codeSnippet)
+            }
+            setSubmissionConditions(conditions)
+            const allTrue = Object.values(conditions).every(value => value === true);
+            if (allTrue) {
+                editPost()
+            } else {
+                return
+            }
+        }
+        const tagConditionsRef = React.useRef({
+            lengthMin: null,
+            lengthMax: null,
+            notExisting: null
+        })
+
+        //tags
+        function Tags() {
+            const [triggerRender, setTriggerRender] = React.useState(0);
+            function IndividualTag({name}) {
+                function handleDeleteTag () {
+                    setEditedPost((preVal) => {
+                        return {
+                            ...preVal,
+                            ['tags']: preVal.tags.filter((x) => x!== name)
+                        }
+                    })
+                }
+                return <div className='form-individual-tag'>
+                    <span style={{cursor: 'default'}}>{name}</span>
+                    <div className='form-tag-delete' onClick={handleDeleteTag}>
+                      <Icons.X />
+                    </div>
+                </div>
+            }
+    
+    
+            return <div className='edit-tag-outer-body'>
+                <div className='edit-tag-body'>
+                Tags
+                {editedPost.tags.length > 0 && editedPost.tags.map((tag) => {
+                    return <IndividualTag name={tag}/>
+                })}
+                <AddTag forceRerender={() => setTriggerRender(prev => prev + 1)}/>
+              </div>
+              {tagConditionsRef.current.lengthMin === false && <div className='edit-error-message'>{errorMessages.tagLengthMin}</div>}
+              {tagConditionsRef.current.lengthMax === false && <div className='edit-error-message'>{errorMessages.tagLengthMax}</div>}
+              {tagConditionsRef.current.notExisting === false && <div className='edit-error-message'>{errorMessages.tagExisting}</div>}
+            </div>
+        }
+        function AddTag({forceRerender}) {
+            const [expanded, setExpanded] = React.useState(false)
+            const [tag, setTag] = React.useState('')
+            const handleTagChange = (e) => {
+               const {value} = e.target
+               setTag(value)
+            }
+            function handleClick() {
+                if (!expanded) {
+                    setExpanded(true)
+                } else if (expanded) {
+                    tagConditionsRef.current = {
+                        lengthMin: tag.length > 0,
+                        lengthMax: tag.length < 10,
+                        notExisting: !editedPost.tags.includes(tag)
+                      };
+                    // setTagConditions(conditions)
+                    forceRerender()
+                    const allTrue = Object.values(tagConditionsRef.current).every(value => value === true);
+                    if (allTrue) {
+                        setEditedPost((preVal) => {
+                            return {
+                                ...preVal,
+                                ['tags']: [...preVal.tags, tag]
+                            }
+                        })
+                    } else {
+                        return
+                    }
+                }
+            }
+            return <div className={`form-add-tag-body ${expanded ? 'expanded' : ''}`}>
+                <input className={`form-tag-input ${expanded ? 'expanded' : ''}`} type ='text' placeholder='Tag' value={tag} onChange={handleTagChange}></input>
+                <div className='form-add-tag' onClick={handleClick}>
+                  <Icons.Plus />
+                </div>
+            </div>
+        }
+    
 
     return <div className='EP-outer-body'>
       {editedPost && <div className='EP-inner-body'>
                          <div className='edit-post-title'>Edit Post</div>
-                          <div className='IP-title'>
+                          <div className='edit-title'>
                                 <input type='text' value={editedPost.title} className='IP-title-input' onChange={handleChange} name='title'></input>
-                            </div>
+                                {submissionConditions.titleLengthMin === false && <div className='edit-error-message'>{errorMessages.titleLengthMin}</div>}
+                                {submissionConditions.titleLengthMax === false && <div className='edit-error-message'>{errorMessages.titleLengthMax}</div>}
+                                {submissionConditions.titleCharacters === false && <div className='edit-error-message'>{errorMessages.titleCharacters}</div>}
+                           </div>
                             <div className='IP-author-visibility'>
                                 <div className='IP-author-date'>
                                     <div className='IP-author-image'>
@@ -265,12 +433,23 @@ export default function EditPost() {
                                         </select>
                                     </div>
                             </div>
-                            <div className='IP-paragraph'>
+                            <div className='edit-paragraph'>
                                 <textarea className='IP-paragraph-textarea' value={editedPost.paragraph} onChange={handleChange} name='paragraph'></textarea>
+                                {submissionConditions.paragraphCharacters === false && <div className='edit-error-message'>{errorMessages.paragraphCharacters}</div>}
                             </div>
-                            <div className='edit-code-snippet'>
-                                <CodeEditor handleCodeChange={handleCodeChange} value={editedPost?.codeSnippet} handleLanguageChange={handleChange}/>  
+                            <div className='code-edit-body'>
+                                <div className='form-description-toggle'>
+                                    <h3 className='form-description-title'>Code snippet</h3>
+                                    <button className='form-toggle-button' name='codeSnippet' onClick={handleToggle}>
+                                        {toggle.codeSnippet ? <Icons.Minus /> : <Icons.Plus />}
+                                    </button>
+                                </div>
+                                <div className={`form-code-editor ${toggle.codeSnippet !== null ? toggle.codeSnippet ? 'open' : 'closed' : ''}`}>
+                                 <CodeEditor handleCodeChange={handleCodeChange} value={editedPost.codeSnippet} handleLanguageChange={handleChange} languageValue={editedPost.codeLanguage}/> 
+                                </div>
+                                {submissionConditions.codeLanguage === false && <div className='edit-error-message'>{errorMessages.codeLanguage}</div>} 
                             </div>
+                            <Tags />
                             <button className='cancel-button' onClick={() => handleCancelEdits()}>
                                 <Icons.X />
                             </button>
@@ -278,9 +457,11 @@ export default function EditPost() {
                                 {editedPost.files.map((x) => {
                                 return <FileImports name={x}/>
                             })}
+                            {fileConditions.fileSize === false && <div className='edit-error-message'>{errorMessages.fileSize}</div>} 
+                            {fileConditions.fileType === false && <div className='edit-error-message'>{errorMessages.fileType}</div>} 
                                 </div>}
                             <ImportsDisplay />
-                            <button className='edit-button' onClick={() => editPost()}>
+                            <button className='edit-button' onClick={() => validatePost(editedPost)}>
                                 Edit
                             </button>
                       </div>}

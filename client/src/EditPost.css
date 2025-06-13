@@ -1,10 +1,9 @@
 .IP-paragraph-textarea {
     width: 100%;
+    padding-top: 0.5rem;
     height: 5rem;
     border-radius: 0.5rem;
     padding-left: 1rem;
-    padding-top: 0.5rem;
-    margin-top: 0.5rem;
     border: 1px solid rgb(206, 206, 206);
 }
 
@@ -13,8 +12,6 @@
 }
 
 .IP-title-input {
-    margin-top: 0.5rem;
-    margin-bottom: 1rem;
     width: 100%;
     height: 2rem;
     font-size: 1.5rem;
@@ -23,6 +20,10 @@
     border: 1px solid rgb(206, 206, 206);
     border-radius: 0.5rem;
     padding-left: 0.5rem;
+}
+
+.IP-title-input:focus {
+    outline: none;
 }
 
 .edit-button {
@@ -124,4 +125,103 @@
 .edit-code-snippet section {
     margin-top: 5px;
     border: 1px solid #bbb;
+}
+
+.edit-code-editor {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    overflow-y: scroll;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    height: 10px;
+    opacity: 0;
+}
+
+.edit-code-editor.open {
+    animation: editorToggleOpen 0.5s forwards;
+}
+
+.edit-code-editor.closed {
+    animation: EditorToggleClosed 0.5s forwards;
+}
+
+@keyframes editorToggleOpen {
+    0% {
+        height: 0px;
+        opacity: 0;
+    }
+    100% {
+        height: 250px;
+        opacity: 100%;
+    }
+}
+
+@keyframes EditorToggleClosed {
+    0% {
+        height: 250px;
+        opacity: 100%;
+    }
+    100% {
+        height: 0px;
+        opacity: 0%;
+    }
+}
+
+.code-edit-body {
+    width: 80%;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.edit-error-message {
+    width: 100%;
+    height: 25px;
+    top: 2.5rem;
+    display: flex;
+    align-items: center;
+    color: rgba(255, 0, 0, 0.486);
+}
+
+.edit-title {
+    width: 80%;
+    display: flex;
+    justify-content: left;
+    margin-bottom: 0.5rem;
+    position: relative;
+    flex-direction: column;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.edit-paragraph {
+    width: 80%;
+    height: fit-content;
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.edit-tag-body {
+    width: 100%;
+    min-height: 30px;
+    height: fit-content;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.edit-tag-outer-body {
+    width: 80%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
 }

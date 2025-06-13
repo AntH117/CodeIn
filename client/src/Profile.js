@@ -87,6 +87,7 @@ export default function Profile () {
             {userPosts && userPosts.map((post) => 
                 <IndividualPost data={post} />
             )}
+            {userPosts?.length == 0 && <p>No posts yet!</p>}
         </div>
     }
 
