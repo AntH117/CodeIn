@@ -44,7 +44,7 @@ export default function Home() {
         if (user) {
             awaitUserData()
         }
-    },[user])
+    },[user, location])
 
     //get filters based on search params
     const [searchParams, setSearchParams] = useSearchParams();
@@ -236,27 +236,26 @@ export default function Home() {
     }
     // onClick={() => navigate(`/users/${user.uid}`)}
     function NavBar () {
-        const [open, setOpen] = React.useState(false)
-        // user && <div onClick={handleSignOut} style={{cursor: 'pointer'}}>Sign Out</div>
         function UserDisplay() {
+            const [open, setOpen] = React.useState(false)
             return <>
             <div className='nav-user-display'>
                 <div className='nav-user-image'>
-                    <img src={loggedUserData.photoURL}>
+                    <img src={loggedUserData?.photoURL || "http://localhost:5000/uploads/final/Temp-profile-pic.png"}>
                     </img>
                 </div>
                 <div className='nav-user-name'>
                     <div className='nav-user-display-name'>
-                            {loggedUserData.displayName}
+                            {loggedUserData?.displayName}
                         </div>
                     <div className='nav-user-display-tag'>
-                        @{loggedUserData.displayTag}
+                        @{loggedUserData?.displayTag}
                     </div>
                 </div>
                 <div className='nav-user-dropdown' onClick={() => setOpen((preVal) => !preVal)}>
                     <Icons.ArrowDown />
                 </div>
-                {open && <div className='nav-user-options'>
+                {<div className={`nav-user-options ${open ? 'open' : ''}`}>
                     <div className='user-dropdown-option'onClick={() => navigate(`/users/${user.uid}`)}>Profile</div>
                     <div className='user-dropdown-option' onClick={handleSignOut}>Sign Out</div>
                 </div>}

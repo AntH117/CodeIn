@@ -7,6 +7,7 @@ import { auth, db } from './firebase';
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import testImage from './images/Temp-profile-pic.png'
 import Icons from './icons/Icons';
+import { getAuth, reauthenticateWithCredential, updatePassword, EmailAuthProvider } from "firebase/auth";
 
 export default function EditProfile() {
     const { user } = useAuth();
@@ -116,7 +117,7 @@ export default function EditProfile() {
         
         await setDoc(userRef, {
             displayName: user.displayName || null,
-            displayTag: user.email.split('@').at(0),
+            displayTag: user.displayTag,
             email: user.email,
             photoURL: user.photoURL || "",
             description: user.description || "",
@@ -192,13 +193,11 @@ export default function EditProfile() {
         }
 
         alert('Profile successfully saved');
-        navigate(-1);
+        navigate(`/users/${user.uid}`);
         } catch (e) {
             console.error('Error saving profile')
         }
     }
-    console.log(uploadedFiles)
-
     const handleCancelEdits = async () => {
         if (uploadedFiles.length > 0) {
             const deleteRequests = uploadedFiles.map(fileUrl => {
@@ -218,7 +217,77 @@ export default function EditProfile() {
         }
         navigate(-1)
     }
+
+    function SensitiveData() {
+        const [toggle, setToggle] = React.useState(false)
+        const [passwords, setPasswords] = React.useState({
+            current:'',
+            new: ''
+        })
+
+        const [errors, setErrors] = React.useState(null)
+        
+        const errorMessages = {
+            'auth/invalid-credential': 'Incorrect password',
+            'auth/missing-password': 'Missing password',
+            passwordLengthMin: 'Password must be larger than 4 characters',
+            passwordLengthMax: 'Password must be less than 12 characers'
+        }
+
+        const handlePasswords = (e) => {    
+            const {value, name} = e.target;
+            setPasswords((preVal) => {
+                return {
+                    ...preVal,
+                    [name]: value
+                }
+            })
+        }
+        async function changeUserPassword({currentPass, newPass}) {
+            if (!user) {
+                console.error("Not authenticated.");
+                return;
+              }
+            if (newPass.length < 4) {
+                setErrors('passwordLengthMin')
+                return
+            } else if (newPass.length > 11) {
+                setErrors(`passwordLengthMax`)
+                return;
+            }
+            const credential = EmailAuthProvider.credential(user.email, currentPass);
+            try {
+                await reauthenticateWithCredential(user, credential);
+                console.log("Reauthentication successful.");
+                await updatePassword(user, newPass);
+                alert("Password updated successfully.");
+                navigate(`/users/${user.uid}`);
+              } catch (error) {
+                setErrors(error.message.match(/\(([^)]+)\)/)[1])
+              }
+        }
+        return <div className='user-sensitive-body'>
+            <div className='user-sensitive-toggle' onClick={() => setToggle((preVal) => !preVal)}>{toggle ? <Icons.LockOpen /> : <Icons.LockClosed />}</div>
+            <div className={`user-sensitive-inner-body ${toggle ? 'open' : ''}`}>
+                <div className='user-change-password'>
+                    Current Password:
+                    <input type='password' className='user-change-password-input' name='current' onChange={handlePasswords}></input>
+                </div>
+                <div className='user-change-password'>
+                    New Password:
+                    <input type='password' className='user-change-password-input' name='new' onChange={handlePasswords}></input>
+                </div>
+                {errors && <div className='password-error-div'>
+                    {errorMessages[errors]}
+                </div>}
+                <button className='user-submit-password' onClick={() => changeUserPassword({currentPass: passwords.current, newPass: passwords.new})}>
+                        Change Password
+                </button>
+            </div>
+    </div>
+    }    
     
+
     return <div className='user-profile-outer-body'>
         {profileInfo && <div className='user-profile-inner-body'>
             <div className='user-background'>
@@ -234,13 +303,12 @@ export default function EditProfile() {
                 </div>
             </div>
             <div className='user-edit-info-name'>
-                <span style={{fontWeight: 'bold', marginRight: "10px"}}>
-                    <input placeholder={profileInfo.displayName || 'Display Name'} name='displayName' onChange={handleChange} value={profileInfo.displayName}>
-                        
+                <span style={{fontWeight: 'bold'}} className='user-edit-display'>
+                    <input placeholder={profileInfo.displayName || 'Display Name'} name='displayName' onChange={handleChange} value={profileInfo.displayName} style={{width: '100%'}} type='text'>
                     </input>
                 </span>
-                <div className='user-info-tag'>
-                    @{profileInfo?.displayTag}
+                <div className='user-edit-info-tag'>
+                    <span style={{fontSize: '0.9rem'}}>@</span><input placeholder='Display Tag' name='displayTag' onChange={handleChange} value={profileInfo.displayTag} className='user-display-tag-input'></input>
                 </div>
                 <div className='user-edit'>
                         <div className='user-edit-cancel' onClick={handleCancelEdits}> <Icons.X /> Cancel</div>
@@ -254,9 +322,10 @@ export default function EditProfile() {
                     </textarea>
                 </div>
                 <div className='user-save'>
-                        <div className='user-edit-save' onClick={() => window.confirm('Save Edits?') && handleSaveEdits()}> Save</div>
+                    <div className='user-edit-save' onClick={() => window.confirm('Save Edits?') && handleSaveEdits()}> Save</div>
                 </div>
             </div>
+            <SensitiveData />
         </div>}
     </div>
 }

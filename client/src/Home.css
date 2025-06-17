@@ -325,7 +325,6 @@
     background-color: #e79898;
     overflow: hidden;
     border-radius: 3rem;
-    cursor: pointer;
   }
 
   .nav-user-image img {
@@ -369,12 +368,17 @@
 
   .nav-user-options {
     width: 100%;
-    height: fit-content;
     position: absolute;
     background-color: #2BC0E4;
-    top: 105%;
+    top: 110%;
     border-radius: 0.5rem;
     overflow: hidden;
+    transition: 0.3s ease-in-out;
+    height: 0%;
+  }
+
+  .nav-user-options.open {
+    height: 4.5rem;
   }
 
   .user-dropdown-option {
