@@ -47,6 +47,7 @@ export default function Register () {
         'auth/invalid-email': 'Email must be valid',
         emailMatch: 'Email & Confirm Emails must match',
         passwordLength: 'Password must be larger than 4 characters',
+        passwordLengthMax: 'Password must be less than 12 characers',
         'auth/email-already-in-use': 'Email already in use',
     }
 
@@ -70,6 +71,7 @@ function handleSignUp({email, password}) {
         const conditions = {
             emailMatch: userDetail.email.toLocaleLowerCase() === userDetail.confirmEmail.toLocaleLowerCase(),
             passwordLength: userDetail.password.length > 4,
+            passwordLength: userDetail.password.length < 12,
         }
         const allTrue = Object.values(conditions).every(value => value === true);
         if (allTrue) {

@@ -8,6 +8,8 @@ import Icons from './icons/Icons';
 import { useAuth } from "./AuthContext";
 import Editor from "@monaco-editor/react";
 import CodeEditor from './CodeEditor';
+import 'emoji-picker-element';
+import TextSettings from './TextSettings';
 
 export default function Post() {
     const { user } = useAuth();
@@ -382,8 +384,11 @@ export default function Post() {
                         {toggle.description ? <Icons.Minus /> : <Icons.Plus />}
                     </button>
                 </div>
-                <textarea className={`form-paragraph ${toggle.description !== null ? toggle.description ? 'open' : 'closed' : ''}`} name='paragraph' onChange={handleChange} disabled={!toggle.description}>
-                </textarea>
+                <div className={`form-paragraph ${toggle.description !== null ? toggle.description ? 'open' : 'closed' : ''}`}>
+                    <textarea className='form-paragraph-textarea' name='paragraph' onChange={handleChange} disabled={!toggle.description} value={formData.paragraph}>
+                    </textarea>
+                </div>
+                {toggle.description && <TextSettings setFormData={setFormData}/>}
                 {submissionConditions.paragraphCharacters === false && <div className='form-paragraph-error'>
                     <p>{errorMessages.paragraphCharacters}</p>
                 </div>}

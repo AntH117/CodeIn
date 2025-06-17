@@ -199,17 +199,61 @@ svg {
 
 .form-paragraph {
     width: 100%;
-    resize: none;
     height: 0px;
+    transition: all 0.5s ease-in-out;
+    opacity: 0;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-paragraph-textarea {
+    width: 100%;
+    height: 100%;
+    resize: none;
     border-radius: 10px;
     background-color: #fefefe;
     border: 1px solid #e2e2e2;
     color: #333;
-    box-sizing: border-box;
     padding-left: 0.5rem;
-    transition: all 0.5s ease-in-out;
-    opacity: 0;
+    box-sizing: border-box;
+}
+.text-settings {
+    width: fit-content;
+    height: 2rem;
+    display: flex;
+    flex-direction: row;
     margin-bottom: 1rem;
+    transition: all 0.5s ease-in-out
+}
+
+.text-settings-emoji {
+    width: 2rem;
+    height: fit-content;
+    display:flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.emoji-icon {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.emoji-drop-down {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    top: 2rem;
+    z-index: 10;
+}
+
+.form-paragraph-textarea:focus {
+    outline: none;
 }
 
 .form-paragraph.open {
@@ -226,14 +270,14 @@ svg {
         opacity: 0;
     }
     100% {
-        height: 100px;
+        height: 8rem;
         opacity: 100%;
     }
 }
 
 @keyframes toggleClosed {
     0% {
-        height: 100px;
+        height: 8rem;
         opacity: 100%;
     }
     100% {
