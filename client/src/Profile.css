@@ -71,11 +71,40 @@
     
 }
 
+.user-follow {
+    position: absolute;
+    right: 0;
+    top: 40%;
+    width: 10rem;
+    height: 4rem;
+    display: flex;
+    flex-direction: column; 
+    font-size: 0.8rem;
+    align-items: end;
+    gap: 5px;
+}
+
+.follow-button {
+    width: 4.5rem;
+    height: 1.5rem;
+    border-radius: 2rem;
+    border: 1px solid black;
+    transition: 0.2s all ease-in-out;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.follow-button:hover {
+    background-color: rgb(87, 87, 255);
+    color: white;
+    border: 1px solid transparent
+}
+
 .user-edit {
     position: absolute;
     right: 0;
     top: 10px;
-    width: 80px;
+    width: 5rem;
     display: flex;
     flex-direction: column;
     border: 1px solid #ddd;

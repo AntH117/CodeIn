@@ -187,7 +187,7 @@ export default function Post() {
         }))
     }
 
-    const visibilityTypes = ['Public', 'Friends', 'Private']
+    const visibilityTypes = ['Public', 'Followers', 'Private']
     const imageInputRef = React.useRef();
     const fileInputRef = React.useRef();
     const handleImageClick = () => {

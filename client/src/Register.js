@@ -21,6 +21,8 @@ export default function Register () {
             backgroundURL: '',
             creationDate: user.metadata.creationTime,
             uid: user.uid,
+            followCount: 0,
+            followed: [],
             likes: []
         }, { merge: true }); // merge keeps existing data
     }

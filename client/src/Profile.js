@@ -4,15 +4,19 @@ import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from "./AuthContext";
 import { signOut } from "firebase/auth";
 import { auth, db } from './firebase';
-import { doc, getDoc, setDoc } from "firebase/firestore";
 import testImage from './images/Temp-profile-pic.png'
 import Icons from './icons/Icons';
 import IndividualPost from './IndividualPost';
+import { doc, getDoc, setDoc, updateDoc, increment  } from "firebase/firestore";
+import { arrayUnion, arrayRemove  } from "firebase/firestore";
 
 export default function Profile () {
     const { user } = useAuth();
  
     const [profileInfo, setProfileInfo] = React.useState()
+    const [loggedUserInfo, setLoggedUserInfo] = React.useState()
+    const [tempFollowCount, setTempFollowCount] = React.useState(0)
+    const [followed, setFollowed] = React.useState(false)
     const location = useLocation();
     const profileId = location.pathname.split('/').at(-1)
     const navigate = useNavigate()
@@ -32,6 +36,25 @@ export default function Profile () {
         }
     }
 
+    React.useEffect(() => {
+        setTempFollowCount(profileInfo?.followCount)
+        setFollowed(loggedUserInfo?.followed.includes(profileId))
+    }, [profileInfo])
+    
+    React.useEffect(() => {
+        if (user?.uid) {
+            getLoggedUserInfo()
+        }
+    }, [location])
+
+    async function getLoggedUserInfo() {
+        try {
+            const userInfo = await getUserInfo(user.uid)
+            setLoggedUserInfo(userInfo)
+        } catch (e) {
+            console.error('Error getting profile info')
+        }
+    }
     async function getAuthorInfo() {
         try {
             const profileInfo = await getUserInfo(profileId)
@@ -271,7 +294,7 @@ export default function Profile () {
         </div>
     )
 }
-        
+
 
     function UserProfileToggle () {
         const [selectToggle, setSelectToggle] = React.useState('Posts')
@@ -312,6 +335,47 @@ export default function Profile () {
         </>
         )
     }
+
+    async function followUser(userId) {
+        //logged user info
+        const userRef = doc(db, "users", user.uid);
+        //profile page info
+        const profileRef = doc(db, "users", profileId);
+        
+        await updateDoc(profileRef, {
+            followCount: increment(1)
+        })
+        await updateDoc(userRef, {
+            followed: arrayUnion(userId)
+            });
+    }
+
+    async function unfollowUser(userId) {
+        //logged user info
+        const userRef = doc(db, "users", user.uid);
+        //profile page info
+        const profileRef = doc(db, "users", profileId);
+        await updateDoc(profileRef, {
+            followCount: increment(-1)
+        })
+        await updateDoc(userRef, {
+            followed: arrayRemove(userId)
+            });
+    }
+
+    function handleFollow() {
+        if (followed) {
+            setTempFollowCount((preVal) => preVal -= 1)
+            unfollowUser(profileId)
+            setFollowed(false)
+        } else {
+            setTempFollowCount((preVal) => preVal += 1)
+            followUser(profileId)
+            setFollowed(true)
+        }
+    }
+
+    
     return <div className='user-profile-outer-body'>
         {loading && <div className='loading-body'>
             <span class="loader"></span>
@@ -334,6 +398,12 @@ export default function Profile () {
                 {isUser && <div className='user-edit'>
                         <div className='EP-dropdown-option' onClick={() => navigate('edit')}> <Icons.Edit /> Edit</div>
                 </div>}
+                <div className='user-follow'>
+                    Followers: {tempFollowCount}
+                    {!isUser && <button className='follow-button' onClick={handleFollow}>
+                        {followed? 'Unfollow' : 'Follow'}
+                    </button>}
+                </div>
                 <div className='user-creation-date'>
                    <Icons.Calendar /> Joined {convertDate(profileInfo?.creationDate)}
                 </div>
