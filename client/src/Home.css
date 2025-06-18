@@ -13,7 +13,9 @@
 
 
 .nav-bar {
-    width: 700px;
+    min-width: 500px;
+    max-width: 700px;
+    width: 100%;
     height: 4.5rem;
     position: absolute;
     top: 5px;
@@ -39,7 +41,9 @@
 }
 
 .news-feed {
-    width: 700px;
+    min-width: 500px;
+    max-width: 700px;
+    width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
@@ -63,6 +67,12 @@
     gap: 10px;
     z-index: 10;
     flex-wrap: wrap;
+  }
+
+  @media (max-width: 450px) {
+    .home-interaction {
+      justify-content: center;
+    }
   }
 
 .individual-post-bodies::after {
@@ -246,8 +256,9 @@
 }
 
 .outlet {
-    width: 700px;
-    min-width: 700px;
+    min-width: 500px;
+    max-width: 700px;
+    width: 100%;
     height: 100vh;
     position: fixed;
 }
@@ -375,6 +386,7 @@
     overflow: hidden;
     transition: 0.3s ease-in-out;
     height: 0%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
   .nav-user-options.open {

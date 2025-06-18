@@ -114,7 +114,7 @@ export default function Post() {
             titleLengthMin: postData.title?.length > 0,
             titleLengthMax: postData.title?.length <= 30,
             titleCharacters: /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(postData?.title),
-            paragraphCharacters:  postData?.paragraph === '' || /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(postData?.paragraph),
+            // paragraphCharacters:  postData?.paragraph === '' || /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(postData?.paragraph),
             codeLanguage: (postData.codeSnippet && postData.codeLanguage !== '') || (!postData.codeSnippet)
         }
         setSubmissionConditions(conditions)
@@ -393,7 +393,7 @@ export default function Post() {
                     <p>{errorMessages.paragraphCharacters}</p>
                 </div>}
             </div>
-            <div className='form-description'>
+            <div className='form-description' style={{marginTop: '5px'}}>
                 <div className='form-description-toggle'>
                     <h3 className='form-description-title'>Code snippet</h3>
                     <button className='form-toggle-button' name='codeSnippet' onClick={handleToggle}>

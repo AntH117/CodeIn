@@ -232,7 +232,7 @@ export default function Profile () {
             }
         }
         async function awaitUserData() {
-            const response = await getUserInfo(user?.uid)
+            const response = await getUserInfo(profileId)
             getLikedPosts(response.likes)
         }
         React.useEffect(() => {

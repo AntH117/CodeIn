@@ -10,6 +10,7 @@ import Icons from './icons/Icons';
 import { useAuth } from "./AuthContext";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import CodeEditor from './CodeEditor';
+import TextSettings from './TextSettings';
 
 export default function EditPost() {
     const [post, setPost] = React.useState()
@@ -406,6 +407,10 @@ export default function EditPost() {
             </div>
         }
     
+        function convertParagraph(text) {
+
+            
+        }
 
     return <div className='EP-outer-body'>
       {editedPost && <div className='EP-inner-body'>
@@ -435,6 +440,7 @@ export default function EditPost() {
                             </div>
                             <div className='edit-paragraph'>
                                 <textarea className='IP-paragraph-textarea' value={editedPost.paragraph} onChange={handleChange} name='paragraph'></textarea>
+                                <TextSettings setFormData={setEditedPost}/>
                                 {submissionConditions.paragraphCharacters === false && <div className='edit-error-message'>{errorMessages.paragraphCharacters}</div>}
                             </div>
                             <div className='code-edit-body'>
