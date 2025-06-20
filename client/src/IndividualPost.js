@@ -193,6 +193,17 @@ export default function IndividualPost({data, handleSearchParams}) {
         </div>
     }
 
+    function visibilityIcon(visibility) {
+        switch(visibility) {
+            case 'Public': 
+                return <Icons.Globe />
+            case 'Followers':
+                return <Icons.Follower />
+            case 'Private':
+                return <Icons.Private />
+        }
+    }
+
     return <div className='IP-body'>
         <div className='IP-title'>
             <h2 onClick={() => navigate(`/posts/${data._id}`)}>{data.postContent.title}</h2>
@@ -205,6 +216,9 @@ export default function IndividualPost({data, handleSearchParams}) {
                 authorInfo?.displayName || `@${authorInfo?.displayTag}`
                 }</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.postContent.time)}</span></h4>
                 <span style={{fontWeight: '400', marginLeft: '5px'}}>{data.postContent?.edited ? ' (Edited)' : ''}</span>
+                <div className='IP-visibility-icon'>
+                    {visibilityIcon(data.postContent.visibility)}
+                </div>
             </div>
         {data.postContent.paragraph && <div className='IP-paragraph'>
             <p>{data.postContent.paragraph}</p>

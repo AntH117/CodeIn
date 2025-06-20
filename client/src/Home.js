@@ -83,10 +83,10 @@ export default function Home() {
         if (filters.sort) {
             switch (filters.sort) {
                 case 'newest':
-                    filtered = filtered.slice().reverse()
+                    filtered = compareTime(filtered, 'newest')
                     break;
                 case 'oldest':
-                    //Default behaviour
+                    filtered = compareTime(filtered, 'oldest')
                     break;
                 case 'likes':
                     filtered = filtered.sort((a,b) => b.likeCount - a.likeCount)
@@ -102,8 +102,20 @@ export default function Home() {
         filterPosts()
     }, [searchParams, posts])
     
-    
+    function compareTime(filtered, sort) {
+        filtered = filtered.sort((a,b) => {
+            const aTime = new Date(a.postContent.time)
+            const bTime = new Date(b.postContent.time)
+            if (sort == 'newest') {
+                return bTime - aTime
+            } else if (sort == 'oldest') {
+                return aTime - bTime
+            }
+        })
+        return filtered
+    }
 
+    
     React.useEffect(() => {
         applyFilters()
     }, [filters])
@@ -141,7 +153,7 @@ export default function Home() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(followedIds)
+                body: JSON.stringify([userId, ...followedIds])
             });
             const data = await response.json();
             setPosts(data)

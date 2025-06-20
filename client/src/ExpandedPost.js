@@ -488,6 +488,18 @@ export default function ExpandedPost () {
         </div>
     }
 
+    function visibilityIcon(visibility) {
+        switch(visibility) {
+            case 'Public': 
+                return <Icons.Globe />
+            case 'Followers':
+                return <Icons.Follower />
+            case 'Private':
+                return <Icons.Private />
+        }
+    }
+
+
     const imageChecker = location.pathname.split('/').includes('image')
     return (<div className='EP-outer-body' style={imageChecker ? {overflowY: 'hidden'} : {}}>
     {loading && <div className='loading-body'>
@@ -507,6 +519,9 @@ export default function ExpandedPost () {
                             <span style={{fontWeight: '200'}}> &#9679; {convertTime(post.postContent.time)}</span>
                             <span style={{fontWeight: '400'}}>{post.postContent?.edited ? ' (Edited)' : ''}</span>
                             </h4>
+                            <div className='IP-visibility-icon'>
+                                {visibilityIcon(post.postContent.visibility)}
+                            </div>
                         </div>
                        {post.postContent.paragraph && <div className='IP-paragraph'>
                             <p>{post.postContent.paragraph}</p>

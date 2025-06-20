@@ -21,7 +21,9 @@ export default function EditPost() {
     const navigate = useNavigate()
     const location = useLocation()
     const id = location.pathname.split('/').at(-2)
-    const visibilityTypes = ['Public', 'Friends', 'Private']
+    const visibilityTypes = ['Public', 'Followers', 'Private']
+    
+    const postPath = location.pathname.split("/edit")[0];
 
     const { user } = useAuth();
     //Check for user
@@ -29,7 +31,7 @@ export default function EditPost() {
         if (!post || !user) return; // Wait until both are loaded
     
         if (user.uid !== post.user) {
-            navigate(-1);
+            navigate(postPath);
         }
     }, [user, post, location]);
 
@@ -215,47 +217,46 @@ export default function EditPost() {
     }))
     }
     const editPost = async () => {
-            let finalEdit = editedPost;
-            if (finalEdit?.codeSnippet) {
-                finalEdit.codeSnippet = sanitiseCode(finalEdit?.codeSnippet)
+        let finalEdit = editedPost;
+        if (finalEdit?.codeSnippet) {
+            finalEdit.codeSnippet = sanitiseCode(finalEdit?.codeSnippet)
+        }
+        const newPost = {
+            ...editedPost,
+            time: new Date().toISOString(),
+            edited: true
+        }
+        try {
+            const response = await fetch(`${APILINK}/posts/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    postContent: newPost,
+                    user: post.user,
+                    deletedFiles: deletedFiles
+                }),
+            });
+            
+            const result = await response.json();
+            if (result.status === 'success') {
+                alert('Post successfully edited')
+                navigate(postPath)
+            } else {
+                console.error('Backend Error', result.error)
             }
-            const newPost = {
-                ...editedPost,
-                time: new Date().toISOString(),
-                edited: true
-            }
-            try {
-                const response = await fetch(`${APILINK}/posts/${id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        postContent: newPost,
-                        user: post.user,
-                        deletedFiles: deletedFiles
-                    }),
-                });
-                
-                const result = await response.json();
-                if (result.status === 'success') {
-                    alert('Post successfully edited')
-                    navigate('/')
-                } else {
-                    console.error('Backend Error', result.error)
-                }
-            } catch (e) {
-                console.error('failed to save post:', e)
-            }
-          };
-
+        } catch (e) {
+            console.error('failed to save post:', e)
+        }
+        };
     function handleCancelEdits() {
         if (post?.postContent !== editedPost) {
             if (!window.confirm("Are you sure you undo all edits?")) {
                 return
               }
         }
-        navigate(-1)
+        navigate(postPath)
     }
     const handleCodeChange = (value) => {
         setEditedPost((preVal) => ({
@@ -305,7 +306,7 @@ export default function EditPost() {
              titleCharacters: 'Title contains invalid characters',
              fileSize: 'File must be less than 35mb',
              fileType: 'Invalid file format',
-             paragraphCharacters: 'Paragraph contains invalid characters',
+            //  paragraphCharacters: 'Paragraph contains invalid characters',
              codeLanguage: 'Please select a language',
              tagLengthMin: 'Please include a tag name',
              tagLengthMax: 'Tag must not be more than 10 characters',
@@ -317,7 +318,7 @@ export default function EditPost() {
                 titleLengthMin: postData.title?.length > 0,
                 titleLengthMax: postData.title?.length <= 30,
                 titleCharacters: /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(postData?.title),
-                paragraphCharacters:  postData?.paragraph === '' || /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(postData?.paragraph),
+                // paragraphCharacters:  postData?.paragraph === '' || /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(postData?.paragraph),
                 codeLanguage: (postData.codeSnippet && postData.codeLanguage !== '') || (!postData.codeSnippet)
             }
             setSubmissionConditions(conditions)
@@ -429,7 +430,7 @@ export default function EditPost() {
                                     <h4><span style={{cursor: 'pointer'}}>{userInfo?.displayName || userInfo?.displayTag}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(post.postContent.time)}</span></h4>
                                 </div>
                                 <div className='IP-visibility'>
-                                        <select name='visibility' onChange={handleChange}>
+                                        <select name='visibility' onChange={handleChange} value={editedPost.visibility}>
                                                 {visibilityTypes.map((x) => (
                                                     <option key={x} value={x}>
                                                         {x}

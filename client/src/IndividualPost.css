@@ -183,4 +183,11 @@
     border: 1px solid transparent
   }
 
-  
+  .IP-visibility-icon {
+    width: 1rem;
+    height: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+  }
