@@ -114,4 +114,22 @@ export default class CodeInDAO {
             const postResponse = await posts.find({ _id: { $in: objectIds } }).toArray();
             return postResponse;
     }
+
+    static async getTailoredPosts(followIds) {
+       //Get posts from followed users
+        const followedPosts = await posts.find({
+            user: { $in: followIds }
+        }).sort({ createdAt: -1 }).toArray();
+    
+        //Get public posts not from followed users
+        const publicPosts = await posts.find({
+            "postContent.visibility": "Public",
+            user: { $nin: followIds } // Avoid duplicates
+        }).sort({ createdAt: -1 }).toArray();
+    
+        //Merge followed posts first, then public
+        const combinedPosts = [...followedPosts, ...publicPosts];
+    
+        return combinedPosts;
+}
 }

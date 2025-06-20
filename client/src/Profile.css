@@ -94,6 +94,12 @@
     cursor: pointer;
 }
 
+.follow-button.active {
+    background-color: rgb(87, 87, 255);
+    color: white;
+    border: 1px solid transparent
+}
+
 .follow-button:hover {
     background-color: rgb(87, 87, 255);
     color: white;

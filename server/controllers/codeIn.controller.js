@@ -265,4 +265,18 @@ export default class CodeInController {
             res.status(500).json({ error: 'Failed to fetch posts' });
         }
     }
+
+    static async apiGetTailoredPosts (req, res) {
+        try {
+            const followIds = req.body;
+            let posts = await CodeInDAO.getTailoredPosts(followIds)
+            if (!posts) {
+                res.status(404).json({error: "Not Found"})
+                return
+            }
+            res.json(posts)
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to fetch posts' });
+        }
+    }
 }

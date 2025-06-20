@@ -24,6 +24,8 @@ const upload = multer({ storage: tempStorage });
 //Get Posts based on multiple Id's
 router.route('/posts/batch')
     .post(CodeInCtrl.apiGetMultiplePosts)
+router.route('/posts/tailored')
+    .post(CodeInCtrl.apiGetTailoredPosts)
 //See and Edit Posts
 router.route('/posts/:id')
     .get(CodeInCtrl.apiGetPost)

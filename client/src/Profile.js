@@ -374,7 +374,6 @@ export default function Profile () {
             setFollowed(true)
         }
     }
-
     
     return <div className='user-profile-outer-body'>
         {loading && <div className='loading-body'>
@@ -400,7 +399,7 @@ export default function Profile () {
                 </div>}
                 <div className='user-follow'>
                     Followers: {tempFollowCount}
-                    {!isUser && <button className='follow-button' onClick={handleFollow}>
+                    {!isUser && <button className={`follow-button ${followed ? 'active' : ''}`} onClick={handleFollow}>
                         {followed? 'Unfollow' : 'Follow'}
                     </button>}
                 </div>

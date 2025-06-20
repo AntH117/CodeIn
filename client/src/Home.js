@@ -12,16 +12,12 @@ import { arrayUnion, arrayRemove  } from "firebase/firestore";
 import IndividualPost from './IndividualPost';
 
 export default function Home() {
-    
     //user
     const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     //handle loading
     const [loading, setLoading] = React.useState(true)
-    React.useEffect(() => {
-        getPosts()
-    }, [location])
 
     //Get logged in user into
     async function getUserInfo(uid) {
@@ -35,14 +31,23 @@ export default function Home() {
         }
     }
     async function awaitUserData() {
-        const response = await getUserInfo(user?.uid)
-        setLoggedUserData(response)
+        try {
+            const response = await getUserInfo(user?.uid)
+            setLoggedUserData(response)
+            //Get tailored posts
+            getTailoredPosts(response.followed)
+        } catch (e) {
+            console.error('Unable to fetch posts')
+        }
     }
     //get liked posts
     const [loggedUserData, setLoggedUserData] = React.useState(null)
     React.useEffect(() => {
         if (user) {
             awaitUserData()
+        } else {
+            //Get public posts
+            getPublicPosts()
         }
     },[user, location])
 
@@ -97,7 +102,7 @@ export default function Home() {
         filterPosts()
     }, [searchParams, posts])
     
-        
+    
 
     React.useEffect(() => {
         applyFilters()
@@ -109,11 +114,11 @@ export default function Home() {
         }
     }
 
-    const APILINK = 'http://localhost:5000/api/v1/codeIn/posts/'
+    const publicAPI = 'http://localhost:5000/api/v1/codeIn/posts/'
     
-    const getPosts = async () => {
+    const getPublicPosts = async () => {
         try {
-            const response = await fetch(APILINK, {
+            const response = await fetch(publicAPI, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -127,7 +132,26 @@ export default function Home() {
             setLoading(false)
         }
       };
-    
+    const tailoredAPI = 'http://localhost:5000/api/v1/codeIn/posts/tailored'
+    const getTailoredPosts = async (followedIds) => {
+        const userId = user.uid
+        try {
+            const response = await fetch(tailoredAPI, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(followedIds)
+            });
+            const data = await response.json();
+            setPosts(data)
+        } catch (e) {
+            console.error('Unable to load posts:', e)
+        } finally {
+            setLoading(false)
+        }
+    };
+
     function handleSignOut() {
         if (window.confirm('Are you sure you want to sign out?')) {
             signOut(auth)
@@ -151,7 +175,7 @@ export default function Home() {
 
     function Filters() {
         const [expand, setExpand] = React.useState()
-        const sortBy = ['newest', 'oldest', 'likes', 'comments']
+        const sortBy = ['newest', 'oldest', 'likes', 'comments', 'followed']
         const [temp, setTemp] = React.useState({
             sort: filters.sort,
             tag: filters.tag
@@ -256,7 +280,7 @@ export default function Home() {
                     <Icons.ArrowDown />
                 </div>
                 {<div className={`nav-user-options ${open ? 'open' : ''}`}>
-                    <div className='user-dropdown-option'onClick={() => navigate(`/users/${user.uid}`)}>Profile</div>
+                    <div className='user-dropdown-option'onClick={() => navigate(`/users/${user?.uid}`)}>Profile</div>
                     <div className='user-dropdown-option' onClick={handleSignOut}>Sign Out</div>
                 </div>}
             </div>
