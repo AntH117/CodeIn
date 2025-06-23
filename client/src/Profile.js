@@ -104,10 +104,19 @@ export default function Profile () {
         React.useEffect(() => {
             getPosts()
         }, [location])
-    
 
+        console.log(userPosts)
+        let filteredPosts = []
+        if (!user || !loggedUserInfo?.followed.includes(profileId)) {
+            filteredPosts = userPosts?.filter((post) => post.postContent.visibility === 'Public');
+        } else if (user && loggedUserInfo?.followed.includes(profileId)) {
+            filteredPosts = userPosts?.filter((post) => post.postContent.visibility !== 'Private')
+        } else if (user && loggedUserInfo.uid == profileId) {
+            filteredPosts = userPosts;
+        }
+        
         return <div className='individual-post-body'>
-            {userPosts && userPosts.map((post) => 
+            {userPosts && filteredPosts.map((post) => 
                 <IndividualPost data={post} />
             )}
             {userPosts?.length == 0 && <p>No posts yet!</p>}
