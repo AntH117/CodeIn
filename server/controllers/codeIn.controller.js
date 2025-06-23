@@ -27,7 +27,17 @@ export default class CodeInController {
                 postContent,
                 user
             )
-            res.json({ status: "success" })
+        if (postResponse?.insertedId) {
+            res.status(200).json({
+                status: 'success',
+                insertedId: postResponse.insertedId,
+            });
+        } else {
+            res.status(500).json({
+                status: 'error',
+                error: postResponse.error || 'Unknown error creating post',
+            });
+        }
         } catch (e) {
             res.status(500).json({error: e.message})
         }

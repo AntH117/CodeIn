@@ -2,7 +2,7 @@ import './EditPost.css';
 import React from 'react';
 import image_upload from './images/image_upload.png'
 import file_upload from './images/file-upload.png'
-import { Link, Outlet, Navigate, useLocation, useNavigate} from 'react-router-dom';
+import { Link, Outlet, Navigate, useLocation, useNavigate, redirect} from 'react-router-dom';
 import testImage from './images/Temp-profile-pic.png'
 import { v4 as uuidv4 } from 'uuid';
 import { auth, db } from './firebase';
@@ -11,12 +11,14 @@ import { useAuth } from "./AuthContext";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import CodeEditor from './CodeEditor';
 import TextSettings from './TextSettings';
+import ShowAlert from './ShowAlert';
 
 export default function EditPost() {
     const [post, setPost] = React.useState()
     const [editedPost, setEditedPost] = React.useState()
     const [deletedFiles, setDeletedFiles] = React.useState([])
     const [userInfo, setUserInfo] = React.useState()
+    const [alert ,setAlert] = React.useState(null)
     const APILINK = `http://localhost:5000/api/v1/codeIn`
     const navigate = useNavigate()
     const location = useLocation()
@@ -241,8 +243,7 @@ export default function EditPost() {
             
             const result = await response.json();
             if (result.status === 'success') {
-                alert('Post successfully edited')
-                navigate(postPath)
+                setAlert({message: 'Post successfully edited', redirect: postPath})
             } else {
                 console.error('Backend Error', result.error)
             }
@@ -407,13 +408,10 @@ export default function EditPost() {
                 </div>
             </div>
         }
-    
-        function convertParagraph(text) {
 
-            
-        }
 
     return <div className='EP-outer-body'>
+       {alert && <ShowAlert message={alert?.message} redirect={alert?.redirect}/>}
       {editedPost && <div className='EP-inner-body'>
                          <div className='edit-post-title'>Edit Post</div>
                           <div className='edit-title'>

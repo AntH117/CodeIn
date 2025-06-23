@@ -10,6 +10,7 @@ import Editor from "@monaco-editor/react";
 import CodeEditor from './CodeEditor';
 import 'emoji-picker-element';
 import TextSettings from './TextSettings';
+import ShowAlert from './ShowAlert';
 
 export default function Post() {
     const { user } = useAuth();
@@ -25,6 +26,8 @@ export default function Post() {
         tags: [],
         files: []
     })
+
+    const [alert, setAlert] = React.useState(null)
 
     //Add tag on language Change
     React.useEffect(() => {
@@ -98,9 +101,8 @@ export default function Post() {
             });
             
             const result = await response.json();
-            if (result.status === 'success') {
-                alert('Post successfully saved')
-                navigate(-1)
+            if (result.insertedId) {
+                setAlert({message: 'Post successfully saved', redirect: `posts/${result.insertedId}`})
             } else {
                 console.error('Backend Error', result.error)
             }
@@ -347,6 +349,7 @@ export default function Post() {
     }
 
     return <div className='post-outer-body'>
+        {alert && <ShowAlert message={alert?.message} redirect={alert?.redirect}/>}
         <div className='post-body'>
         <button className='cancel-button' onClick={() => {
             cancelPost();

@@ -24,7 +24,8 @@ export default class CodeInDAO {
                 likeCount: 0,
                 shareCount: 0,
             }
-            return await posts.insertOne(postDoc)
+            const result = await posts.insertOne(postDoc);
+            return { insertedId: result.insertedId };
         } catch (e) {
             console.error(`Unable to create post: ${e}`)
             return {error: e}

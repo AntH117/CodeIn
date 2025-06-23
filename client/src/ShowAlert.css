@@ -1,0 +1,42 @@
+.custom-alert {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    width: fit-content;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    gap: 10px;
+    border-radius: 5px;
+    align-items: center;
+}
+
+.custom-alert-button {
+    width: 5rem;
+    height: fit-content;
+    cursor: pointer;
+    background-color: rgba(112,94,218,255);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.alert-overlay {
+    z-index: 999;
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background: rgba(0, 0, 0, 0.199); /* dark grey transparent */
+    backdrop-filter: blur(2px); /* optional: adds subtle blur */
+}
