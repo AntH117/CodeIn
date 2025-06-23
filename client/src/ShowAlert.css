@@ -40,3 +40,10 @@
     background: rgba(0, 0, 0, 0.199); /* dark grey transparent */
     backdrop-filter: blur(2px); /* optional: adds subtle blur */
 }
+
+.custom-alert-confirmation {
+    width: fit-content;
+    display: flex;
+    flex-direction: row;   
+    gap: 5px;
+}

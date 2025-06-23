@@ -251,14 +251,22 @@ export default function EditPost() {
             console.error('failed to save post:', e)
         }
         };
+
+    const [cancelConfirmation, setCancelConfirmation] = React.useState(null)
+
     function handleCancelEdits() {
         if (post?.postContent !== editedPost) {
-            if (!window.confirm("Are you sure you undo all edits?")) {
-                return
-              }
+            setCancelConfirmation(false)
+        } else {
+            navigate(postPath)
         }
-        navigate(postPath)
     }
+    React.useEffect(() => {
+        if (cancelConfirmation) {
+            navigate(postPath)
+        }
+    }, [cancelConfirmation])
+
     const handleCodeChange = (value) => {
         setEditedPost((preVal) => ({
             ...preVal,
@@ -412,6 +420,7 @@ export default function EditPost() {
 
     return <div className='EP-outer-body'>
        {alert && <ShowAlert message={alert?.message} redirect={alert?.redirect}/>}
+       {cancelConfirmation == false && <ShowAlert confirm={true} message={'Discard all changes?'} setConfirmation={setCancelConfirmation}/>}
       {editedPost && <div className='EP-inner-body'>
                          <div className='edit-post-title'>Edit Post</div>
                           <div className='edit-title'>

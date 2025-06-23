@@ -8,6 +8,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import testImage from './images/Temp-profile-pic.png'
 import Icons from './icons/Icons';
 import { getAuth, reauthenticateWithCredential, updatePassword, EmailAuthProvider } from "firebase/auth";
+import ShowAlert from './ShowAlert';
 
 export default function EditProfile() {
     const { user } = useAuth();
@@ -17,6 +18,7 @@ export default function EditProfile() {
     const userImageRef = React.useRef(null)
     const userBgRef = React.useRef(null)
 
+    
     // Check if current user is profile user
     React.useEffect(() => {
         if (user.uid !== profileId) {
@@ -125,6 +127,15 @@ export default function EditProfile() {
         }, { merge: true }); // merge keeps existing data
     }
 
+    const [confirmation, setConfirmation] = React.useState(null)
+    const [alert , setAlert] = React.useState(null)
+
+    React.useEffect(() => {
+        if (confirmation) {
+            handleSaveEdits()
+        }
+    }, [confirmation])
+
     const handleSaveEdits = async () => {
         const updatedUserData = { 
             ...profileInfo, 
@@ -192,8 +203,7 @@ export default function EditProfile() {
             console.log('All temp files deleted');
         }
 
-        alert('Profile successfully saved');
-        navigate(`/users/${user.uid}`);
+        setAlert({message: 'Profile successfully saved', redirect: `/users/${user.uid}`})
         } catch (e) {
             console.error('Error saving profile')
         }
@@ -289,6 +299,7 @@ export default function EditProfile() {
     
 
     return <div className='user-profile-outer-body'>
+            {alert && <ShowAlert message={alert?.message} redirect={alert?.redirect}/>}
         {profileInfo && <div className='user-profile-inner-body'>
             <div className='user-background'>
                 <img className='user-background-image' src={profileInfo?.backgroundURL || null} onClick={handleBgClick}style={{cursor: 'pointer', zIndex: '5'}}>
@@ -322,7 +333,8 @@ export default function EditProfile() {
                     </textarea>
                 </div>
                 <div className='user-save'>
-                    <div className='user-edit-save' onClick={() => window.confirm('Save Edits?') && handleSaveEdits()}> Save</div>
+                    <div className='user-edit-save' onClick={() => setConfirmation(false)}> Save</div>
+                    {confirmation == false && <ShowAlert message={'Save Edits?'} confirm={true} setConfirmation={setConfirmation}/>}
                 </div>
             </div>
             <SensitiveData />
