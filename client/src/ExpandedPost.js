@@ -235,8 +235,12 @@ export default function ExpandedPost () {
             
             const result = await response.json();
             if (result.status === 'success') {
-                alert('Comment Saved')
-                window.location.reload()
+                toast.success('Comment created successfully', {
+                    duration: 4000,
+                    position: 'bottom-right',
+                    icon: '🎉',
+                  });
+                getComments()
             } else {
                 console.error('Backend Error', result.error)
             }
@@ -263,8 +267,12 @@ export default function ExpandedPost () {
             
             const result = await response.json();
             if (result.status === 'success') {
-                alert('Comment deleted')
-                window.location.reload()
+                toast.success('Comment deleted!', {
+                    duration: 4000,
+                    position: 'bottom-right',
+                    icon: '🗑️',
+                  });
+                getComments()
             } else {
                 console.error('Backend Error', result.error)
             }

@@ -9,7 +9,7 @@
     background-color: #fff;
     border: 1px solid #ccc;
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     z-index: 1000;
     gap: 10px;
     border-radius: 5px;
@@ -19,16 +19,39 @@
 .custom-alert-button {
     width: 5rem;
     height: fit-content;
-    cursor: pointer;
+    /* cursor: pointer;
     background-color: rgba(112,94,218,255);
     color: white;
     border: none;
     border-radius: 6px;
     padding: 6px 12px;
     transition: background-color 0.2s;
+    cursor: pointer; */
+    padding: 0.6rem 1.5rem;
+    border: none;
+    border-radius: 0.6rem;
+    font-weight: 600;
     cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    color: white;
+    animation: forwards fadeIn 0.5s;
+    margin-top: 10px;
 }
 
+.custom-alert-button:hover {
+    transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+.custom-alert span {
+    color: #333;
+}
+
+  
 .alert-overlay {
     z-index: 999;
     display: flex;

@@ -207,6 +207,11 @@ export default function Home() {
     React.useEffect(() => {
         if (confirmSignOut == true) {
             signOut(auth)
+            toast.success('Successfully signed out', {
+                duration: 4000,
+                position: 'bottom-right',
+                icon: '✅',
+              });
         }
     }, [confirmSignOut])
 

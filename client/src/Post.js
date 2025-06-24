@@ -368,11 +368,11 @@ export default function Post() {
                 <div className='form-title'>
                     <h3>Title</h3>
                     <input type='text' className='form-title-input' name='title' onChange={handleChange}></input>
-                    <div className='form-title-error'>
-                        {submissionConditions.titleLengthMin === false && errorMessages.titleLengthMin}
-                        {submissionConditions.titleLengthMax === false && errorMessages.titleLengthMax}
-                        {submissionConditions.titleCharacters === false && errorMessages.titleCharacters}
-                    </div>
+                </div>
+                <div className='form-title-error'>
+                        <span>{submissionConditions.titleLengthMin === false && errorMessages.titleLengthMin}</span>
+                        <span>{submissionConditions.titleLengthMax === false && errorMessages.titleLengthMax}</span>
+                        <span>{submissionConditions.titleCharacters === false && errorMessages.titleCharacters}</span>
                 </div>
                 <div className='form-visibility'>
                     <h3 className='form-visibility-title'>Visibility</h3>

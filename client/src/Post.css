@@ -105,14 +105,12 @@
 
 
 .form-title-error {
-    position: absolute;
-    width: 70%;
+    width: 100%;
     height: fit-content;
-    right: 0;
-    top: 40px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     color: rgb(248, 157, 157);
+    margin-bottom: 5px;
 }
 
 .form-title-input {
