@@ -129,6 +129,11 @@
     height: fit-content;
     max-height: 300px;
     overflow: scroll;
+    margin-top: 5px;
+}
+
+.IP-code-display::-webkit-scrollbar {
+    width: 0;
 }
 
 .IP-code-display pre::-webkit-scrollbar {

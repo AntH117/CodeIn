@@ -9,6 +9,7 @@ import Icons from './icons/Icons';
 import IndividualPost from './IndividualPost';
 import { doc, getDoc, setDoc, updateDoc, increment  } from "firebase/firestore";
 import { arrayUnion, arrayRemove  } from "firebase/firestore";
+import NotFound from './NotFound';
 
 export default function Profile () {
     const { user } = useAuth();
@@ -20,6 +21,7 @@ export default function Profile () {
     const location = useLocation();
     const profileId = location.pathname.split('/').at(-1)
     const navigate = useNavigate()
+    const [loadingError, setLoadingError] = React.useState(false)
 
     //handle loading
     const [loading, setLoading] = React.useState(true)
@@ -37,14 +39,21 @@ export default function Profile () {
     }
 
     React.useEffect(() => {
-        setTempFollowCount(profileInfo?.followCount)
-        setFollowed(loggedUserInfo?.followed.includes(profileId))
+        if (profileInfo) {
+            setLoading(false)
+            setTempFollowCount(profileInfo?.followCount)
+            setFollowed(loggedUserInfo?.followed.includes(profileId))
+        }
     }, [profileInfo])
+
     
     React.useEffect(() => {
         if (user?.uid) {
             getLoggedUserInfo()
         }
+
+        //reset loading error state
+        setLoadingError(false)
     }, [location])
 
     async function getLoggedUserInfo() {
@@ -55,14 +64,19 @@ export default function Profile () {
             console.error('Error getting profile info')
         }
     }
+    
+
     async function getAuthorInfo() {
         try {
             const profileInfo = await getUserInfo(profileId)
-            setProfileInfo(profileInfo)
+            console.log(profileInfo)
+            if (profileInfo) {
+                setProfileInfo(profileInfo)
+            } else {
+                setLoadingError(true)
+            }
         } catch (e) {
             console.error('Error getting profile info')
-        } finally {
-            setLoading(false)
         }
     }
 
@@ -385,9 +399,10 @@ export default function Profile () {
     }
     
     return <div className='user-profile-outer-body'>
-        {loading && <div className='loading-body'>
+        {(loading && !loadingError) && <div className='loading-body'>
             <span class="loader"></span>
         </div>}
+        {loadingError && <NotFound />}
         {!loading && <div className='user-profile-inner-body'>
             <div className='user-background'>
                 <img className='user-background-image' src={profileInfo?.backgroundURL || null}>

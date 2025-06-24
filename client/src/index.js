@@ -13,6 +13,8 @@ import EditPost from './EditPost';
 import Profile from './Profile';
 import EditProfile from './EditProfile';
 import { AuthProvider } from './AuthContext';
+import NotFound from './NotFound';
+
 import {
   createBrowserRouter,
   RouterProvider,
@@ -56,6 +58,10 @@ const router = createBrowserRouter([
             element: <ExpandedImage />
           }
         ]
+      },
+      {
+        path:'*',
+        element: <NotFound />
       }
     ]
   },

@@ -102,7 +102,7 @@ export default function Post() {
             
             const result = await response.json();
             if (result.insertedId) {
-                setAlert({message: 'Post successfully saved', redirect: `posts/${result.insertedId}`})
+                setAlert({message: 'Post successfully saved', redirect: `/posts/${result.insertedId}`})
             } else {
                 console.error('Backend Error', result.error)
             }

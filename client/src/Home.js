@@ -10,6 +10,8 @@ import { db } from "./firebase";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { arrayUnion, arrayRemove  } from "firebase/firestore";
 import IndividualPost from './IndividualPost';
+import ShowAlert from './ShowAlert';
+
 
 export default function Home() {
     //user
@@ -164,11 +166,17 @@ export default function Home() {
         }
     };
 
+    const [confirmSignOut, setConfirmSignOut] = React.useState(null)
+
     function handleSignOut() {
-        if (window.confirm('Are you sure you want to sign out?')) {
+        setConfirmSignOut(false)
+    }
+
+    React.useEffect(() => {
+        if (confirmSignOut == true) {
             signOut(auth)
         }
-    }
+    }, [confirmSignOut])
 
     function FilterTag({tag}) {
 
@@ -313,6 +321,7 @@ export default function Home() {
 
     return <div className='home'>
         <NavBar />
+        {confirmSignOut == false && <ShowAlert confirm={true} message={'Are you sure you want to sign out?'} setConfirmation={setConfirmSignOut}/>}
         <div className='news-feed-body'>
                 <div className='news-feed'>
                     {location.pathname == '/' && <div className='home-interaction'>
