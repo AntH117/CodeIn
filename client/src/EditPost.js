@@ -12,6 +12,8 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import CodeEditor from './CodeEditor';
 import TextSettings from './TextSettings';
 import ShowAlert from './ShowAlert';
+import { Toaster, toast } from 'react-hot-toast';
+
 
 export default function EditPost() {
     const [post, setPost] = React.useState()
@@ -34,6 +36,11 @@ export default function EditPost() {
     
         if (user.uid !== post.user) {
             navigate(postPath);
+            toast.error('Permission Denied', {
+                duration: 4000,
+                position: 'bottom-right',
+                icon: '⛔',
+              });
         }
     }, [user, post, location]);
 
@@ -243,7 +250,12 @@ export default function EditPost() {
             
             const result = await response.json();
             if (result.status === 'success') {
-                setAlert({message: 'Post successfully edited', redirect: postPath})
+                navigate(postPath)
+                toast.success('Saved!', {
+                    duration: 4000,
+                    position: 'bottom-right',
+                    icon: '💾',
+                  });
             } else {
                 console.error('Backend Error', result.error)
             }
@@ -419,7 +431,6 @@ export default function EditPost() {
 
 
     return <div className='EP-outer-body'>
-       {alert && <ShowAlert message={alert?.message} redirect={alert?.redirect}/>}
        {cancelConfirmation == false && <ShowAlert confirm={true} message={'Discard all changes?'} setConfirmation={setCancelConfirmation}/>}
       {editedPost && <div className='EP-inner-body'>
                          <div className='edit-post-title'>Edit Post</div>

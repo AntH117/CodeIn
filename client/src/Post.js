@@ -11,6 +11,7 @@ import CodeEditor from './CodeEditor';
 import 'emoji-picker-element';
 import TextSettings from './TextSettings';
 import ShowAlert from './ShowAlert';
+import { Toaster, toast } from 'react-hot-toast';
 
 export default function Post() {
     const { user } = useAuth();
@@ -102,7 +103,12 @@ export default function Post() {
             
             const result = await response.json();
             if (result.insertedId) {
-                setAlert({message: 'Post successfully saved', redirect: `/posts/${result.insertedId}`})
+                navigate(`/posts/${result.insertedId}`)
+                toast.success('Post Created', {
+                    duration: 4000,
+                    position: 'bottom-right',
+                    icon: '🎉',
+                  });
             } else {
                 console.error('Backend Error', result.error)
             }
@@ -349,7 +355,6 @@ export default function Post() {
     }
 
     return <div className='post-outer-body'>
-        {alert && <ShowAlert message={alert?.message} redirect={alert?.redirect}/>}
         <div className='post-body'>
         <button className='cancel-button' onClick={() => {
             cancelPost();

@@ -11,7 +11,7 @@ import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { arrayUnion, arrayRemove  } from "firebase/firestore";
 import IndividualPost from './IndividualPost';
 import ShowAlert from './ShowAlert';
-
+import { Toaster, toast } from 'react-hot-toast';
 
 export default function Home() {
     //user
@@ -126,6 +126,8 @@ export default function Home() {
                 case 'comments':
                     filtered = filtered.sort((a,b) => b.commentCount - a.commentCount)
                     break;
+                case 'followed':
+                    filtered = filtered.filter((post) => loggedUserData?.followed.includes(post.user))
             }  
         }
         setFilteredPosts(filtered)
@@ -350,6 +352,7 @@ export default function Home() {
     }
 
     return <div className='home'>
+        <Toaster />
         <NavBar />
         {confirmSignOut == false && <ShowAlert confirm={true} message={'Are you sure you want to sign out?'} setConfirmation={setConfirmSignOut}/>}
         <div className='news-feed-body'>

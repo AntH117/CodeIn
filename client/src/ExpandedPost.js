@@ -12,7 +12,8 @@ import { arrayUnion, arrayRemove  } from "firebase/firestore";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import NotFound from './NotFound';
-
+import ShowAlert from './ShowAlert';
+import { Toaster, toast } from 'react-hot-toast';
 
 export default function ExpandedPost () {
     const { user } = useAuth();
@@ -123,14 +124,19 @@ export default function ExpandedPost () {
             }
         }
     }
+
+    const [confirmDelete, setConfirmDelete] = React.useState(null)
     //Delete post
     function handleDeletePost() {
-        if (window.confirm("Are you sure you want to delete this post?")) {
-            // Perform deletion
+        setConfirmDelete(false)
+    }
+
+    React.useEffect(() => {
+        if (confirmDelete) {
             handleDeleteAllComments(post._id)
             deletePost();
-          }
-    }
+        }
+    }, [confirmDelete])
     const deletePost = async () => {
         try {
             const response = await fetch (APILINK, {
@@ -141,7 +147,11 @@ export default function ExpandedPost () {
                 body: post?.postContent.files.length > 0 ? JSON.stringify(post?.postContent.files) : null
             })
             if (response.ok) {
-                alert('Post deleted successfully.');
+                toast.success('Post deleted!', {
+                    duration: 4000,
+                    position: 'bottom-right',
+                    icon: '🗑️',
+                  });
                 navigate('/');
             } else {
                 const errorText = await response.text();
@@ -513,6 +523,7 @@ export default function ExpandedPost () {
     </div>}
     {loadingError && <NotFound />}
     <Outlet />
+    {confirmDelete == false && <ShowAlert message={'Are you sure you want to delete this post?'} confirm={true} setConfirmation={setConfirmDelete}/>}
     {!loading && <div className='EP-inner-body'>
                     {user?.uid == post.user && <DropDownMenu />}
                     <div className='IP-title'>
