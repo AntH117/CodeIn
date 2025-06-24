@@ -70,6 +70,36 @@ export default function Home() {
 
     const [posts, setPosts] = React.useState([])
     const [filteredPosts, setFilteredPosts] = React.useState(posts)
+    const [visibleCount, setVisibleCount] = React.useState(3)
+    const visiblePosts = filteredPosts.slice(0, visibleCount);
+
+
+    const scrollRef = React.useRef(null);
+
+    //Handle lazy loading
+    React.useEffect(() => {
+        const scroll = scrollRef.current;
+    
+        const handleScroll = () => {
+          if (!scroll) return;
+    
+          const { scrollTop, scrollHeight, clientHeight } = scroll;
+          if (scrollTop + clientHeight >= scrollHeight - 100) {
+            setVisibleCount((prev) => prev + 3);
+          }
+        };
+    
+        if (scroll) {
+          scroll.addEventListener('scroll', handleScroll);
+        }
+    
+        return () => {
+          if (scroll) {
+            scroll.removeEventListener('scroll', handleScroll);
+          }
+        };
+      }, []);
+
 
     function filterPosts() {
         let filtered = posts;
@@ -323,7 +353,7 @@ export default function Home() {
         <NavBar />
         {confirmSignOut == false && <ShowAlert confirm={true} message={'Are you sure you want to sign out?'} setConfirmation={setConfirmSignOut}/>}
         <div className='news-feed-body'>
-                <div className='news-feed'>
+                <div className='news-feed' ref={scrollRef}>
                     {location.pathname == '/' && <div className='home-interaction'>
                         {(!loading && user) &&<div className='create-post'>
                         <button className='create-post-button'>
@@ -337,7 +367,7 @@ export default function Home() {
                     <span class="loader"></span>
                 }
                 {!loading && <div className='individual-post-bodies'>
-                    {(location.pathname == '/' || location.pathname == '/post') && filteredPosts.map((data) => {
+                    {(location.pathname == '/' || location.pathname == '/post') && visiblePosts.map((data) => {
                         return <IndividualPost data={data} key={data._id} handleSearchParams={handleSearchParams}/>
                     })}
                     {filteredPosts.length == 0 && <div>No posts found</div>}
