@@ -249,8 +249,10 @@ export default function IndividualPost({data, handleSearchParams}) {
             })}
         </div>}
         <div className='IP-socials'>
-            <div className='IP-socials-individual'>
-                {user ? loggedUserData?.likes?.includes(data._id) ? <Icons.HeartFilled /> : <Icons.Heart /> : <Icons.Heart />}
+            <div className='like-icon-wrapper'>
+                <div className={`like-icon ${loggedUserData?.likes?.includes(data._id) && 'liked'}`}>
+                    {user ? loggedUserData?.likes?.includes(data._id) ? <Icons.HeartFilled /> : <Icons.Heart /> : <Icons.Heart />}
+                </div>
                 {tempLikeCount}
             </div>
             <div className='IP-socials-individual'>
