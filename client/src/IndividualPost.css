@@ -130,6 +130,14 @@
     max-height: 300px;
     overflow: scroll;
     margin-top: 5px;
+    position: relative;
+}
+
+.IP-code-display-copy {
+    position: absolute;
+    top: 5%;
+    right: 5px;
+    cursor: pointer;
 }
 
 .IP-code-display::-webkit-scrollbar {

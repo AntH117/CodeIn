@@ -12,6 +12,7 @@ import { arrayUnion, arrayRemove  } from "firebase/firestore";
 import IndividualPost from './IndividualPost';
 import ShowAlert from './ShowAlert';
 import { Toaster, toast } from 'react-hot-toast';
+import notify from './Toast';
 
 export default function Home() {
     //user
@@ -204,17 +205,6 @@ export default function Home() {
         setConfirmSignOut(false)
     }
 
-    React.useEffect(() => {
-        if (confirmSignOut == true) {
-            signOut(auth)
-            toast.success('Successfully signed out', {
-                duration: 4000,
-                position: 'bottom-right',
-                icon: '✅',
-              });
-        }
-    }, [confirmSignOut])
-
     function FilterTag({tag}) {
 
         return <div className='filter-tag-body'>
@@ -359,7 +349,10 @@ export default function Home() {
     return <div className='home'>
         <Toaster />
         <NavBar />
-        {confirmSignOut == false && <ShowAlert confirm={true} message={'Are you sure you want to sign out?'} setConfirmation={setConfirmSignOut}/>}
+        {confirmSignOut == false && <ShowAlert confirm={true} message={'Are you sure you want to sign out?'} setConfirmation={setConfirmSignOut} callback={() => {
+            signOut(auth)
+            notify.success('Successfully signed out')
+        }}/>}
         <div className='news-feed-body'>
                 <div className='news-feed' ref={scrollRef}>
                     {location.pathname == '/' && <div className='home-interaction'>

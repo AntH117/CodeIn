@@ -11,6 +11,7 @@ import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { arrayUnion, arrayRemove  } from "firebase/firestore";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import notify from './Toast';
 
 export default function IndividualPost({data, handleSearchParams}) {
     const { user } = useAuth();
@@ -204,6 +205,11 @@ export default function IndividualPost({data, handleSearchParams}) {
         }
     }
 
+    function handleCopy(data) {
+        navigator.clipboard.writeText(data);
+        notify.success('Copied to clipboard!','📋')
+    }
+
     return <div className='IP-body'>
         <div className='IP-title'>
             <h2 onClick={() => navigate(`/posts/${data._id}`)}>{data.postContent.title}</h2>
@@ -225,6 +231,9 @@ export default function IndividualPost({data, handleSearchParams}) {
         </div>}
         
         {data?.postContent?.codeSnippet && <div className='IP-code-display'>
+            <div className='IP-code-display-copy' onClick={() => handleCopy(data.postContent.codeSnippet)}>
+                <Icons.Copy />
+            </div>
             {data?.postContent?.codeSnippet && <CodeBlock language={data.postContent.codeLanguage} code={data.postContent.codeSnippet}/>}
         </div>}
 

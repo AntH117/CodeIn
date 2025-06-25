@@ -179,11 +179,20 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid #ddd;
   border-radius: 8px;
+  transition: all 0.5s ease-in-out
 }
 
-.user-submit-password:hover {
+.user-submit-password.active:hover {
   background-color: #f0fff4;
   color: #2a9978;
+}
+
+.user-submit-password.disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.user-submit-password.disabled:hover {
 }
 
 .password-error-div {

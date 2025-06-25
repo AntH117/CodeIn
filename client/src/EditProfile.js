@@ -9,6 +9,7 @@ import testImage from './images/Temp-profile-pic.png'
 import Icons from './icons/Icons';
 import { getAuth, reauthenticateWithCredential, updatePassword, EmailAuthProvider } from "firebase/auth";
 import ShowAlert from './ShowAlert';
+import notify from './Toast';
 
 export default function EditProfile() {
     const { user } = useAuth();
@@ -130,12 +131,6 @@ export default function EditProfile() {
     const [confirmation, setConfirmation] = React.useState(null)
     const [alert , setAlert] = React.useState(null)
 
-    React.useEffect(() => {
-        if (confirmation) {
-            handleSaveEdits()
-        }
-    }, [confirmation])
-
     const handleSaveEdits = async () => {
         const updatedUserData = { 
             ...profileInfo, 
@@ -202,8 +197,8 @@ export default function EditProfile() {
             );
             console.log('All temp files deleted');
         }
-
-        setAlert({message: 'Profile successfully saved', redirect: `/users/${user.uid}`})
+        navigate(`/users/${user.uid}`)
+        notify.success('Profile saved!', '💾')
         } catch (e) {
             console.error('Error saving profile')
         }
@@ -225,7 +220,8 @@ export default function EditProfile() {
                 console.error('Error deleting one or more files:', err);
             }
         }
-        navigate(-1)
+        notify.warn('Changes discarded')
+        navigate(`/users/${user.uid}`);
     }
 
     function SensitiveData() {
@@ -253,29 +249,39 @@ export default function EditProfile() {
                 }
             })
         }
+
+        const [passwordCd, setPasswordCd] = React.useState(false)
         async function changeUserPassword({currentPass, newPass}) {
+            if (passwordCd) return
+            setPasswordCd(true)
+            notify.warn("Working on it...", "🛠️")
             if (!user) {
                 console.error("Not authenticated.");
+                setPasswordCd(false)
                 return;
               }
             if (newPass.length < 4) {
                 setErrors('passwordLengthMin')
+                setPasswordCd(false)
                 return
             } else if (newPass.length > 11) {
                 setErrors(`passwordLengthMax`)
+                setPasswordCd(false)
                 return;
             }
             const credential = EmailAuthProvider.credential(user.email, currentPass);
             try {
                 await reauthenticateWithCredential(user, credential);
-                console.log("Reauthentication successful.");
                 await updatePassword(user, newPass);
-                alert("Password updated successfully.");
+                notify.success('Password saved successfully!', '💾')
+                setPasswordCd(false)
                 navigate(`/users/${user.uid}`);
               } catch (error) {
+                setPasswordCd(false)
                 setErrors(error.message.match(/\(([^)]+)\)/)[1])
               }
         }
+        console.log(passwordCd)
         return <div className='user-sensitive-body'>
             <div className='user-sensitive-toggle' onClick={() => setToggle((preVal) => !preVal)}>{toggle ? <Icons.LockOpen /> : <Icons.LockClosed />}</div>
             <div className={`user-sensitive-inner-body ${toggle ? 'open' : ''}`}>
@@ -290,7 +296,7 @@ export default function EditProfile() {
                 {errors && <div className='password-error-div'>
                     {errorMessages[errors]}
                 </div>}
-                <button className='user-submit-password' onClick={() => changeUserPassword({currentPass: passwords.current, newPass: passwords.new})}>
+                <button className={`user-submit-password ${passwordCd ? 'disabled' : 'active'}`} onClick={() => {changeUserPassword({currentPass: passwords.current, newPass: passwords.new})}} disabled={passwordCd}>
                         Change Password
                 </button>
             </div>
@@ -299,7 +305,7 @@ export default function EditProfile() {
     
 
     return <div className='user-profile-outer-body'>
-            {alert && <ShowAlert message={alert?.message} redirect={alert?.redirect}/>}
+            {/* {alert && <ShowAlert message={alert?.message} redirect={alert?.redirect}/>} */}
         {profileInfo && <div className='user-profile-inner-body'>
             <div className='user-background'>
                 <img className='user-background-image' src={profileInfo?.backgroundURL || null} onClick={handleBgClick}style={{cursor: 'pointer', zIndex: '5'}}>
@@ -334,7 +340,7 @@ export default function EditProfile() {
                 </div>
                 <div className='user-save'>
                     <div className='user-edit-save' onClick={() => setConfirmation(false)}> Save</div>
-                    {confirmation == false && <ShowAlert message={'Save Edits?'} confirm={true} setConfirmation={setConfirmation}/>}
+                    {confirmation == false && <ShowAlert message={'Save Edits?'} confirm={true} setConfirmation={setConfirmation} callback={() => handleSaveEdits()}/>}
                 </div>
             </div>
             <SensitiveData />

@@ -12,7 +12,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import CodeEditor from './CodeEditor';
 import TextSettings from './TextSettings';
 import ShowAlert from './ShowAlert';
-import { Toaster, toast } from 'react-hot-toast';
+import notify from './Toast';
 
 
 export default function EditPost() {
@@ -36,11 +36,7 @@ export default function EditPost() {
     
         if (user.uid !== post.user) {
             navigate(postPath);
-            toast.error('Permission Denied', {
-                duration: 4000,
-                position: 'bottom-right',
-                icon: '⛔',
-              });
+            notify.error('Permission Denied')
         }
     }, [user, post, location]);
 
@@ -251,11 +247,7 @@ export default function EditPost() {
             const result = await response.json();
             if (result.status === 'success') {
                 navigate(postPath)
-                toast.success('Saved!', {
-                    duration: 4000,
-                    position: 'bottom-right',
-                    icon: '💾',
-                  });
+                notify.success('Post saved!', '💾')
             } else {
                 console.error('Backend Error', result.error)
             }

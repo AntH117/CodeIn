@@ -13,7 +13,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import NotFound from './NotFound';
 import ShowAlert from './ShowAlert';
-import { Toaster, toast } from 'react-hot-toast';
+import notify from './Toast';
 
 export default function ExpandedPost () {
     const { user } = useAuth();
@@ -125,18 +125,12 @@ export default function ExpandedPost () {
         }
     }
 
-    const [confirmDelete, setConfirmDelete] = React.useState(null)
+    const [confirmDeletePost, setConfirmDeletePost] = React.useState(null)
     //Delete post
     function handleDeletePost() {
-        setConfirmDelete(false)
+        setConfirmDeletePost(false)
     }
 
-    React.useEffect(() => {
-        if (confirmDelete) {
-            handleDeleteAllComments(post._id)
-            deletePost();
-        }
-    }, [confirmDelete])
     const deletePost = async () => {
         try {
             const response = await fetch (APILINK, {
@@ -147,11 +141,7 @@ export default function ExpandedPost () {
                 body: post?.postContent.files.length > 0 ? JSON.stringify(post?.postContent.files) : null
             })
             if (response.ok) {
-                toast.success('Post deleted!', {
-                    duration: 4000,
-                    position: 'bottom-right',
-                    icon: '🗑️',
-                  });
+                notify.success('Post deleted!', '🗑️')
                 navigate('/');
             } else {
                 const errorText = await response.text();
@@ -235,11 +225,7 @@ export default function ExpandedPost () {
             
             const result = await response.json();
             if (result.status === 'success') {
-                toast.success('Comment created successfully', {
-                    duration: 4000,
-                    position: 'bottom-right',
-                    icon: '🎉',
-                  });
+                notify.success('Comment created successfully!')
                 getComments()
             } else {
                 console.error('Backend Error', result.error)
@@ -249,12 +235,13 @@ export default function ExpandedPost () {
         }
       };
       
+      const [confirmDeleteComment, setConfirmDeleteComment] = React.useState(null)
       //delete comment
       function handleDeleteComment(commentId, postId) {
-        if (window.confirm('Are you sure you want to delete this comment?')) {
-            deleteComment(commentId, postId)
-        }
+        setSelectedComment(commentId)
+        setConfirmDeleteComment(false)
       }
+
       const deleteComment = async (commentId, postId) => {
         try {
             const response = await fetch(`${CommentAPILINK}/${commentId}`, {
@@ -267,11 +254,7 @@ export default function ExpandedPost () {
             
             const result = await response.json();
             if (result.status === 'success') {
-                toast.success('Comment deleted!', {
-                    duration: 4000,
-                    position: 'bottom-right',
-                    icon: '🗑️',
-                  });
+                notify.success('Comment deleted!', '🗑️')
                 getComments()
             } else {
                 console.error('Backend Error', result.error)
@@ -368,6 +351,7 @@ export default function ExpandedPost () {
         )
     }
 
+    const [selectedComment, setSelectedComment] = React.useState(null)
     function Comments() {
         const [commentLimit, setCommentLimit] = React.useState(5)
         const [currentComment, setCurrentComment] = React.useState('')
@@ -522,7 +506,10 @@ export default function ExpandedPost () {
                 return <Icons.Private />
         }
     }
-
+    function handleCopy(data) {
+        navigator.clipboard.writeText(data);
+        notify.success('Copied to clipboard!','📋')
+    }
 
     const imageChecker = location.pathname.split('/').includes('image')
     return (<div className='EP-outer-body' style={imageChecker ? {overflowY: 'hidden'} : {}}>
@@ -531,7 +518,14 @@ export default function ExpandedPost () {
     </div>}
     {loadingError && <NotFound />}
     <Outlet />
-    {confirmDelete == false && <ShowAlert message={'Are you sure you want to delete this post?'} confirm={true} setConfirmation={setConfirmDelete}/>}
+    {confirmDeletePost == false && <ShowAlert message={'Are you sure you want to delete this post?'} confirm={true} setConfirmation={setConfirmDeletePost} callback={() => {
+        handleDeleteAllComments(post._id);
+        deletePost()
+    }}/>}
+    {confirmDeleteComment == false && <ShowAlert message={'Are you sure you want to delete this comment?'} confirm={true} setConfirmation={setConfirmDeleteComment} callback={() => {
+        deleteComment(selectedComment, postId)
+        setSelectedComment(null)
+    }}/>}
     {!loading && <div className='EP-inner-body'>
                     {user?.uid == post.user && <DropDownMenu />}
                     <div className='IP-title'>
@@ -554,6 +548,9 @@ export default function ExpandedPost () {
                         </div>}
                         {post?.postContent?.codeSnippet && <div className='IP-code-display'>
                               <CodeBlock language={post.postContent.codeLanguage} code={post.postContent.codeSnippet}/>
+                              <div className='IP-code-display-copy' onClick={() => handleCopy(post.postContent.codeSnippet)}>
+                                <Icons.Copy />
+                              </div>
                         </div>}
                         {imageFiles && <ImageGrid imageFiles={imageFiles}/>}
                         {otherFiles && <div className='IP-attachments'>
