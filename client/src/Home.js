@@ -14,6 +14,89 @@ import ShowAlert from './ShowAlert';
 import { Toaster, toast } from 'react-hot-toast';
 import notify from './Toast';
 
+function Filters({filters, setFilters}) {
+    const [expand, setExpand] = React.useState()
+    const sortBy = ['newest', 'oldest', 'likes', 'comments', 'followed']
+    const [temp, setTemp] = React.useState({
+        sort: filters.sort,
+        tag: filters.tag
+    })
+
+    function capitalizeFirstLetter(val) {
+        return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+    }
+
+    const handleApply = () => {
+        if (temp.sort) setFilters((preVal) => {return {...preVal, ['sort']: temp.sort}})
+    }
+
+    function FilterDropDownMenu({options}) {
+        const [open, setOpen] = React.useState(false)
+
+        return <div className='filter-sort-dropdown'>
+        <button class="filter-drop-toggle" type="button" onClick={() => setOpen((preVal) => !preVal)}>
+            {temp.sort ? capitalizeFirstLetter(temp.sort) : 'Sort By'}
+        </button>
+        {open && <div class="filter-drop-down">
+            {options.map((item) => {
+                return <button className='filter-drop-option' onClick={() => setTemp((preVal) => {return {...preVal, ['sort']: item}})}>
+                    {capitalizeFirstLetter(item)}
+                </button>
+            })}
+        </div>}
+    </div>
+    }
+
+    function FilterTag({tag}) {
+
+        return <div className='filter-tag-body'>
+                {tag || null}
+                <div className='form-tag-delete' onClick={() => setFilters((preVal) => {
+                    return {
+                        ...preVal,
+                        tag: preVal.tag.filter(x => x!== tag)
+                    }
+                })}>
+                  <Icons.X />
+                </div>
+        </div>
+    }
+
+    React.useEffect(() => {
+        if (expand) {
+            setTimeout(() => {
+                document.getElementById('home-filter').style.overflow = "";
+            }, [500])
+        } else {
+            document.getElementById('home-filter').style.overflow = 'hidden';
+        }
+    }, [expand])
+
+    return (
+    <>
+    <div className='home-filter-body'>
+        <div className={`home-filter ${expand ? 'expanded' : ''}`} id='home-filter'>
+            <div className='home-filter-icon' onClick={() => setExpand((preVal) => preVal == null ? true : !preVal)}>
+                <Icons.Filter />
+            </div>
+            <div className='home-filter-options'>
+                <FilterDropDownMenu options={sortBy}/>
+                <button className='filter-apply' onClick={handleApply}>
+                    Apply
+                </button>
+            </div>
+        </div>
+    </div>
+    {filters.tag?.length > 0 && filters.tag.map((tag) => {return  <FilterTag tag={tag}/>})}
+    {filters.tag?.length > 1 && <div className='filter-clear-all' onClick={() => setFilters((preVal) => {
+        return {...preVal, tag: []}
+    })}> 
+        Clear All
+    </div>}
+    </>
+    )
+}
+
 export default function Home() {
     //user
     const { user } = useAuth();
@@ -205,88 +288,88 @@ export default function Home() {
         setConfirmSignOut(false)
     }
 
-    function FilterTag({tag}) {
+    // function FilterTag({tag}) {
 
-        return <div className='filter-tag-body'>
-                {tag || null}
-                <div className='form-tag-delete' onClick={() => setFilters((preVal) => {
-                    return {
-                        ...preVal,
-                        tag: preVal.tag.filter(x => x!== tag)
-                    }
-                })}>
-                  <Icons.X />
-                </div>
-        </div>
-    }
+    //     return <div className='filter-tag-body'>
+    //             {tag || null}
+    //             <div className='form-tag-delete' onClick={() => setFilters((preVal) => {
+    //                 return {
+    //                     ...preVal,
+    //                     tag: preVal.tag.filter(x => x!== tag)
+    //                 }
+    //             })}>
+    //               <Icons.X />
+    //             </div>
+    //     </div>
+    // }
 
-    function Filters() {
-        const [expand, setExpand] = React.useState()
-        const sortBy = ['newest', 'oldest', 'likes', 'comments', 'followed']
-        const [temp, setTemp] = React.useState({
-            sort: filters.sort,
-            tag: filters.tag
-        })
+    // function Filters() {
+    //     const [expand, setExpand] = React.useState()
+    //     const sortBy = ['newest', 'oldest', 'likes', 'comments', 'followed']
+    //     const [temp, setTemp] = React.useState({
+    //         sort: filters.sort,
+    //         tag: filters.tag
+    //     })
 
-        function capitalizeFirstLetter(val) {
-            return String(val).charAt(0).toUpperCase() + String(val).slice(1);
-        }
+    //     function capitalizeFirstLetter(val) {
+    //         return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+    //     }
 
-        const handleApply = () => {
-            if (temp.sort) setFilters((preVal) => {return {...preVal, ['sort']: temp.sort}})
-        }
+    //     const handleApply = () => {
+    //         if (temp.sort) setFilters((preVal) => {return {...preVal, ['sort']: temp.sort}})
+    //     }
 
-        function FilterDropDownMenu({options}) {
-            const [open, setOpen] = React.useState(false)
+    //     function FilterDropDownMenu({options}) {
+    //         const [open, setOpen] = React.useState(false)
     
-            return <div className='filter-sort-dropdown'>
-            <button class="filter-drop-toggle" type="button" onClick={() => setOpen((preVal) => !preVal)}>
-                {temp.sort ? capitalizeFirstLetter(temp.sort) : 'Sort By'}
-            </button>
-            {open && <div class="filter-drop-down">
-                {options.map((item) => {
-                    return <button className='filter-drop-option' onClick={() => setTemp((preVal) => {return {...preVal, ['sort']: item}})}>
-                        {capitalizeFirstLetter(item)}
-                    </button>
-                })}
-            </div>}
-        </div>
-        }
+    //         return <div className='filter-sort-dropdown'>
+    //         <button class="filter-drop-toggle" type="button" onClick={() => setOpen((preVal) => !preVal)}>
+    //             {temp.sort ? capitalizeFirstLetter(temp.sort) : 'Sort By'}
+    //         </button>
+    //         {open && <div class="filter-drop-down">
+    //             {options.map((item) => {
+    //                 return <button className='filter-drop-option' onClick={() => setTemp((preVal) => {return {...preVal, ['sort']: item}})}>
+    //                     {capitalizeFirstLetter(item)}
+    //                 </button>
+    //             })}
+    //         </div>}
+    //     </div>
+    //     }
 
-        React.useEffect(() => {
-            if (expand) {
-                setTimeout(() => {
-                    document.getElementById('home-filter').style.overflow = "";
-                }, [500])
-            } else {
-                document.getElementById('home-filter').style.overflow = 'hidden';
-            }
-        }, [expand])
+    //     React.useEffect(() => {
+    //         if (expand) {
+    //             setTimeout(() => {
+    //                 document.getElementById('home-filter').style.overflow = "";
+    //             }, [500])
+    //         } else {
+    //             document.getElementById('home-filter').style.overflow = 'hidden';
+    //         }
+    //     }, [expand])
 
-        return (
-        <>
-        <div className='home-filter-body'>
-            <div className={`home-filter ${expand ? 'expanded' : ''}`} id='home-filter'>
-                <div className='home-filter-icon' onClick={() => setExpand((preVal) => preVal == null ? true : !preVal)}>
-                    <Icons.Filter />
-                </div>
-                <div className='home-filter-options'>
-                    <FilterDropDownMenu options={sortBy}/>
-                    <button className='filter-apply' onClick={handleApply}>
-                        Apply
-                    </button>
-                </div>
-            </div>
-        </div>
-        {filters.tag?.length > 0 && filters.tag.map((tag) => {return  <FilterTag tag={tag}/>})}
-        {filters.tag?.length > 1 && <div className='filter-clear-all' onClick={() => setFilters((preVal) => {
-            return {...preVal, tag: []}
-        })}> 
-            Clear All
-        </div>}
-        </>
-        )
-    }
+    //     return (
+    //     <>
+    //     <div className='home-filter-body'>
+    //         <div className={`home-filter ${expand ? 'expanded' : ''}`} id='home-filter'>
+    //             <div className='home-filter-icon' onClick={() => setExpand((preVal) => preVal == null ? true : !preVal)}>
+    //                 <Icons.Filter />
+    //             </div>
+    //             <div className='home-filter-options'>
+    //                 <FilterDropDownMenu options={sortBy}/>
+    //                 <button className='filter-apply' onClick={handleApply}>
+    //                     Apply
+    //                 </button>
+    //             </div>
+    //         </div>
+    //     </div>
+    //     {filters.tag?.length > 0 && filters.tag.map((tag) => {return  <FilterTag tag={tag}/>})}
+    //     {filters.tag?.length > 1 && <div className='filter-clear-all' onClick={() => setFilters((preVal) => {
+    //         return {...preVal, tag: []}
+    //     })}> 
+    //         Clear All
+    //     </div>}
+    //     </>
+    //     )
+    // }
 
     function FilterByTag() {
         const handleAddTag = () => {
@@ -362,7 +445,7 @@ export default function Home() {
                         </button>
                         </div>}
                         <FilterByTag />
-                        <Filters />
+                        <Filters filters={filters} setFilters={setFilters} />
                     </div>}
                 {loading &&
                     <span class="loader"></span>
