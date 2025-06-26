@@ -69,7 +69,6 @@ export default function Profile () {
     async function getAuthorInfo() {
         try {
             const profileInfo = await getUserInfo(profileId)
-            console.log(profileInfo)
             if (profileInfo) {
                 setProfileInfo(profileInfo)
             } else {
@@ -119,7 +118,6 @@ export default function Profile () {
             getPosts()
         }, [location])
 
-        console.log(userPosts)
         let filteredPosts = []
         if (!user || !loggedUserInfo?.followed.includes(profileId)) {
             filteredPosts = userPosts?.filter((post) => post.postContent.visibility === 'Public');
@@ -341,6 +339,8 @@ export default function Profile () {
                     return <UserComments onLoaded={() => setToggleLoading(false)}/>
                 case 'Likes':
                     return <UserLikes  onLoaded={() => setToggleLoading(false)} />
+                case 'Followed':
+                    return <UserFollowed onLoaded={() => setToggleLoading(false)}/>
         }
         }
         return (<>
@@ -348,6 +348,7 @@ export default function Profile () {
                 <ToggleOption name={'Posts'}/>
                 <ToggleOption name={'Comments'}/>
                 <ToggleOption name={'Likes'}/>
+                <ToggleOption name={'Followed'}/>
             </div>
             <div className='user-toggle-outlet'>
             {toggleLoading && <div className='toggle-loader'>
@@ -397,7 +398,80 @@ export default function Profile () {
             setFollowed(true)
         }
     }
-    
+
+    function UserFollowed({onLoaded}) {
+        const [followed, setFollowed] = React.useState([])
+        async function getUserInfo(uid) {
+            const docRef = doc(db, "users", uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                return docSnap.data(); // { displayName, photoURL, email }
+            } else {
+                return null;
+            }
+        }        
+        
+        async function displayFollowed(followed) {
+            try {
+                const promises = followed.map(async (user) => {
+                    const response = await getUserInfo(user);
+                    // followedInfo.push(response)
+                    return response;
+                });
+                const results = await Promise.all(promises);
+                setFollowed(results)
+            } catch (e) {
+                console.error('User not found')
+            } finally {
+                onLoaded()
+            }
+        }
+        //get profile info && followed info
+        async function awaitUserData() {
+            try {
+                //get profile info
+                const response = await getUserInfo(profileId)
+                //get followed info
+                displayFollowed(response.followed)
+            } catch (e) {
+
+            }
+        }
+        React.useEffect(() => {
+            awaitUserData()
+        }, [])
+
+        function IndividualUser({user}) {
+
+            return (
+                <div className='IU-body' onClick={() => navigate(`/users/${user.uid}`)}>
+                    <div className='IU-left'>
+                        <div className='IU-pfp'>
+                            <img src={user.photoURL}>
+                            </img>
+                        </div>
+                        <div className='IU-display-body'>
+                            <span className='IU-display-name'>{user.displayName}</span>
+                            <span className='IU-display-tag'>@{user.displayTag}</span>
+                        </div>
+                    </div>
+                    <div className='user-creation-date'>
+                        <Icons.Calendar /> Joined {convertDate(user.creationDate)}
+                    </div>
+                </div>
+            )
+        }
+
+        return (
+            followed.length > 0 ? <div className='user-profile-followed-body'>
+                {followed.map((user) => {
+                    return IndividualUser({user: user})
+                })}
+            </div> : <p>
+                No followers yet
+            </p>
+        )
+    }
     return <div className='user-profile-outer-body'>
         {(loading && !loadingError) && <div className='loading-body'>
             <span class="loader"></span>

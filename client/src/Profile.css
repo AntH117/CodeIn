@@ -268,3 +268,71 @@
     margin-top: 5px;
     font-size: 15px;
 }
+
+.user-profile-followed-body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.IU-body {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid rgb(201, 201, 201);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.IU-body:hover {
+    background-color: #daefff;
+}
+
+.IU-pfp {
+    width: 3rem;
+    height: 3rem;
+    overflow: hidden;
+    border-radius: 3rem;
+}
+
+.IU-pfp img {
+    width: 100%;
+    height: 100%;
+}
+
+.IU-display-body {
+    width: fit-content;
+    height: 3rem;
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem;
+}
+
+.IU-display-name {
+    width: 100%;
+    height: 55%;
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.IU-display-tag {
+    width: 100%;
+    height: 45%;
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: #71767b;
+}
+
+.IU-left {
+    display: flex;
+    flex-direction: row;
+}
