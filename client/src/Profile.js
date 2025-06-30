@@ -309,9 +309,10 @@ export default function Profile () {
 
     return (
         <div className='individual-post-body'>
-            {likedPosts && likedPosts.map((post) => {
+            {likedPosts?.length > 0 && likedPosts.map((post) => {
             return <IndividualPost data={post}/>
         })}
+        {likedPosts?.length < 1 && <p>Nothing liked yet!</p>}
         </div>
     )
 }
@@ -467,7 +468,7 @@ export default function Profile () {
                     return IndividualUser({user: user})
                 })}
             </div> : <p>
-                No followers yet
+                No-one followed yet!
             </p>
         )
     }

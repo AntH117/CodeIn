@@ -339,11 +339,11 @@ export default function ExpandedPost () {
                     <Icons.Trash />
                 </div>}
                 <div className='IC-user-info'>
-                    <div className='IC-user-image'>
+                    <div className='IC-user-image' onClick={() => navigate(`/users/${userInfo?.uid}`)}>
                         <img src={userInfo?.photoURL || null}></img>
                     </div>
                     <div className='IC-user-name-date'>
-                     <h4><span style={{cursor: 'pointer'}}>{userInfo?.displayName || userInfo?.displayTag}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.comment.timestamp)}</span></h4>
+                     <h4><span style={{cursor: 'pointer'}} onClick={() => navigate(`/users/${userInfo?.uid}`)} >{userInfo?.displayName || userInfo?.displayTag}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.comment.timestamp)}</span></h4>
                     </div>
                 </div>
                 <div className='IC-comment'>
@@ -493,7 +493,7 @@ export default function ExpandedPost () {
 
     function IndividualTag({tagName}) {
 
-        return <div className='IP-individual-tag'>
+        return <div className='IP-individual-tag' onClick={() => navigate(`/?tag=${tagName}`)}>
             {tagName}
         </div>
     }

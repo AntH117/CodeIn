@@ -105,6 +105,10 @@ export default function Home() {
     const location = useLocation();
     //handle loading
     const [loading, setLoading] = React.useState(true)
+    const [forcedRefresh, setForcedRefresh] = React.useState(0)
+
+    // Force posts to reload on params change
+    const [forceParams, setForceParams] = React.useState(0)
 
     //Get logged in user into
     async function getUserInfo(uid) {
@@ -127,6 +131,20 @@ export default function Home() {
             console.error('Unable to fetch posts')
         }
     }
+
+    //get filters based on search params
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [filters, setFilters] = React.useState({
+        tag: searchParams.getAll("tag") || [],
+        sort: searchParams.get("sort") || "",
+        });
+
+    // Forces render on search params change
+    React.useEffect(() => {
+        setForceParams((preVal) => preVal += 1)
+    }, [searchParams])
+
+
     //get liked posts
     const [loggedUserData, setLoggedUserData] = React.useState(null)
     React.useEffect(() => {
@@ -137,15 +155,7 @@ export default function Home() {
             //Get public posts
             getPublicPosts()
         }
-    },[user, location])
-
-    //get filters based on search params
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [filters, setFilters] = React.useState({
-        tag: searchParams.getAll("tag") || [],
-        sort: searchParams.get("sort") || "",
-      });
-
+    },[user, forcedRefresh])
 
     const applyFilters = () => {
         const params = new URLSearchParams();
@@ -158,8 +168,7 @@ export default function Home() {
     const [filteredPosts, setFilteredPosts] = React.useState(posts)
     const [visibleCount, setVisibleCount] = React.useState(3)
     const visiblePosts = filteredPosts.slice(0, visibleCount);
-
-
+    
     const scrollRef = React.useRef(null);
 
     //Handle lazy loading
@@ -220,6 +229,7 @@ export default function Home() {
         }
         setFilteredPosts(filtered)
     }
+
     React.useEffect(() => {
         filterPosts()
     }, [searchParams, posts])
@@ -318,7 +328,7 @@ export default function Home() {
             const [open, setOpen] = React.useState(false)
             return <>
             <div className='nav-user-display'>
-                <div className='nav-user-image'>
+                <div className='nav-user-image' onClick={() => navigate(`/users/${user.uid}`)}>
                     <img src={loggedUserData?.photoURL || "http://localhost:5000/uploads/final/Temp-profile-pic.png"}>
                     </img>
                 </div>
@@ -343,7 +353,7 @@ export default function Home() {
 
         return (
             <div className='nav-bar'>
-                <Link to={'/'} style={{color: 'black', textDecoration: 'none'}} onClick={() => setFilters({tag: [], sort: ''})}>Home</Link>
+                <Link to={'/'} style={{textDecoration: 'none'}} onClick={() => setFilters({tag: [], sort: ''})}><span className='nav-bar-home'>Home</span></Link>
                 {user ? 
                 <UserDisplay />
                 : 
@@ -367,6 +377,9 @@ export default function Home() {
                         <button className='create-post-button'>
                             <Link to={'/post'} style={{textDecoration: 'none'}}>Create Post</Link>
                         </button>
+                        <div className='forced-refresh' onClick={() => setForcedRefresh((preVal) => preVal += 1)}>
+                            <Icons.Refresh />
+                        </div>
                         </div>}
                         <FilterByTag />
                         <Filters filters={filters} setFilters={setFilters} />
