@@ -15,8 +15,9 @@ import { Toaster, toast } from 'react-hot-toast';
 import notify from './Toast';
 
 function Filters({filters, setFilters}) {
+    const { user } = useAuth();
     const [expand, setExpand] = React.useState()
-    const sortBy = ['newest', 'oldest', 'likes', 'comments', 'followed']
+    const sortBy = ['newest', 'oldest', 'likes', 'comments']
     const [temp, setTemp] = React.useState({
         sort: filters.sort,
         tag: filters.tag
@@ -80,7 +81,7 @@ function Filters({filters, setFilters}) {
                 <Icons.Filter />
             </div>
             <div className='home-filter-options'>
-                <FilterDropDownMenu options={sortBy}/>
+                <FilterDropDownMenu options={user ? [...sortBy, 'followed'] : sortBy}/>
                 <button className='filter-apply' onClick={handleApply}>
                     Apply
                 </button>
@@ -129,6 +130,7 @@ export default function Home() {
     //get liked posts
     const [loggedUserData, setLoggedUserData] = React.useState(null)
     React.useEffect(() => {
+        setLoading(true)
         if (user) {
             awaitUserData()
         } else {
@@ -211,7 +213,9 @@ export default function Home() {
                     filtered = filtered.sort((a,b) => b.commentCount - a.commentCount)
                     break;
                 case 'followed':
-                    filtered = filtered.filter((post) => loggedUserData?.followed.includes(post.user))
+                    if (user) {
+                        filtered = filtered.filter((post) => loggedUserData?.followed.includes(post.user))
+                    }
             }  
         }
         setFilteredPosts(filtered)
@@ -245,7 +249,8 @@ export default function Home() {
     }
 
     const publicAPI = 'http://localhost:5000/api/v1/codeIn/posts/'
-    
+    const [loadingError, setLoadingError] = React.useState(false)
+
     const getPublicPosts = async () => {
         try {
             const response = await fetch(publicAPI, {
@@ -258,6 +263,7 @@ export default function Home() {
             setPosts(data)
         } catch (e) {
             console.error('Unable to load posts:', e)
+            setLoadingError(true)
         } finally {
             setLoading(false)
         }
@@ -277,6 +283,7 @@ export default function Home() {
             setPosts(data)
         } catch (e) {
             console.error('Unable to load posts:', e)
+            setLoadingError(true)
         } finally {
             setLoading(false)
         }
@@ -298,7 +305,7 @@ export default function Home() {
         
 
         return <div className='filter-by-tag'>
-            <input type='text' className='filter-by-tag-input' placeholder='Tags' id='tag-name'>
+            <input type='text' className='filter-by-tag-input' placeholder='Tags' id='tag-name' autocomplete="off">
             </input>
             <button className='filter-by-tag-add' onClick={handleAddTag}>
                 <Icons.PlusLarge />
@@ -364,9 +371,10 @@ export default function Home() {
                         <FilterByTag />
                         <Filters filters={filters} setFilters={setFilters} />
                     </div>}
-                {loading &&
+                {(loading && !loadingError) &&
                     <span class="loader"></span>
                 }
+                {loadingError && <div>Error loading posts</div>}
                 {!loading && <div className='individual-post-bodies'>
                     {(location.pathname == '/' || location.pathname == '/post') && visiblePosts.map((data) => {
                         return <IndividualPost data={data} key={data._id} handleSearchParams={handleSearchParams}/>

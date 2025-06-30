@@ -37,7 +37,7 @@ export default function Profile () {
             return null;
         }
     }
-
+    console.log(loggedUserInfo)
     React.useEffect(() => {
         if (profileInfo) {
             setLoading(false)
@@ -442,7 +442,6 @@ export default function Profile () {
         }, [])
 
         function IndividualUser({user}) {
-
             return (
                 <div className='IU-body' onClick={() => navigate(`/users/${user.uid}`)}>
                     <div className='IU-left'>
@@ -479,9 +478,8 @@ export default function Profile () {
         {loadingError && <NotFound />}
         {!loading && <div className='user-profile-inner-body'>
             <div className='user-background'>
-                <img className='user-background-image' src={profileInfo?.backgroundURL || null}>
-
-                </img>
+                {profileInfo?.backgroundURL ? <img className='user-background-image' src={profileInfo?.backgroundURL}>
+                </img> : <div className='default-background'></div>}
                 <div className='user-info-image'>
                     <img src={profileInfo?.photoURL || testImage}>
                     </img>

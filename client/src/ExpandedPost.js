@@ -192,7 +192,9 @@ export default function ExpandedPost () {
         return (
         <div className='IP-socials'>
                 <div className='IP-socials-individual'>
-                    {user ? loggedUserData?.likes?.includes(post._id) ? <Icons.HeartFilled /> : <Icons.Heart /> : <Icons.Heart />}
+                    <div className={`like-icon ${loggedUserData?.likes?.includes(postId) && 'liked'}`}>
+                        {user ? loggedUserData?.likes?.includes(postId) ? <Icons.HeartFilled /> : <Icons.Heart /> : <Icons.Heart />}
+                    </div>
                     {tempLikeCount}
                 </div>
                 <div className='IP-socials-individual'>
@@ -360,7 +362,7 @@ export default function ExpandedPost () {
         return (
             <div className='EP-comments-body'>
                 {user && <div className='EP-add-comment'>
-                    <input type='text' className='EP-comment-input' placeholder='Add a comment...' id='comment-input'  onChange={(e) => setCurrentComment(e.target.value)} value={currentComment}></input>
+                    <input type='text' className='EP-comment-input' placeholder='Add a comment...' id='comment-input'  onChange={(e) => setCurrentComment(e.target.value)} value={currentComment} autocomplete="off"></input>
                     <button className='EP-comment-post' onClick={() => currentComment.length > 0 ? saveComment(currentComment) : console.error('Comment invalid')}>Post</button>
                 </div>}
                 <div className='EP-comments'>
