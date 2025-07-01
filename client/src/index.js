@@ -73,7 +73,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} basename={basename}/>
+      <RouterProvider router={router} basename="/CodeIn" />
     </AuthProvider>
   </React.StrictMode>
 );
