@@ -279,7 +279,7 @@ export default function Home() {
             setLoading(false)
         }
       };
-    const tailoredAPI = `${backendURL}api/v1/codeIn/posts/tailored`
+    const tailoredAPI = `${backendURL}/api/v1/codeIn/posts/tailored`
     const getTailoredPosts = async (followedIds) => {
         const userId = user.uid
         try {

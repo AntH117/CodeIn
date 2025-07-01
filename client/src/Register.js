@@ -8,7 +8,7 @@ import { doc, setDoc } from "firebase/firestore";
 
 
 export default function Register () {
-
+    const backendURL = process.env.REACT_APP_BACKEND_URL
     const { user } = useAuth();
     async function saveUserInfo(user) {
         const userRef = doc(db, "users", user.uid);
