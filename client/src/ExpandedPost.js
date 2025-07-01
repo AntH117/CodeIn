@@ -16,6 +16,7 @@ import ShowAlert from './ShowAlert';
 import notify from './Toast';
 
 export default function ExpandedPost () {
+    const backendURL = process.env.REACT_APP_BACKEND_URL
     const { user } = useAuth();
     const [post, setPost] = React.useState(null)
     const [imageFiles, setImageFiles] = React.useState(null)
@@ -72,7 +73,7 @@ export default function ExpandedPost () {
     const location  = useLocation()
     const postId = location.pathname.split('/').at(-1)
     const navigate = useNavigate();
-    const APILINK = `http://localhost:5000/api/v1/codeIn/posts/${postId}`
+    const APILINK = `${backendURL}/api/v1/codeIn/posts/${postId}`
 
     const getPost = async () => {
         try {
@@ -209,7 +210,7 @@ export default function ExpandedPost () {
         )
     }
     //create comment
-    const CommentAPILINK = `http://localhost:5000/api/v1/comments`
+    const CommentAPILINK = `${backendURL}/api/v1/comments`
     const saveComment = async (currentComment) => {
         const savedComment = {
             postId: post._id,
@@ -391,7 +392,7 @@ export default function ExpandedPost () {
                 onClick={() => navigate(`image/${src.split('\\').at(-1)}`)}
                 className='IP-image'
                 key={idx}
-                src={`http://localhost:5000/${src}`}
+                src={`${backendURL}/${src}`}
                 alt={`Image ${idx + 1}`}
               />
             ))}
@@ -443,7 +444,7 @@ export default function ExpandedPost () {
         }
     
         const likePost = async(postId) => {
-            const likesAPILINK = `http://localhost:5000/api/v1/codeIn/socials/like/${postId}`
+            const likesAPILINK = `${backendURL}/api/v1/codeIn/socials/like/${postId}`
             try {
                 const response = await fetch(likesAPILINK, {
                     method: 'PUT',

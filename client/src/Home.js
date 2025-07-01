@@ -100,6 +100,7 @@ function Filters({filters, setFilters}) {
 
 export default function Home() {
     //user
+    const backendURL = process.env.REACT_APP_BACKEND_URL
     const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -258,7 +259,7 @@ export default function Home() {
         }
     }
 
-    const publicAPI = 'http://localhost:5000/api/v1/codeIn/posts/'
+    const publicAPI = `${backendURL}/api/v1/codeIn/posts/`
     const [loadingError, setLoadingError] = React.useState(false)
 
     const getPublicPosts = async () => {
@@ -278,7 +279,7 @@ export default function Home() {
             setLoading(false)
         }
       };
-    const tailoredAPI = 'http://localhost:5000/api/v1/codeIn/posts/tailored'
+    const tailoredAPI = `${backendURL}api/v1/codeIn/posts/tailored`
     const getTailoredPosts = async (followedIds) => {
         const userId = user.uid
         try {
@@ -329,7 +330,7 @@ export default function Home() {
             return <>
             <div className='nav-user-display'>
                 <div className='nav-user-image' onClick={() => navigate(`/users/${user.uid}`)}>
-                    <img src={loggedUserData?.photoURL || "http://localhost:5000/uploads/final/Temp-profile-pic.png"}>
+                    <img src={loggedUserData?.photoURL || `${backendURL}/uploads/final/Temp-profile-pic.png`}>
                     </img>
                 </div>
                 <div className='nav-user-name'>

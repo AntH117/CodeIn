@@ -16,12 +16,13 @@ import notify from './Toast';
 
 
 export default function EditPost() {
+    const backendURL = process.env.REACT_APP_BACKEND_URL
     const [post, setPost] = React.useState()
     const [editedPost, setEditedPost] = React.useState()
     const [deletedFiles, setDeletedFiles] = React.useState([])
     const [userInfo, setUserInfo] = React.useState()
     const [alert ,setAlert] = React.useState(null)
-    const APILINK = `http://localhost:5000/api/v1/codeIn`
+    const APILINK = `${backendURL}/api/v1/codeIn`
     const navigate = useNavigate()
     const location = useLocation()
     const id = location.pathname.split('/').at(-2)

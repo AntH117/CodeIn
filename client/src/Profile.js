@@ -13,7 +13,7 @@ import NotFound from './NotFound';
 
 export default function Profile () {
     const { user } = useAuth();
- 
+    const backendURL = process.env.REACT_APP_BACKEND_URL
     const [profileInfo, setProfileInfo] = React.useState()
     const [loggedUserInfo, setLoggedUserInfo] = React.useState()
     const [tempFollowCount, setTempFollowCount] = React.useState(0)
@@ -94,7 +94,7 @@ export default function Profile () {
     function UserPosts({onLoaded}) {
          //get user only posts
     const [userPosts, setUserPosts] = React.useState()  
-    const APILINK = 'http://localhost:5000/api/v1/codeIn'
+    const APILINK = `${backendURL}/api/v1/codeIn`
 
 
     const getPosts = async () => {
@@ -152,7 +152,7 @@ export default function Profile () {
     //display user only comments
     function UserComments({onLoaded}) {
         const [userComments, setUserComments] = React.useState([])
-            const CommentAPILINK = `http://localhost:5000/api/v1/comments`
+            const CommentAPILINK = `${backendURL}/api/v1/comments`
         const getUserComments = async() => {
             try {
                 const response = await fetch(`${CommentAPILINK}/user/${profileId}`, {
@@ -286,7 +286,7 @@ export default function Profile () {
         },[user])
         
         const getLikedPosts = async(postIds) => {
-            const APILINK = `http://localhost:5000/api/v1/codeIn/posts/batch`
+            const APILINK = `${backendURL}/api/v1/codeIn/posts/batch`
             try {
                 const response = await fetch(APILINK, {
                     method: 'POST',

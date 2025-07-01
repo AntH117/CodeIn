@@ -17,7 +17,7 @@ export default function Register () {
             displayName: user.displayName || null,
             displayTag: user.email.split('@').at(0),
             email: user.email,
-            photoURL: 'http://localhost:5000/uploads/final/Temp-profile-pic.png',
+            photoURL: `${backendURL}/uploads/final/Temp-profile-pic.png`,
             backgroundURL: '',
             creationDate: user.metadata.creationTime,
             uid: user.uid,

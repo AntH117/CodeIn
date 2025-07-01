@@ -18,7 +18,7 @@ export default function EditProfile() {
     const navigate = useNavigate()
     const userImageRef = React.useRef(null)
     const userBgRef = React.useRef(null)
-
+    const backendURL = process.env.REACT_APP_BACKEND_URL
     
     // Check if current user is profile user
     React.useEffect(() => {
@@ -70,7 +70,7 @@ export default function EditProfile() {
         })
     }
     //handle file change
-    const APILINK = `http://localhost:5000/api/v1/codeIn`
+    const APILINK = `${backendURL}/api/v1/codeIn`
     const handleImageChange = async (e, type) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -104,7 +104,7 @@ export default function EditProfile() {
         setProfileInfo((preval) => {
             return {
                 ...preval,
-                [type]: `http://localhost:5000/${data.filePath}`
+                [type]: `${backendURL}/${data.filePath}`
             }
         }) 
     }
@@ -144,7 +144,7 @@ export default function EditProfile() {
            if (uploadedFiles.length > 0) {
                 // 1. Handle profile photo update
                 if (profileInfo.photoURL.includes('/temp/')) {
-                    const photoPath = profileInfo.photoURL.split('http://localhost:5000/')[1];
+                    const photoPath = profileInfo.photoURL.split(backendURL)[1];
                     const res = await fetch(`${APILINK}/final-upload`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -153,14 +153,14 @@ export default function EditProfile() {
         
                     const data = await res.json();
                     if (res.ok) {
-                        updatedUserData.photoURL = `http://localhost:5000/${data.newPath}`;
+                        updatedUserData.photoURL = `${backendURL}/${data.newPath}`;
                         finalisedFiles.push(photoPath);
                     } else {
                         console.error('Failed to finalize profile image:', data.error);
                     }
                 }
                 if (profileInfo.backgroundURL.includes('/temp/')) {
-                    const bgPath = profileInfo.backgroundURL.split('http://localhost:5000/')[1];
+                    const bgPath = profileInfo.backgroundURL.split(backendURL)[1];
                     const res = await fetch(`${APILINK}/final-upload`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },

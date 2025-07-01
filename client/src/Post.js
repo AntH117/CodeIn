@@ -15,7 +15,8 @@ import { Toaster, toast } from 'react-hot-toast';
 
 export default function Post() {
     const { user } = useAuth();
-    const APILINK = `http://localhost:5000/api/v1/codeIn`
+    const backendURL = process.env.REACT_APP_BACKEND_URL
+    const APILINK = `${backendURL}/api/v1/codeIn`
 
     const navigate = useNavigate();
     const [formData, setFormData] = React.useState({
