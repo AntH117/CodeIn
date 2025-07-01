@@ -20,9 +20,11 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
+const basename = "/CodeIn";
+
 const router = createBrowserRouter([
   {
-    path: "/CodeIn",
+    path: "/",
     element: <Home />,
     children: [
       {
@@ -71,7 +73,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={router}/>
+      <RouterProvider router={router} basename={basename}/>
     </AuthProvider>
   </React.StrictMode>
 );
