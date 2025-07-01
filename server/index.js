@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const MongoClient = mongodb.MongoClient
+const ServerApiVersion = mongodb.ServerApiVersion;
 // environment variables, safer to store
 const mongo_username = process.env.MONGO_USERNAME
 const mongo_password = process.env.MONGO_PASSWORD
@@ -23,6 +24,7 @@ MongoClient.connect(
         //Connection attempt timeout threshold
         wtimeoutMS: 2500,
         useNewUrlParser: true,
+        serverApi: ServerApiVersion.v1,
 
     })
     //Catching errors
