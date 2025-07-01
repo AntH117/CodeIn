@@ -22,7 +22,7 @@ import {
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/CodeIn",
     element: <Home />,
     children: [
       {
