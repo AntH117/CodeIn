@@ -17,7 +17,7 @@ export default function IndividualPost({data, handleSearchParams}) {
     const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-
+    const backendURL = process.env.REACT_APP_BACKEND_URL
     const [likeCooldown, setLikeCooldown] = React.useState(false);
 
     //get liked posts
@@ -79,7 +79,7 @@ export default function IndividualPost({data, handleSearchParams}) {
     }
 
     const likePost = async(postId) => {
-        const likesAPILINK = `http://localhost:5000/api/v1/codeIn/socials/like/${postId}`
+        const likesAPILINK = `${backendURL}/api/v1/codeIn/socials/like/${postId}`
         try {
             const response = await fetch(likesAPILINK, {
                 method: 'PUT',
@@ -94,7 +94,7 @@ export default function IndividualPost({data, handleSearchParams}) {
     }
 
     const unlikePost = async(postId) => {
-        const likesAPILINK = `http://localhost:5000/api/v1/codeIn/socials/unlike/${postId}`
+        const likesAPILINK = `${backendURL}/api/v1/codeIn/socials/unlike/${postId}`
         try {
             const response = await fetch(likesAPILINK, {
                 method: 'PUT',
@@ -170,7 +170,7 @@ export default function IndividualPost({data, handleSearchParams}) {
               <img
                 className='IP-image'
                 key={idx}
-                src={`http://localhost:5000/${src}`}
+                src={`${backendURL}/${src}`}
                 alt={`Image ${idx + 1}`}
               />
             ))}
