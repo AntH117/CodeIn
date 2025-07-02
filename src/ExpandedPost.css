@@ -1,0 +1,225 @@
+.EP-outer-body {
+    width: 100%;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    overflow-y: scroll;
+    padding-bottom: 10%;
+}
+
+.EP-inner-body {
+    width: 90%;
+    min-height: 400px;
+    height: fit-content;
+    background-color: rgba(253,245,234,255);
+    margin-bottom: 1.4rem;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1), 0px 0px 10px rgba(0, 0, 0, 0.05);
+    position: relative;
+    margin-top: 3rem;
+}
+
+.EP-delete {
+    width: 23px;
+    height: 20px;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    margin: 0 auto;  
+}
+
+.dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    background-color: black;
+}
+
+.EP-dropdown {
+    position: absolute;
+    width: 120px;
+    top: 40px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 10;
+}
+
+.EP-dropdown-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.EP-dropdown-option:hover {
+    background-color: #f0f0ff;
+    color: #2a2a99;
+  }
+  
+  .EP-dropdown-option svg {
+    width: 16px;
+    height: 16px;
+    fill: #666;
+    transition: fill 0.2s ease;
+  }
+  
+  .EP-dropdown-option:hover svg {
+    fill: #2a2a99;
+  }
+
+.EP-comments-body {
+    width: 80%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.EP-add-comment {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 1.3rem;
+    align-items: end;
+}
+
+.EP-comment-input {
+    height: 50px;
+    width: 100%;
+    border: 1px solid rgb(163, 162, 162);
+    padding-left: 1rem;
+    background-color: transparent;
+    border-radius: 10px;
+}
+
+.EP-comment-input:focus {
+   outline: none;
+}
+
+.EP-comment-post {
+    width: 80px;
+    height: 35px;
+    margin-top: 0.9rem;
+    color: white;
+    border: 0px;
+    background-color: rgba(112,94,218,255);
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.EP-comments { 
+    width: 100%;
+    height: fit-content;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 1.4rem;
+    align-items: center;
+}
+.IC-body {
+    width: 100%;
+    min-height: 80px;
+    height: fit-content;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.425);
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.7rem;
+    position: relative;
+}
+
+.IC-user-info {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+}
+
+.IC-user-image {
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 100%;
+    margin-right: 0.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.IC-user-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.IC-user-name-date {
+    margin-left: 0.4rem;
+}
+
+.IC-comment {
+    width: 100%;
+    height: fit-content;
+}
+
+.IC-delete {
+    width: fit-content;
+    min-width: 15px;
+    min-height: 15px;
+    height: fit-content;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+
+.load-comments-button {
+    margin-top: 0.3rem;
+    width: 20%;
+    height: 35px;
+    margin-top: 0.6rem;
+    color: white;
+    border: 0px;
+    background-color: rgba(112,94,218,255);
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.IP-attachments {
+    width: 80%;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+}
+
+.file-attachment-body {
+    margin-top: 0.3rem;
+    width: fit-content;
+    height: 30px;
+    display: flex;
+    gap: 0.5rem;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+}

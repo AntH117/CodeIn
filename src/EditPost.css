@@ -1,0 +1,227 @@
+.IP-paragraph-textarea {
+    width: 100%;
+    padding-top: 0.5rem;
+    height: 5rem;
+    border-radius: 0.5rem;
+    padding-left: 1rem;
+    border: 1px solid rgb(206, 206, 206);
+}
+
+.IP-paragraph-textarea:focus {
+    outline: none;
+}
+
+.IP-title-input {
+    width: 100%;
+    height: 2rem;
+    font-size: 1.5rem;
+    font-family: 'Sansation' ;
+    font-weight: 400;
+    border: 1px solid rgb(206, 206, 206);
+    border-radius: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.IP-title-input:focus {
+    outline: none;
+}
+
+.edit-button {
+    width: 70px;
+    height: 30px;
+    position: absolute;
+    bottom: 3%;
+    right: 3%;
+    background-color: rgba(112,94,218,255);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.edit-button:hover {
+    background-color: rgb(195, 255, 221);
+    color: rgb(114, 114, 114);
+}
+
+.edit-form-imports {
+    display: flex;
+    width: 80%;
+    height: fit-content;
+    padding-bottom: 20px;
+    margin-top: 15px
+}
+
+.file-imports-body {
+    width: 80%;
+    margin-top: 10px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    /* overflow-y: scroll; */
+    gap: 10px;
+
+}
+
+.file-import-name {
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+    border: 1px solid rgb(206, 206, 206);
+    border-radius: 0.3rem;
+    padding: 0.3rem;
+    background-color: rgb(255, 255, 255);
+}
+
+.file-import-name p {
+    margin:0;
+}
+
+.IP-visibility {
+    width: 40%;
+    height: fit-content;
+    display: flex;
+}
+
+.IP-visibility h3 {
+    margin: 0;
+}
+
+.IP-visibility select {
+    border-radius: 3px;
+    font-family: 'Sansation' ;
+    background-color: #fefefe;
+    border: 1px solid #bbb;
+    color: #333;
+}
+
+.IP-visibility select:focus {
+ outline: none;   
+}
+
+.IP-author-visibility {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+}
+
+.edit-post-title {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    height: 30px;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.edit-code-snippet {
+    width: 80%;
+    height: fit-content;
+}
+
+.edit-code-snippet section {
+    margin-top: 5px;
+    border: 1px solid #bbb;
+}
+
+.edit-code-editor {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    overflow-y: scroll;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    height: 10px;
+    opacity: 0;
+}
+
+.edit-code-editor.open {
+    animation: editorToggleOpen 0.5s forwards;
+}
+
+.edit-code-editor.closed {
+    animation: EditorToggleClosed 0.5s forwards;
+}
+
+@keyframes editorToggleOpen {
+    0% {
+        height: 0px;
+        opacity: 0;
+    }
+    100% {
+        height: 250px;
+        opacity: 100%;
+    }
+}
+
+@keyframes EditorToggleClosed {
+    0% {
+        height: 250px;
+        opacity: 100%;
+    }
+    100% {
+        height: 0px;
+        opacity: 0%;
+    }
+}
+
+.code-edit-body {
+    width: 80%;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.edit-error-message {
+    width: 100%;
+    height: 25px;
+    top: 2.5rem;
+    display: flex;
+    align-items: center;
+    color: rgba(255, 0, 0, 0.486);
+}
+
+.edit-title {
+    width: 80%;
+    display: flex;
+    justify-content: left;
+    margin-bottom: 0.5rem;
+    position: relative;
+    flex-direction: column;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.edit-paragraph {
+    width: 80%;
+    height: fit-content;
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.edit-tag-body {
+    width: 100%;
+    min-height: 30px;
+    height: fit-content;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.edit-tag-outer-body {
+    width: 80%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+}

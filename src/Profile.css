@@ -1,0 +1,338 @@
+
+.user-profile-outer-body {
+    min-width: 500px;
+    max-width: 700px;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-profile-inner-body {
+    width: 80%;
+    min-height: 400px;
+    height: fit-content;
+    margin-top: 20px;
+    background-color: rgba(253,245,234,255);
+    margin-bottom: 20px;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1), 0px 0px 10px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.user-background {
+    width: 100%;
+    height: 150px;
+    background-color: azure;
+    position: relative;
+}
+
+.user-info-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: -50px;
+    left: 20px;
+    border: 1px solid rgb(131, 130, 130);
+}
+
+.user-info-image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-info-name {
+    display: flex;
+    width: 90%;
+    height: 100px;
+    font-size: 1.1rem;
+    padding-top: 60px;
+    position: relative;
+    flex-direction: column;
+}
+
+.user-info-tag {
+    width: 100%;
+    height: fit-content;
+    font-size: 0.8rem;
+    margin-top: 2px;
+    margin-bottom: 0.5rem
+    
+}
+
+.user-follow {
+    position: absolute;
+    right: 0;
+    top: 40%;
+    width: 10rem;
+    height: 4rem;
+    display: flex;
+    flex-direction: column; 
+    font-size: 0.8rem;
+    align-items: end;
+    gap: 5px;
+}
+
+.follow-button {
+    width: 4.5rem;
+    height: 1.5rem;
+    border-radius: 2rem;
+    border: 1px solid black;
+    transition: 0.2s all ease-in-out;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.follow-button.active {
+    background-color: rgb(87, 87, 255);
+    color: white;
+    border: 1px solid transparent
+}
+
+.follow-button:hover {
+    background-color: rgb(87, 87, 255);
+    color: white;
+    border: 1px solid transparent
+}
+
+.user-edit {
+    position: absolute;
+    right: 0;
+    top: 10px;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 10;
+}
+
+.user-background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-creation-date {
+    font-size: 0.8rem;
+    width: fit-content;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.user-posts-body {
+    width: 100%;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    gap: 15px;
+    padding-bottom: 50px;
+}
+
+.individual-user-post-body {
+    width: 100%;
+    height: fit-content;
+    background-color: rgba(253,245,234,255);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1), 0px 0px 10px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.user-profile-toggle {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid rgb(207, 207, 207);
+    margin-top: 5px;
+}
+
+.user-toggle-option {
+    width: 25%;
+    height: 100%;
+    background-color: 	#f0f0f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s all ease-out;
+    position: relative;
+}
+
+.user-toggle-option:hover {
+    background-color: 	#aad6ff;
+    box-shadow: 0 0 4px #c8a8ff;
+}
+
+
+.user-toggle-option.selected {
+    background-color: #c0e7ff;
+}
+
+.user-toggled {
+    position: absolute;
+    width: 40%;
+    height: 7px;
+    background-color: #68bdfa;
+    border-radius: 20%;
+    bottom: 0;
+}
+
+.user-toggle-outlet {
+    width: 100%;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.individual-comment-body {
+    width: 100%;
+    min-height: 80px;
+    height: fit-content;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.425);
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.7rem;
+    position: relative;
+    align-items: center;
+}
+
+.individual-comment-user-info {
+    width: 90%;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.individual-comment-comment {
+    width: 90%;
+    height: fit-content;
+}
+
+.individual-comment-navigate {
+    width: fit-content;
+    height: fit-content;
+    position: absolute;
+    right: 7px;
+    bottom: 25%;
+    cursor: pointer;
+}
+
+.toggle-loader {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.individual-post-body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow-y: scroll;
+    gap: 20px;
+}
+
+.user-info-description {
+    width: 100%;
+    min-height: 20px;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    font-size: 15px;
+}
+
+.user-profile-followed-body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.IU-body {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid rgb(201, 201, 201);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.IU-body:hover {
+    background-color: #daefff;
+}
+
+.IU-pfp {
+    width: 3rem;
+    height: 3rem;
+    overflow: hidden;
+    border-radius: 3rem;
+}
+
+.IU-pfp img {
+    width: 100%;
+    height: 100%;
+}
+
+.IU-display-body {
+    width: fit-content;
+    height: 3rem;
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem;
+}
+
+.IU-display-name {
+    width: 100%;
+    height: 55%;
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.IU-display-tag {
+    width: 100%;
+    height: 45%;
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: #71767b;
+}
+
+.IU-left {
+    display: flex;
+    flex-direction: row;
+}
