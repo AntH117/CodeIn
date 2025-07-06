@@ -386,7 +386,9 @@ export default function Home() {
                         <Filters filters={filters} setFilters={setFilters} />
                     </div>}
                 {(loading && !loadingError) &&
-                    <span class="loader"></span>
+                    <div className='loader-body'>
+                        <span class="loader"></span>
+                    </div>
                 }
                 {loadingError && <div>Error loading posts</div>}
                 {!loading && <div className='individual-post-bodies'>
