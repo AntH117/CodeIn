@@ -172,12 +172,13 @@ export default function Post() {
             method: 'POST',
             body: form
         });
-
         const data = await res.json();
-            setFormData((preVal) => ({
+        console.log(data)
+        setFormData((preVal) => ({
                 ...preVal,
                 files: [...preVal.files, data.filePath]
         }))
+
     }
 
     const handleChange = (e) => {

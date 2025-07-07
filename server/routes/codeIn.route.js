@@ -2,6 +2,7 @@ import express from 'express'
 import CodeInCtrl from '../controllers/codeIn.controller.js'
 import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
 import path from 'path';
 
 const router = express.Router();
@@ -20,6 +21,10 @@ const tempStorage = multer.diskStorage({
 });
 
 const upload = multer({ storage: tempStorage });
+
+//creating temp uploads
+const uploadPath = path.join(process.cwd(), 'uploads', 'temp');
+fs.mkdirSync(uploadPath, { recursive: true });
 
 //Get Posts based on multiple Id's
 router.route('/posts/batch')
