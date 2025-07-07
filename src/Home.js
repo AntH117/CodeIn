@@ -13,6 +13,7 @@ import IndividualPost from './IndividualPost';
 import ShowAlert from './ShowAlert';
 import { Toaster, toast } from 'react-hot-toast';
 import notify from './Toast';
+import CodeInLogo from './images/codeIn-logo.png'
 
 function Filters({filters, setFilters}) {
     const { user } = useAuth();
@@ -354,7 +355,13 @@ export default function Home() {
 
         return (
             <div className='nav-bar'>
-                <Link to={'/'} style={{textDecoration: 'none'}} onClick={() => setFilters({tag: [], sort: ''})}><span className='nav-bar-home'>Home</span></Link>
+                <div className='nav-bar-home'>
+                    <img src={CodeInLogo} className='codeIn-logo' onClick={() => {
+                    setFilters({tag: [], sort: ''});
+                    navigate('/')
+                }}>
+                    </img>    
+                </div>
                 {user ? 
                 <UserDisplay />
                 : 

@@ -413,8 +413,18 @@
   }
   
   .nav-bar-home {
-    color: rgb(122, 63, 189);
-    font-weight: bold;
+    height: 100%;
+    display: flex;
+    width: 50%;
+    align-items: center;
+  }
+
+  .codeIn-logo {
+    width: 80%;
+    height: 80%;
+    object-fit: cover;
+    margin-top: 5px;
+    cursor: pointer;
   }
 
   .forced-refresh {
@@ -446,8 +456,9 @@
   
   .loader-body {
     width: 100%;
-    height: 100%;
-    position: flex;
+    height: 90%;
+    display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
   }
