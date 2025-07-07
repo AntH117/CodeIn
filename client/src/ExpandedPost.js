@@ -86,9 +86,7 @@ export default function ExpandedPost () {
             const data = await response.json();
             if (data?.postContent) {
                 setPost(data)
-                console.log('Post found')
             } else {
-                console.log('Post not found')
                 setLoadingError(true)
             }
         } catch (e) {
@@ -389,7 +387,7 @@ export default function ExpandedPost () {
           <div style={imageFiles.length === 1 ? {} : gridStyle} className={`IP-image-container ${imageFiles.length === 1 ? 'single' : ''}`}>
             {imageFiles.map((src, idx) => (
               <img
-                onClick={() => navigate(`image/${src.split('\\').at(-1)}`)}
+                onClick={() => navigate(`image/${src.split(/[/\\]/).at(-1)}`)}
                 className='IP-image'
                 key={idx}
                 src={`${backendURL}/${src}`}
@@ -513,7 +511,6 @@ export default function ExpandedPost () {
         navigator.clipboard.writeText(data);
         notify.success('Copied to clipboard!','📋')
     }
-
     const imageChecker = location.pathname.split('/').includes('image')
     return (<div className='EP-outer-body' style={imageChecker ? {overflowY: 'hidden'} : {}}>
     {(loading && !loadingError) && <div className='loading-body'>

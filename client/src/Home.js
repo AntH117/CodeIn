@@ -355,8 +355,11 @@ export default function Home() {
 
         return (
             <div className='nav-bar'>
-                <div className='nav-bar-home' onClick={() => setFilters({tag: [], sort: ''})}>
-                    <img src={CodeInLogo} className='codeIn-logo'>
+                <div className='nav-bar-home'>
+                    <img src={CodeInLogo} className='codeIn-logo' onClick={() => {
+                    setFilters({tag: [], sort: ''});
+                    navigate('/')
+                }}>
                     </img>    
                 </div>
                 {user ? 
