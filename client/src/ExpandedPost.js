@@ -57,6 +57,8 @@ export default function ExpandedPost () {
     //handle loading
     const [loading, setLoading] = React.useState(true)
     React.useEffect(() => {
+        console.log(post)
+        console.log(authorInfo)
         if (post && authorInfo) {
             setLoading(false)
         }
