@@ -83,10 +83,14 @@ export default function IndividualPost({data, handleSearchParams}) {
                     'Content-Type': 'application/json',
                 },
             });
-            const result = await response.json();
-            if (result.status == 'success') {
-                setTempLikeCount((preVal) => preVal + 1)
-                addUserLikes(postId)
+            if (response.ok) {
+                const result = await response.json();
+                if (result.status === 'success') {
+                    setTempLikeCount((prevVal) => prevVal + 1);
+                    addUserLikes(postId);
+                }
+            } else {
+                console.error('Unable to like post:', response.statusText);
             }
         } catch (e) {
             console.error('Unable to like post:', e)
@@ -94,7 +98,7 @@ export default function IndividualPost({data, handleSearchParams}) {
     }
 
     const unlikePost = async(postId) => {
-        const likesAPILINK = `${backendURL}/api/v1/codeIn/socials/unlike/${postId}`
+        const likesAPILINK = `http://localhost:5000/api/v1/codeIn/socials/unlike/${postId}`
         try {
             const response = await fetch(likesAPILINK, {
                 method: 'PUT',
@@ -102,15 +106,20 @@ export default function IndividualPost({data, handleSearchParams}) {
                     'Content-Type': 'application/json',
                 },
             });
-            const result = await response.json();
-            if (result.status == 'success') {
-                removeUserLikes(postId)
-                setTempLikeCount((preVal) => preVal - 1)
+            if (response.ok) {
+                const result = await response.json();
+                if (result.status === 'success') {
+                    removeUserLikes(postId)
+                    setTempLikeCount((preVal) => preVal - 1)
+                }
+            } else {
+                console.error('Unable to like post:', response.statusText);
             }
         } catch (e) {
             console.error('Unable to like post:', e)
         }
     }
+
     //Prevent spamming
     async function handleLike(postId) {
     if (likeCooldown) return;

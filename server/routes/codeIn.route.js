@@ -54,8 +54,7 @@ router.route('/posts')
 //Liking a post
 router.route('/socials/like/:postId')
     .put(CodeInCtrl.apiLikePost)
-//unliking a post
-//Liking a post
+//Unliking a post
 router.route('/socials/unlike/:postId')
     .put(CodeInCtrl.apiUnlikePost)
 

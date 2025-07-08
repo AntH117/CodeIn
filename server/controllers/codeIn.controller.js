@@ -243,7 +243,7 @@ export default class CodeInController {
         });
       };
 
-    static async apiLikePost (res, req) {
+    static async apiLikePost (req, res) {
         try {
             const postId = res.params.postId
             const postResponse = await CodeInDAO.likePost(postId)
@@ -253,7 +253,7 @@ export default class CodeInController {
             res.status(500).json({error: e})
         }
     }
-    static async apiUnlikePost (res, req) {
+    static async apiUnlikePost (req, res) {
         try {
             const postId = res.params.postId
             const postResponse = await CodeInDAO.unlikePost(postId)

@@ -431,12 +431,8 @@ export default function ExpandedPost () {
         async function handleUserLikes(postId) {
             const containsPostId = loggedUserData?.likes?.includes(postId)
             if (containsPostId) {
-                removeUserLikes(postId)
-                setTempLikeCount((preVal) => preVal - 1)
                 unlikePost(postId)
             } else if (!containsPostId) {
-                addUserLikes(postId)
-                setTempLikeCount((preVal) => preVal + 1)
                 likePost(postId)
             }
             awaitUserData()
@@ -451,7 +447,15 @@ export default function ExpandedPost () {
                         'Content-Type': 'application/json',
                     },
                 });
-                const result = await response.json();
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        setTempLikeCount((prevVal) => prevVal + 1);
+                        addUserLikes(postId);
+                    }
+                } else {
+                    console.error('Unable to like post:', response.statusText);
+                }
             } catch (e) {
                 console.error('Unable to like post:', e)
             }
@@ -466,7 +470,15 @@ export default function ExpandedPost () {
                         'Content-Type': 'application/json',
                     },
                 });
-                const result = await response.json();
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        removeUserLikes(postId)
+                        setTempLikeCount((preVal) => preVal - 1)
+                    }
+                } else {
+                    console.error('Unable to like post:', response.statusText);
+                }
             } catch (e) {
                 console.error('Unable to like post:', e)
             }
