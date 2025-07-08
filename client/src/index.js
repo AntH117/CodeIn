@@ -52,7 +52,7 @@ const router = createBrowserRouter([
         element: <EditPost />
       },
       {
-        path: '/posts/:id',
+        path: '/posts/:postId',
         element: <ExpandedPost />,
         children: [
           {

@@ -1,6 +1,6 @@
 import './ExpandedPost.css';
 import React from 'react';
-import { Link, Outlet, Navigate, useLocation, useNavigate} from 'react-router-dom';
+import { Link, Outlet, Navigate, useLocation, useNavigate, useParams} from 'react-router-dom';
 import testImage from './images/Temp-profile-pic.png'
 import { v4 as uuidv4 } from 'uuid';
 import Icons from './icons/Icons';
@@ -57,12 +57,10 @@ export default function ExpandedPost () {
     //handle loading
     const [loading, setLoading] = React.useState(true)
     React.useEffect(() => {
-        console.log(post)
-        console.log(authorInfo)
         if (post && authorInfo) {
-            setLoading(false)
+            setLoading(false);
         }
-    }, [post])
+    }, [post, authorInfo]);
  
     //Get user data --> user liked post
     const [tempLikeCount, setTempLikeCount] = React.useState(0)
@@ -110,7 +108,8 @@ export default function ExpandedPost () {
         }
     }
     const location  = useLocation()
-    const postId = location.pathname.split('/').at(-1)
+    //takes postId straight from params
+    const { postId } = useParams();
     const navigate = useNavigate();
     const APILINK = `${backendURL}/api/v1/codeIn/posts/${postId}`
 
