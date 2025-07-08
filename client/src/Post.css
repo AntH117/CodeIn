@@ -345,6 +345,11 @@ svg {
     background-color: white;
 }
 
+.form-import-button.CD {
+    cursor: default;
+    opacity: 0.5;
+}
+
 .form-import-button img {
     width: 120%;
 }

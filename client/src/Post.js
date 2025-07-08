@@ -29,7 +29,6 @@ export default function Post() {
         files: []
     })
 
-    const [alert, setAlert] = React.useState(null)
 
     //Add tag on language Change
     React.useEffect(() => {
@@ -135,9 +134,12 @@ export default function Post() {
         }
     }
 
+    const [fileCD, setFileCD] = React.useState(false)
+
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
-        if (!file) return;
+        if (!file) return
+        setFileCD(true)
         //file conditions
         const validFiles = [  
             "image/jpeg",
@@ -161,6 +163,7 @@ export default function Post() {
         setFileConditions(valid)
         const allTrue = Object.values(valid).every(value => value === true);
         if (!allTrue) {
+            setFileCD(false)
             return
         }
 
@@ -173,7 +176,7 @@ export default function Post() {
             body: form
         });
         const data = await res.json();
-        console.log(data)
+        setFileCD(false)
         setFormData((preVal) => ({
                 ...preVal,
                 files: [...preVal.files, data.filePath]
@@ -426,11 +429,11 @@ export default function Post() {
                         })}
                 </div>
                 <div className='form-imports'>
-                    <button className='form-import-button' type="button" onClick={handleImageClick}>
+                    <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handleImageClick} disabled={fileCD}>
                         <img src={image_upload}></img>
                         <input type='file' name='file' className='file-upload' onChange={handleFileChange} ref={imageInputRef}></input>
                     </button>
-                    <button className='form-import-button' type="button" onClick={handleFileClick}>
+                    <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handleFileClick} disabled={fileCD}>
                         <img src={file_upload}></img>
                         <input type='file' name='file' className='file-upload' onChange={handleFileChange} ref={fileInputRef}></input>
                     </button>

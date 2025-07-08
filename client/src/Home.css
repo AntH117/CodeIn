@@ -101,14 +101,16 @@
 .create-post-button {
     width: 100px;
     height: 2rem;
-    color: rgba(77,71,181,255);
     border: 0px;
-    background-color: transparent;
-    border-radius: 10px;
+    background-color: #7b47d4;
+    border-radius: 20px;
     font-size: 15px;
     cursor: pointer;
-    font-weight: 600;
-    
+    font-weight: 500;
+    transition: background-color 0.4s ease;
+}
+.create-post-button:hover {
+  background-color: #916fd1;
 }
 
 .home-filter-body {

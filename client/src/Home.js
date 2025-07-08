@@ -381,9 +381,9 @@ export default function Home() {
         <div className='news-feed-body'>
                 <div className='news-feed' ref={scrollRef}>
                     {location.pathname == '/' && <div className='home-interaction'>
-                        {(!loading && user) &&<div className='create-post'>
+                        {(!loading && user) && <div className='create-post'>
                         <button className='create-post-button'>
-                            <Link to={'/post'} style={{textDecoration: 'none'}}>Create Post</Link>
+                            <Link to={'/post'} style={{textDecoration: 'none', color: 'white'}}>Create Post</Link>
                         </button>
                         <div className='forced-refresh' onClick={() => setForcedRefresh((preVal) => preVal += 1)}>
                             <Icons.Refresh />
