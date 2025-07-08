@@ -245,7 +245,7 @@ export default class CodeInController {
 
     static async apiLikePost (req, res) {
         try {
-            const postId = res.params.postId
+            const postId = req.params.postId
             const postResponse = await CodeInDAO.likePost(postId)
             res.json({ status: 'success'})
         } catch (e) {
@@ -255,7 +255,7 @@ export default class CodeInController {
     }
     static async apiUnlikePost (req, res) {
         try {
-            const postId = res.params.postId
+            const postId = req.params.postId
             const postResponse = await CodeInDAO.unlikePost(postId)
             res.json({ status: 'success'})
         } catch (e) {

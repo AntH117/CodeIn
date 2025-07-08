@@ -85,6 +85,7 @@ export default function IndividualPost({data, handleSearchParams}) {
             });
             if (response.ok) {
                 const result = await response.json();
+                console.log(result)
                 if (result.status === 'success') {
                     setTempLikeCount((prevVal) => prevVal + 1);
                     addUserLikes(postId);
