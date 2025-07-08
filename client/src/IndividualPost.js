@@ -13,6 +13,16 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import notify from './Toast';
 
+function LikeWrapper({loggedUserData, data, user}) {
+
+    return (
+    <div className={`like-icon ${loggedUserData?.likes?.includes(data._id) && 'liked'}`}>
+        {user ? loggedUserData?.likes?.includes(data._id) ? <Icons.HeartFilled /> : <Icons.Heart /> : <Icons.Heart />}
+    </div>
+    )
+}
+
+
 export default function IndividualPost({data, handleSearchParams}) {
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -71,7 +81,6 @@ export default function IndividualPost({data, handleSearchParams}) {
         } else if (!containsPostId) {
             likePost(postId)
         }
-        awaitUserData()
     }
 
     const likePost = async(postId) => {
@@ -87,7 +96,7 @@ export default function IndividualPost({data, handleSearchParams}) {
                 const result = await response.json();
                 console.log(result)
                 if (result.status === 'success') {
-                    setTempLikeCount((prevVal) => prevVal + 1);
+                    setTempLikeCount((preVal) => preVal + 1);
                     addUserLikes(postId);
                 }
             } else {
@@ -95,11 +104,13 @@ export default function IndividualPost({data, handleSearchParams}) {
             }
         } catch (e) {
             console.error('Unable to like post:', e)
+        } finally {
+            awaitUserData()
         }
     }
 
     const unlikePost = async(postId) => {
-        const likesAPILINK = `http://localhost:5000/api/v1/codeIn/socials/unlike/${postId}`
+        const likesAPILINK = `${backendURL}/api/v1/codeIn/socials/unlike/${postId}`
         try {
             const response = await fetch(likesAPILINK, {
                 method: 'PUT',
@@ -114,24 +125,25 @@ export default function IndividualPost({data, handleSearchParams}) {
                     setTempLikeCount((preVal) => preVal - 1)
                 }
             } else {
-                console.error('Unable to like post:', response.statusText);
+                console.error('Unable to unlike post:', response.statusText);
             }
         } catch (e) {
             console.error('Unable to like post:', e)
+        } finally {
+            awaitUserData()
         }
     }
 
     //Prevent spamming
     async function handleLike(postId) {
-    if (likeCooldown) return;
-    setLikeCooldown(true);
-    try {
-    await handleUserLikes(postId);
-    } finally {
-    setTimeout(() => setLikeCooldown(false), 1500);
+        if (likeCooldown) return;
+        setLikeCooldown(true);
+        try {
+        await handleUserLikes(postId);
+        } finally {
+        setTimeout(() => setLikeCooldown(false), 1500);
+        }
     }
-}
-
 
     //getting author info
     const [authorInfo, setAuthorInfo] = React.useState()
@@ -264,9 +276,7 @@ export default function IndividualPost({data, handleSearchParams}) {
         </div>}
         <div className='IP-socials'>
             <div className='like-icon-wrapper'>
-                <div className={`like-icon ${loggedUserData?.likes?.includes(data._id) && 'liked'}`}>
-                    {user ? loggedUserData?.likes?.includes(data._id) ? <Icons.HeartFilled /> : <Icons.Heart /> : <Icons.Heart />}
-                </div>
+                <LikeWrapper loggedUserData={loggedUserData} data={data} user={user}/>
                 {tempLikeCount}
             </div>
             <div className='IP-socials-individual'>
@@ -279,7 +289,7 @@ export default function IndividualPost({data, handleSearchParams}) {
             </div>
         </div>
         <div className='IP-interact'>
-            {user && <h5 onClick={() => handleLike(data._id)}>{loggedUserData?.likes.includes(data._id) ? 'Unlike' : 'Like'}</h5>}
+            {user && <h5 onClick={() => handleLike(data._id)} style={likeCooldown ? {color: 'gray', cursor: 'default'} : {}}>{loggedUserData?.likes.includes(data._id) ? 'Unlike' : 'Like'}</h5>}
             <h5 onClick={() => navigate(`/posts/${data._id}`)}>Comment</h5>
             <h5>Share</h5>
         </div>

@@ -15,6 +15,35 @@ import NotFound from './NotFound';
 import ShowAlert from './ShowAlert';
 import notify from './Toast';
 
+
+function LikeWrapper({loggedUserData, user}) {
+    const location  = useLocation()
+    const postId = location.pathname.split('/').at(-1)
+    return (
+    <div className={`like-icon ${loggedUserData?.likes?.includes(postId) && 'liked'}`}>
+        {user ? loggedUserData?.likes?.includes(postId) ? <Icons.HeartFilled /> : <Icons.Heart /> : <Icons.Heart />}
+    </div>
+    )
+}
+function Socials({post, tempLikeCount, loggedUserData, user}) {
+    return (
+    <div className='IP-socials'>
+            <div className='IP-socials-individual'>
+                <LikeWrapper loggedUserData={loggedUserData} user={user}/>
+                {tempLikeCount}
+            </div>
+            <div className='IP-socials-individual'>
+                <Icons.Comment />
+                {post.commentCount}
+            </div>
+            <div className='IP-socials-individual'>
+                <Icons.Share />
+                {post.shareCount}
+            </div>
+    </div>
+    )
+}
+
 export default function ExpandedPost () {
     const backendURL = process.env.REACT_APP_BACKEND_URL
     const { user } = useAuth();
@@ -28,10 +57,14 @@ export default function ExpandedPost () {
     //handle loading
     const [loading, setLoading] = React.useState(true)
     React.useEffect(() => {
-        if (post && authorInfo) {
+        if (user) {
+            if ((post && loggedUserData) && authorInfo) {
+                setLoading(false)
+            }
+        } else if (post && authorInfo) {
             setLoading(false)
         }
-    }, [authorInfo])
+    }, [post])
  
     //Get user data --> user liked post
     const [tempLikeCount, setTempLikeCount] = React.useState(0)
@@ -47,13 +80,20 @@ export default function ExpandedPost () {
         }
     },[user])
     
-    //set temp like count
+    //Intial setups
     React.useEffect(() => {
-    if (!post) {
-        return
-    } else {
-        setTempLikeCount(post?.likeCount)
-    }
+        getPost()
+    }, [])
+
+    React.useEffect(() => {
+        if (!post) {
+            return
+        } else {
+            getComments()
+            setTempLikeCount(post?.likeCount)
+            setFiles()
+            getAuthorInfo()
+        }
     }, [post])
 
     function setFiles () {
@@ -94,14 +134,6 @@ export default function ExpandedPost () {
             console.error(`Unable to load post:`, e)
         }
     }
-    React.useEffect(() => {
-        getPost()
-    }, [])
-    
-    React.useEffect(() => {
-        setFiles()
-        getAuthorInfo()
-    }, [post])
 
     //Get Author details
     async function getUserInfo(uid) {
@@ -188,26 +220,24 @@ export default function ExpandedPost () {
             </div>}
         </>
     }
-    function Socials() {
-        return (
-        <div className='IP-socials'>
-                <div className='IP-socials-individual'>
-                    <div className={`like-icon ${loggedUserData?.likes?.includes(postId) && 'liked'}`}>
-                        {user ? loggedUserData?.likes?.includes(postId) ? <Icons.HeartFilled /> : <Icons.Heart /> : <Icons.Heart />}
-                    </div>
-                    {tempLikeCount}
-                </div>
-                <div className='IP-socials-individual'>
-                    <Icons.Comment />
-                    {post.commentCount}
-                </div>
-                <div className='IP-socials-individual'>
-                    <Icons.Share />
-                    {post.shareCount}
-                </div>
-        </div>
-        )
-    }
+    // function Socials({post, tempLikeCount, loggedUserData, user}) {
+    //     return (
+    //     <div className='IP-socials'>
+    //             <div className='IP-socials-individual'>
+    //                 <LikeWrapper loggedUserData={loggedUserData} user={user}/>
+    //                 {tempLikeCount}
+    //             </div>
+    //             <div className='IP-socials-individual'>
+    //                 <Icons.Comment />
+    //                 {post.commentCount}
+    //             </div>
+    //             <div className='IP-socials-individual'>
+    //                 <Icons.Share />
+    //                 {post.shareCount}
+    //             </div>
+    //     </div>
+    //     )
+    // }
     //create comment
     const CommentAPILINK = `${backendURL}/api/v1/comments`
     const saveComment = async (currentComment) => {
@@ -302,11 +332,6 @@ export default function ExpandedPost () {
         }
       }
 
-      React.useEffect(() => {
-        if (post) {
-            getComments()
-        }
-      }, [post])
 
       //display individual comment
     function IndividualComment({data}) {
@@ -435,9 +460,7 @@ export default function ExpandedPost () {
             } else if (!containsPostId) {
                 likePost(postId)
             }
-            awaitUserData()
         }
-    
         const likePost = async(postId) => {
             const likesAPILINK = `${backendURL}/api/v1/codeIn/socials/like/${postId}`
             try {
@@ -449,8 +472,9 @@ export default function ExpandedPost () {
                 });
                 if (response.ok) {
                     const result = await response.json();
+                    console.log(result)
                     if (result.status === 'success') {
-                        setTempLikeCount((prevVal) => prevVal + 1);
+                        setTempLikeCount((preVal) => preVal + 1);
                         addUserLikes(postId);
                     }
                 } else {
@@ -458,11 +482,13 @@ export default function ExpandedPost () {
                 }
             } catch (e) {
                 console.error('Unable to like post:', e)
+            } finally {
+                awaitUserData()
             }
         }
     
         const unlikePost = async(postId) => {
-            const likesAPILINK = `http://localhost:5000/api/v1/codeIn/socials/unlike/${postId}`
+            const likesAPILINK = `${backendURL}/api/v1/codeIn/socials/unlike/${postId}`
             try {
                 const response = await fetch(likesAPILINK, {
                     method: 'PUT',
@@ -477,22 +503,25 @@ export default function ExpandedPost () {
                         setTempLikeCount((preVal) => preVal - 1)
                     }
                 } else {
-                    console.error('Unable to like post:', response.statusText);
+                    console.error('Unable to unlike post:', response.statusText);
                 }
             } catch (e) {
                 console.error('Unable to like post:', e)
+            } finally {
+                awaitUserData()
             }
         }
+
         //Prevent spamming
         async function handleLike(postId) {
-        if (likeCooldown) return;
-        setLikeCooldown(true);
-        try {
-        await handleUserLikes(postId);
-        } finally {
-        setTimeout(() => setLikeCooldown(false), 1500);
+            if (likeCooldown) return;
+            setLikeCooldown(true);
+            try {
+            await handleUserLikes(postId);
+            } finally {
+            setTimeout(() => setLikeCooldown(false), 1500);
+            }
         }
-    }
 
     function CodeBlock({ code, language}) {
 
@@ -576,9 +605,9 @@ export default function ExpandedPost () {
                                 return <IndividualTag tagName={tag}/>
                             })}
                         </div>}
-                        <Socials />
+                        <Socials post={post} tempLikeCount={tempLikeCount} loggedUserData={loggedUserData} user={user}/>
                         <div className='IP-interact' style={{marginBottom: '1rem'}}>
-                            {user && <h5 onClick={() => handleLike(post._id)}>{loggedUserData?.likes.includes(post._id) ? 'Unlike' : 'Like'}</h5>}
+                            {user && <h5 onClick={() => handleLike(post._id)} style={likeCooldown ? {color: 'gray', cursor: 'default'} : {}}>{loggedUserData?.likes.includes(post._id) ? 'Unlike' : 'Like'}</h5>}
                             <h5>Share</h5>
                         </div>
                         <Comments />
