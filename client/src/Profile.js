@@ -152,7 +152,8 @@ export default function Profile () {
     //display user only comments
     function UserComments({onLoaded}) {
         const [userComments, setUserComments] = React.useState([])
-            const CommentAPILINK = `${backendURL}/api/v1/comments`
+        const [loaded, setLoaded] = React.useState(false)
+        const CommentAPILINK = `${backendURL}/api/v1/comments`
         const getUserComments = async() => {
             try {
                 const response = await fetch(`${CommentAPILINK}/user/${profileId}`, {
@@ -172,6 +173,7 @@ export default function Profile () {
                 console.error('failed to receive comments:', e)
             } finally {
                 onLoaded()
+                setLoaded(true)
             }
         }
 
@@ -257,7 +259,7 @@ export default function Profile () {
             {userComments.length > 0 && userComments.map((comment) => {
                 return <IndividualComment data={comment}/>
             })}
-            {userComments.length == 0 && <p>No comments yet!</p>}
+            {(userComments.length == 0 && loaded) && <p>No comments yet!</p>}
         </>
     }
 

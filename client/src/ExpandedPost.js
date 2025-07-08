@@ -22,7 +22,7 @@ export default function ExpandedPost () {
     const [imageFiles, setImageFiles] = React.useState(null)
     const [otherFiles, setOtherFiles] = React.useState(null)
     const [authorInfo, setAuthorInfo] = React.useState(null)
-    const [comments, setComments] = React.useState([])
+    const [comments, setComments] = React.useState(null)
     const [loadingError, setLoadingError] = React.useState(false)
 
     //handle loading
@@ -46,6 +46,7 @@ export default function ExpandedPost () {
             awaitUserData()
         }
     },[user])
+    
     //set temp like count
     React.useEffect(() => {
     if (!post) {
@@ -365,11 +366,11 @@ export default function ExpandedPost () {
                     <button className='EP-comment-post' onClick={() => currentComment.length > 0 ? saveComment(currentComment) : console.error('Comment invalid')}>Post</button>
                 </div>}
                 <div className='EP-comments'>
-                    {comments.length > 0 && comments.map((x) => {
+                    {comments?.length > 0 && comments.map((x) => {
                         return <IndividualComment data = {x}/>
                     })}
-                    {comments.length == 0 && <p>No comments yet!</p>}
-                    {comments.length > commentLimit && <button className='load-comments-button' onClick={() => setCommentLimit((preval) => preval += 5)}>Load more</button>}
+                    {comments?.length == 0 && <p>No comments yet!</p>}
+                    {comments?.length > commentLimit && <button className='load-comments-button' onClick={() => setCommentLimit((preval) => preval += 5)}>Load more</button>}
                 </div>
             </div>
         )

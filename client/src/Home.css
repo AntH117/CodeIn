@@ -153,7 +153,7 @@
     width: 2rem;
     height: 2rem;
     display: flex;
-    border: 1px solid transparent;
+    border: 0px solid transparent;
     border-radius: 30px;
     background-color: rgba(112, 94, 218, 255);
     color: white;

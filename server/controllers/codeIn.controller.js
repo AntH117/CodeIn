@@ -247,6 +247,7 @@ export default class CodeInController {
         try {
             const postId = res.params.postId
             const postResponse = await CodeInDAO.likePost(postId)
+            res.json({ status: 'success'})
         } catch (e) {
             console.log(`api, ${e}`)
             res.status(500).json({error: e})
@@ -256,6 +257,7 @@ export default class CodeInController {
         try {
             const postId = res.params.postId
             const postResponse = await CodeInDAO.unlikePost(postId)
+            res.json({ status: 'success'})
         } catch (e) {
             console.log(`api, ${e}`)
             res.status(500).json({error: e})

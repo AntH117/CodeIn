@@ -67,12 +67,8 @@ export default function IndividualPost({data, handleSearchParams}) {
     async function handleUserLikes(postId) {
         const containsPostId = loggedUserData?.likes?.includes(postId)
         if (containsPostId) {
-            removeUserLikes(postId)
-            setTempLikeCount((preVal) => preVal - 1)
             unlikePost(postId)
         } else if (!containsPostId) {
-            addUserLikes(postId)
-            setTempLikeCount((preVal) => preVal + 1)
             likePost(postId)
         }
         awaitUserData()
@@ -88,6 +84,10 @@ export default function IndividualPost({data, handleSearchParams}) {
                 },
             });
             const result = await response.json();
+            if (result.status == 'success') {
+                setTempLikeCount((preVal) => preVal + 1)
+                addUserLikes(postId)
+            }
         } catch (e) {
             console.error('Unable to like post:', e)
         }
@@ -103,6 +103,10 @@ export default function IndividualPost({data, handleSearchParams}) {
                 },
             });
             const result = await response.json();
+            if (result.status == 'success') {
+                removeUserLikes(postId)
+                setTempLikeCount((preVal) => preVal - 1)
+            }
         } catch (e) {
             console.error('Unable to like post:', e)
         }
