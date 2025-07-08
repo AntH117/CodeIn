@@ -108,7 +108,7 @@ export default function Home() {
     //handle loading
     const [loading, setLoading] = React.useState(true)
     const [forcedRefresh, setForcedRefresh] = React.useState(0)
-
+    
     // Force posts to reload on params change
     const [forceParams, setForceParams] = React.useState(0)
 
@@ -145,7 +145,11 @@ export default function Home() {
     React.useEffect(() => {
         setForceParams((preVal) => preVal += 1)
     }, [searchParams])
-
+    
+    // Forces render on location change
+    React.useEffect(() => {
+        setForcedRefresh((preVal) => preVal += 1)
+    }, [location])
 
     //get liked posts
     const [loggedUserData, setLoggedUserData] = React.useState(null)
