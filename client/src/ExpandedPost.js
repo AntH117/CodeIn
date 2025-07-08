@@ -57,11 +57,7 @@ export default function ExpandedPost () {
     //handle loading
     const [loading, setLoading] = React.useState(true)
     React.useEffect(() => {
-        if (user) {
-            if ((post && loggedUserData) && authorInfo) {
-                setLoading(false)
-            }
-        } else if (post && authorInfo) {
+        if (post && authorInfo) {
             setLoading(false)
         }
     }, [post])
@@ -472,7 +468,6 @@ export default function ExpandedPost () {
                 });
                 if (response.ok) {
                     const result = await response.json();
-                    console.log(result)
                     if (result.status === 'success') {
                         setTempLikeCount((preVal) => preVal + 1);
                         addUserLikes(postId);
