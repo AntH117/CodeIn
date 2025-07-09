@@ -100,9 +100,10 @@ export default function EditPost() {
 
     //IMPORTS
     function FileImports({name}) {
-        const uniqueFile = name.includes('\\') ? name.split('\\').at(-1) : name.split('/').at(-1)
-        const fileType = name.includes('\\') ? name.split('\\').at(1) : name.split('/').at(1)
-        const originalName = uniqueFile.slice(37)
+        const isCloudinaryUrl = (url) => url.includes('res.cloudinary.com');
+        const fileName = (typeof name === 'object' && name !== null) ? name.url : name
+        const uniqueFile = (typeof name === 'object' && name !== null) ? fileName.split('/').at(-1) : fileName.slice(50)
+        const fileType = fileName.includes(isCloudinaryUrl) ? 'final' : 'temp'
         const deleteTempFile = async (e) => {
             const res = await fetch(`${APILINK}/temp-upload`, {
                 method: 'DELETE',
@@ -117,7 +118,7 @@ export default function EditPost() {
             if (data.status === 'success') {
                 setEditedPost((preVal) => ({
                     ...preVal,
-                    files: preVal.files.filter((x) => x !== name)
+                    files: preVal.files.filter((x) => x !== fileName)
                 }))
             } else {
                 console.error('Unable to delete file')
@@ -134,7 +135,7 @@ export default function EditPost() {
         return <div className='file-import-body'>
             <div className='file-import-name'>
                 <p>
-                    {originalName}
+                    {uniqueFile}
                 </p>
             </div>
             <div className='file-import-delete' onClick={() => fileType == 'temp' ? deleteTempFile() : deleteFinalFile()}>

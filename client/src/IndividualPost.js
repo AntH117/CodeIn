@@ -173,11 +173,11 @@ export default function IndividualPost({data, handleSearchParams}) {
     if (data.postContent.files.length > 0) {
         const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.svg'];
          imageFiles = data.postContent.files.filter(file => {
-            const ext = file.slice(file.lastIndexOf('.')).toLowerCase();
+            const ext = file.url.slice(file.url.lastIndexOf('.')).toLowerCase();
             return imageExtensions.includes(ext);
           });
         otherFiles = data.postContent.files.filter(file => {
-            const ext = file.slice(file.lastIndexOf('.')).toLowerCase();
+            const ext = file.url.slice(file.url.lastIndexOf('.')).toLowerCase();
             return !imageExtensions.includes(ext);
           });
     }
@@ -192,11 +192,11 @@ export default function IndividualPost({data, handleSearchParams}) {
       
         return (
           <div style={imageFiles.length === 1 ? {} : gridStyle} className={`IP-image-container ${imageFiles.length === 1 ? 'single' : ''}`}  onClick={() => navigate(`/posts/${data._id}`)}>
-            {imageFiles.map((src, idx) => (
+            {imageFiles.map((image, idx) => (
               <img
                 className='IP-image'
                 key={idx}
-                src={`${backendURL}/${src}`}
+                src={image.url}
                 alt={`Image ${idx + 1}`}
               />
             ))}

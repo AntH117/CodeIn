@@ -26,10 +26,9 @@ export default class CodeInController {
                         const result = await cloudinary.uploader.upload(absolutePath, {
                             folder: 'codein',
                         });
-                        console.log("Cloudinary upload result:", result);
                         // Delete the temp file after upload
                         fs.unlinkSync(absolutePath);
-            
+        
                         // Save the Cloudinary URL
                         uploadedURLs.push({
                             url: result.secure_url,
@@ -122,9 +121,8 @@ export default class CodeInController {
             const deletedFiles = req.body?.deletedFiles;
             //file upload
             if (postContent.files.length > 0) {
-                const isCloudinaryUrl = (url) => url.includes('res.cloundinary.com')
-                const finalArray = postContent.files.filter(isCloudinaryUrl);
-                const newArray = postContent.files.filter(!isCloudinaryUrl);
+                const finalArray = postContent.files.filter((file) => typeof file === 'object');
+                const newArray = postContent.files.filter((file) => typeof file !== 'object');
                 const uploadedURLs = [...finalArray];
                 if (newArray.length > 0) {
                     for (const tempPath of newArray) {

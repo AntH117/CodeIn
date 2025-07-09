@@ -53,7 +53,6 @@ export default function ExpandedPost () {
     const [authorInfo, setAuthorInfo] = React.useState(null)
     const [comments, setComments] = React.useState(null)
     const [loadingError, setLoadingError] = React.useState(false)
-    console.log(post?.postContent.files)
     //handle loading
     const [loading, setLoading] = React.useState(true)
     React.useEffect(() => {
@@ -96,12 +95,12 @@ export default function ExpandedPost () {
         if (post?.postContent.files.length > 0) {
             const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.svg'];
             const images = post.postContent.files.filter(file => {
-                const ext = file.slice(file.lastIndexOf('.')).toLowerCase();
+                const ext = file.url.slice(file.url.lastIndexOf('.')).toLowerCase();
                 return imageExtensions.includes(ext);
               });
             setImageFiles(images)
             const other = post.postContent.files.filter(file => {
-                const ext = file.slice(file.lastIndexOf('.')).toLowerCase();
+                const ext = file.url.slice(file.url.lastIndexOf('.')).toLowerCase();
                 return !imageExtensions.includes(ext);
               });
             setOtherFiles(other)
@@ -408,12 +407,12 @@ export default function ExpandedPost () {
         };
         return (
           <div style={imageFiles.length === 1 ? {} : gridStyle} className={`IP-image-container ${imageFiles.length === 1 ? 'single' : ''}`}>
-            {imageFiles.map((src, idx) => (
+            {imageFiles.map((image, idx) => (
               <img
-                onClick={() => navigate(`image/${src.split(/[/\\]/).at(-1)}`)}
+                onClick={console.log('clicked')}
                 className='IP-image'
                 key={idx}
-                src={`${backendURL}/${src}`}
+                src={image.url}
                 alt={`Image ${idx + 1}`}
               />
             ))}
@@ -422,7 +421,7 @@ export default function ExpandedPost () {
       }
     
     function FileAttachment({file}) {
-        const originalName = file.slice(51)
+        const originalName = file.url
 
         return <div className='file-attachment-body'>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
