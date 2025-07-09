@@ -92,20 +92,21 @@ export default function ExpandedPost () {
     }, [post])
 
     function setFiles () {
-        if (post?.postContent.files.length > 0) {
-            const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.svg'];
-            const images = post.postContent.files.filter(file => {
-                const ext = file.url.slice(file.url.lastIndexOf('.')).toLowerCase();
-                return imageExtensions.includes(ext);
-              });
-            setImageFiles(images)
-            const other = post.postContent.files.filter(file => {
-                const ext = file.url.slice(file.url.lastIndexOf('.')).toLowerCase();
-                return !imageExtensions.includes(ext);
-              });
-            setOtherFiles(other)
-        }
+        // if (post?.postContent.files.length > 0) {
+        //     const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.svg'];
+        //     const images = post.postContent.files.filter(file => {
+        //         const ext = file.url.slice(file.url.lastIndexOf('.')).toLowerCase();
+        //         return imageExtensions.includes(ext);
+        //       });
+        //     setImageFiles(images)
+        //     const other = post.postContent.files.filter(file => {
+        //         const ext = file.url.slice(file.url.lastIndexOf('.')).toLowerCase();
+        //         return !imageExtensions.includes(ext);
+        //       });
+        //     setOtherFiles(other)
+        // }
     }
+    console.log(post)
     const location  = useLocation()
     //takes postId straight from params
     const { postId } = useParams();

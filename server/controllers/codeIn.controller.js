@@ -149,6 +149,7 @@ export default class CodeInController {
                         }
                     }
                 }
+                postContent.files = uploadedURLs;
             }
             //delete final files
             if (deletedFiles?.length > 0) {

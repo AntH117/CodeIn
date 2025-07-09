@@ -100,7 +100,8 @@ export default function EditPost() {
 
     //IMPORTS
     function FileImports({name}) {
-        const isCloudinaryUrl = (url) => url.includes('res.cloudinary.com');
+        const isCloudinaryUrl = (url) =>
+            typeof url === 'string' && url.includes('res.cloudinary.com');
         const fileName = (typeof name === 'object' && name !== null) ? name.url : name
         const uniqueFile = (typeof name === 'object' && name !== null) ? fileName.split('/').at(-1) : fileName.slice(50)
         const fileType = fileName.includes(isCloudinaryUrl) ? 'final' : 'temp'
@@ -118,7 +119,7 @@ export default function EditPost() {
             if (data.status === 'success') {
                 setEditedPost((preVal) => ({
                     ...preVal,
-                    files: preVal.files.filter((x) => x !== fileName)
+                    files: preVal.files.filter((x) => x.url !== fileName)
                 }))
             } else {
                 console.error('Unable to delete file')
