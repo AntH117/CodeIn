@@ -156,11 +156,11 @@ export default function EditPost() {
         const fileInputRef = React.useRef();
         return (
             <div className='edit-form-imports'>
-                <button className='form-import-button' type="button" onClick={handldeImageClick}>
+                <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handldeImageClick}>
                     <img src={image_upload}></img>
                     <input type='file' name='file' className='file-upload' onChange={handleFileChange} ref={imagleInputRef}></input>
                 </button>
-                <button className='form-import-button' type="button" onClick={handleFileClick}>
+                <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handleFileClick}>
                     <img src={file_upload}></img>
                     <input type='file' name='file' className='file-upload' onChange={handleFileChange} ref={fileInputRef}></input>
                 </button>
@@ -178,10 +178,12 @@ export default function EditPost() {
       };
     
 
+    const [fileCD, setFileCD] = React.useState(false)
 
     const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    setFileCD(true)
     //validate file
     const validFiles = [  
         "image/jpeg",
@@ -205,6 +207,7 @@ export default function EditPost() {
     setFileConditions(valid)
     const allTrue = Object.values(valid).every(value => value === true);
     if (!allTrue) {
+        setFileCD(false)
         return
     }
             
@@ -217,7 +220,8 @@ export default function EditPost() {
     });
 
     const data = await res.json();
-        setEditedPost((preVal) => ({
+    setFileCD(false)
+    setEditedPost((preVal) => ({
             ...preVal,
             files: [...preVal.files, data.filePath]
     }))

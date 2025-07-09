@@ -3,6 +3,7 @@ import path from 'path'
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { promises as fsPromises } from 'fs';
+import cloudinary from '../utils/cloudinary.js'
 
 export default class CodeInController {
 
@@ -12,15 +13,34 @@ export default class CodeInController {
             const postContent = req.body.postContent
             const user = req.body.user
 
-            //file upload
+            //file upload - changed to cloundinary
             if (postContent?.files.length > 0) {
-                const movedFiles = postContent.files.map(tempPath => {
-                    const fileName = path.basename(tempPath);
-                    const finalPath = path.join('uploads', 'final', fileName);
-                    fs.renameSync(tempPath, finalPath);
-                    return finalPath;
-                });
-                postContent.files = movedFiles;
+                const uploadedURLs = [];
+            
+                for (const tempPath of postContent.files) {
+                    try {
+                        // Make sure the path is absolute
+                        const absolutePath = path.resolve(tempPath);
+            
+                        // Upload to Cloudinary
+                        const result = await cloudinary.uploader.upload(absolutePath, {
+                            folder: 'codein',
+                        });
+            
+                        // Delete the temp file after upload
+                        fs.unlinkSync(absolutePath);
+            
+                        // Save the Cloudinary URL
+                        uploadedURLs.push({
+                            url: result.secure_url,
+                            public_id: result.public_id
+                        });
+                    } catch (err) {
+                        console.error('Cloudinary upload failed for', tempPath, err);
+                    }
+                }
+            
+                postContent.files = uploadedURLs;
             }
 
             const postResponse = await CodeInDAO.createPost(
@@ -42,7 +62,7 @@ export default class CodeInController {
             res.status(500).json({error: e.message})
         }
     }
-    //handle uploading files for creating/editing posts
+    //handle uploading files for creating/`edit`ing posts
     static handleUpload(req, res, next) {
         try {
             if (!req.file) {
@@ -69,8 +89,7 @@ export default class CodeInController {
                     console.error('Error deleting file', err)
                 } else {
                     console.log('Temp file deleted', filename)
-                }
-                res.json({
+                }                res.json({
                     status: 'success'
                 });
             })
@@ -103,26 +122,34 @@ export default class CodeInController {
             const deletedFiles = req.body?.deletedFiles;
             //file upload
             if (postContent.files.length > 0) {
-                const finalArray = postContent.files.filter((x) => {
-                    const folderName = x.includes('\\') ? x.split('\\')[1] : x.split('/')[1];
-                    return folderName === 'final';
-                });
-            
-                const newArray = postContent.files.filter((x) => {
-                    const folderName = x.includes('\\') ? x.split('\\')[1] : x.split('/')[1];
-                    return folderName === 'temp';
-                });
-            
+                const isCloudinaryUrl = (url) => url.includes('res.cloundinary.com')
+                const finalArray = postContent.files.filter(isCloudinaryUrl);
+                const newArray = postContent.files.filter(!isCloudinaryUrl);
+                const uploadedURLs = [...finalArray];
                 if (newArray.length > 0) {
-                    const movedFiles = newArray.map(tempPath => {
-                        const fileName = path.basename(tempPath);
-                        const finalPath = path.join('uploads', 'final', fileName);
-                        fs.renameSync(tempPath, finalPath);
-                        return finalPath;
-                    });
+                    for (const tempPath of newArray) {
+                        try {
+                            // Make sure the path is absolute
+                            const absolutePath = path.resolve(tempPath);
                 
-                    postContent.files = [...finalArray, ...movedFiles];
-                    console.log('files moved successfully')
+                            // Upload to Cloudinary
+                            const result = await cloudinary.uploader.upload(absolutePath, {
+                                folder: 'codein',
+                            });
+                
+                            // Delete the temp file after upload
+                            fs.unlinkSync(absolutePath);
+                
+                            // Save the Cloudinary URL and public_id for deletion
+                            uploadedURLs.push({
+                                url: result.secure_url,
+                                public_id: result.public_id
+                            });
+
+                        } catch (err) {
+                            console.error('Cloudinary upload failed for', tempPath, err);
+                        }
+                    }
                 }
             }
             //delete final files
@@ -130,17 +157,14 @@ export default class CodeInController {
                 const __filename = fileURLToPath(import.meta.url);
                 const __dirname = path.dirname(__filename);
     
-                for (const filePaths of deletedFiles) {
-                    const normalizedPath = path.normalize(filePaths);
-                    const filePath = path.join(__dirname, '..', normalizedPath);
-    
+                for (const file of deletedFiles) {
                     try {
-                        await fsPromises.unlink(filePath);
-                        console.log('Deleted file:', normalizedPath);
+                      await cloudinary.uploader.destroy(file.public_id);
+                      console.log(`Deleted ${file.public_id}`);
                     } catch (err) {
-                        console.error('Error deleting file', normalizedPath, err);
+                      console.error(`Failed to delete ${file.public_id}`, err);
                     }
-                }
+                  }
             }
 
             const postResponse = await CodeInDAO.updatePost (
