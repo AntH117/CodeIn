@@ -53,7 +53,7 @@ export default function ExpandedPost () {
     const [authorInfo, setAuthorInfo] = React.useState(null)
     const [comments, setComments] = React.useState(null)
     const [loadingError, setLoadingError] = React.useState(false)
-
+    console.log(post?.postContent.files)
     //handle loading
     const [loading, setLoading] = React.useState(true)
     React.useEffect(() => {

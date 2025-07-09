@@ -26,7 +26,7 @@ export default class CodeInController {
                         const result = await cloudinary.uploader.upload(absolutePath, {
                             folder: 'codein',
                         });
-            
+                        console.log("Cloudinary upload result:", result);
                         // Delete the temp file after upload
                         fs.unlinkSync(absolutePath);
             
