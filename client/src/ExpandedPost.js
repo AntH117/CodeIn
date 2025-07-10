@@ -16,7 +16,7 @@ import ShowAlert from './ShowAlert';
 import notify from './Toast';
 
 
-function LikeWrapper({loggedUserData, user, isLiked}) {
+function LikeWrapper({user, isLiked}) {
     const location  = useLocation()
     const postId = location.pathname.split('/').at(-1)
     return (
@@ -25,11 +25,11 @@ function LikeWrapper({loggedUserData, user, isLiked}) {
     </div>
     )
 }
-function Socials({post, tempLikeCount, loggedUserData, user, isLiked}) {
+function Socials({post, tempLikeCount, user, isLiked}) {
     return (
     <div className='IP-socials'>
             <div className='IP-socials-individual'>
-                <LikeWrapper loggedUserData={loggedUserData} user={user} isLiked={isLiked}/>
+                <LikeWrapper user={user} isLiked={isLiked}/>
                 {tempLikeCount}
             </div>
             <div className='IP-socials-individual'>
@@ -585,7 +585,7 @@ export default function ExpandedPost () {
                                 return <IndividualTag tagName={tag}/>
                             })}
                         </div>}
-                        <Socials post={post} tempLikeCount={tempLikeCount} loggedUserData={loggedUserData} user={user} isLiked={isLiked}/>
+                        <Socials post={post} tempLikeCount={tempLikeCount} user={user} isLiked={isLiked}/>
                         <div className='IP-interact' style={{marginBottom: '1rem'}}>
                             {user && <h5 onClick={() => handleLike(post._id)} style={likeCooldown ? {color: 'gray', cursor: 'default'} : {}}>{isLiked ? 'Unlike' : 'Like'}</h5>}
                             <h5>Share</h5>
