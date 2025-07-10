@@ -16,20 +16,20 @@ import ShowAlert from './ShowAlert';
 import notify from './Toast';
 
 
-function LikeWrapper({loggedUserData, user}) {
+function LikeWrapper({loggedUserData, user, isLiked}) {
     const location  = useLocation()
     const postId = location.pathname.split('/').at(-1)
     return (
-    <div className={`like-icon ${loggedUserData?.likes?.includes(postId) && 'liked'}`}>
-        {user ? loggedUserData?.likes?.includes(postId) ? <Icons.HeartFilled /> : <Icons.Heart /> : <Icons.Heart />}
+    <div className={`like-icon ${isLiked && 'liked'}`}>
+        {(user && isLiked) ? <Icons.HeartFilled /> : <Icons.Heart />}
     </div>
     )
 }
-function Socials({post, tempLikeCount, loggedUserData, user}) {
+function Socials({post, tempLikeCount, loggedUserData, user, isLiked}) {
     return (
     <div className='IP-socials'>
             <div className='IP-socials-individual'>
-                <LikeWrapper loggedUserData={loggedUserData} user={user}/>
+                <LikeWrapper loggedUserData={loggedUserData} user={user} isLiked={isLiked}/>
                 {tempLikeCount}
             </div>
             <div className='IP-socials-individual'>
@@ -60,21 +60,22 @@ export default function ExpandedPost () {
             setLoading(false);
         }
     }, [post, authorInfo]);
- 
+    const location  = useLocation()
     //Get user data --> user liked post
     const [tempLikeCount, setTempLikeCount] = React.useState(0)
     const [loggedUserData, setLoggedUserData] = React.useState(null)
     const [likeCooldown, setLikeCooldown] = React.useState(false)
+    const [isLiked, setIsLiked] = React.useState(false)
     async function awaitUserData() {
         const response = await getUserInfo(user?.uid)
         setLoggedUserData(response)
     }
+    console.log('isLiked', isLiked)
     React.useEffect(() => {
         if (user) {
             awaitUserData()
         }
     },[user])
-    
     //Intial setups
     React.useEffect(() => {
         getPost()
@@ -88,6 +89,7 @@ export default function ExpandedPost () {
             setTempLikeCount(post?.likeCount)
             setFiles()
             getAuthorInfo()
+            setIsLiked(loggedUserData?.likes.includes(post?._id))
         }
     }, [post])
 
@@ -106,7 +108,6 @@ export default function ExpandedPost () {
             setOtherFiles(other)
         }
     }
-    const location  = useLocation()
     //takes postId straight from params
     const { postId } = useParams();
     const navigate = useNavigate();
@@ -216,24 +217,6 @@ export default function ExpandedPost () {
             </div>}
         </>
     }
-    // function Socials({post, tempLikeCount, loggedUserData, user}) {
-    //     return (
-    //     <div className='IP-socials'>
-    //             <div className='IP-socials-individual'>
-    //                 <LikeWrapper loggedUserData={loggedUserData} user={user}/>
-    //                 {tempLikeCount}
-    //             </div>
-    //             <div className='IP-socials-individual'>
-    //                 <Icons.Comment />
-    //                 {post.commentCount}
-    //             </div>
-    //             <div className='IP-socials-individual'>
-    //                 <Icons.Share />
-    //                 {post.shareCount}
-    //             </div>
-    //     </div>
-    //     )
-    // }
     //create comment
     const CommentAPILINK = `${backendURL}/api/v1/comments`
     const saveComment = async (currentComment) => {
@@ -440,6 +423,7 @@ export default function ExpandedPost () {
             await updateDoc(userRef, {
                 likes: arrayUnion(postId)
               });
+            setIsLiked(true)
         }
     
         async function removeUserLikes(postId) {
@@ -448,6 +432,7 @@ export default function ExpandedPost () {
             await updateDoc(userRef, {
                 likes: arrayRemove(postId)
               });
+              setIsLiked(false)
         }
         async function handleUserLikes(postId) {
             const containsPostId = loggedUserData?.likes?.includes(postId)
@@ -600,9 +585,9 @@ export default function ExpandedPost () {
                                 return <IndividualTag tagName={tag}/>
                             })}
                         </div>}
-                        <Socials post={post} tempLikeCount={tempLikeCount} loggedUserData={loggedUserData} user={user}/>
+                        <Socials post={post} tempLikeCount={tempLikeCount} loggedUserData={loggedUserData} user={user} isLiked={isLiked}/>
                         <div className='IP-interact' style={{marginBottom: '1rem'}}>
-                            {user && <h5 onClick={() => handleLike(post._id)} style={likeCooldown ? {color: 'gray', cursor: 'default'} : {}}>{loggedUserData?.likes.includes(post._id) ? 'Unlike' : 'Like'}</h5>}
+                            {user && <h5 onClick={() => handleLike(post._id)} style={likeCooldown ? {color: 'gray', cursor: 'default'} : {}}>{isLiked ? 'Unlike' : 'Like'}</h5>}
                             <h5>Share</h5>
                         </div>
                         <Comments />

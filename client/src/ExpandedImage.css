@@ -4,19 +4,52 @@
     height: 100%;
     position: absolute;
     display: flex;
-    background-color: rgba(185, 185, 185, 0.445);
+    background: rgba(0, 0, 0, 0.1); 
+    backdrop-filter: blur(4px); 
     z-index: 5;
     justify-content: center;
+    align-items: center;
 }
 
 .expanded-image-container {
+    /* width: 80%;
+    height: fit-content;
+    margin-top: 35%; */
+    background-color: #fff;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
     width: 80%;
     height: fit-content;
-    margin-top: 35%;
+    overflow: auto;
+    position: relative;
+    transform: scale(0.95);
+    opacity: 0;
+    animation: popIn 0.3s forwards;
 }
+
+@keyframes popIn {
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+.close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    z-index: 1001;
+  }
 
 .expanded-image-container img {
     width: 100%;
+    border-radius: 0.5rem;
 }
 .no-scroll {
     overflow: hidden;

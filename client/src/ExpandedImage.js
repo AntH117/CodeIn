@@ -1,14 +1,17 @@
 import './ExpandedImage.css';
 import React from 'react';
-import { Link, Outlet, Navigate, useLocation, useNavigate} from 'react-router-dom';
+import { Link, Outlet, Navigate, useLocation, useNavigate, useParams} from 'react-router-dom';
 
 export default function ExpandedImage() {
     const navigate = useNavigate()
     const location  = useLocation()
-    const id = location.pathname.split('/').at(-1)
-    return <div className='expanded-image-body' onClick={() => navigate(-1)}>
+    const postLocation = location.pathname.split('image')[0];
+    console.log(postLocation)
+    const { imageId } = useParams()
+    return <div className='expanded-image-body' onClick={() => navigate(postLocation)}>
         <div className='expanded-image-container'>
-            <img src={`https://res.cloudinary.com/dvc16neqe/image/upload/v1752025154/codein/${id}`}>
+            <button className="close-button" onClick={() => navigate(postLocation)}>✕</button>
+            <img src={`https://res.cloudinary.com/dvc16neqe/image/upload/v1752025154/codein/${imageId}`}>
             </img>
         </div>
     </div>

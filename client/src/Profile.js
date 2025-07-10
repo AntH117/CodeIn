@@ -1,6 +1,6 @@
 import './Profile.css';
 import React from 'react';
-import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Link, Outlet, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from "./AuthContext";
 import { signOut } from "firebase/auth";
 import { auth, db } from './firebase';
@@ -19,7 +19,7 @@ export default function Profile () {
     const [tempFollowCount, setTempFollowCount] = React.useState(0)
     const [followed, setFollowed] = React.useState(false)
     const location = useLocation();
-    const profileId = location.pathname.split('/').at(-1)
+    const { profileId } = useParams();
     const navigate = useNavigate()
     const [loadingError, setLoadingError] = React.useState(false)
 
