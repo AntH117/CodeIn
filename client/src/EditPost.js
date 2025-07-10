@@ -226,7 +226,11 @@ export default function EditPost() {
             files: [...preVal.files, data.filePath]
     }))
     }
+
+    const [editInProgress, setEditInProgress] = React.useState(false)
     const editPost = async () => {
+        setEditInProgress(true)
+        notify.progress('Saving post...')
         let finalEdit = editedPost;
         if (finalEdit?.codeSnippet) {
             finalEdit.codeSnippet = sanitiseCode(finalEdit?.codeSnippet)
@@ -251,12 +255,14 @@ export default function EditPost() {
             
             const result = await response.json();
             if (result.status === 'success') {
+                setEditInProgress(false)
                 navigate(postPath)
                 notify.success('Post saved!', '💾')
             } else {
                 console.error('Backend Error', result.error)
             }
         } catch (e) {
+            setEditInProgress(false)
             console.error('failed to save post:', e)
         }
         };
@@ -425,7 +431,7 @@ export default function EditPost() {
     return <div className='EP-outer-body'>
        {cancelConfirmation == false && <ShowAlert confirm={true} message={'Discard all changes?'} setConfirmation={setCancelConfirmation} callback={() => navigate(postPath)}/>}
       {editedPost && <div className='EP-inner-body'>
-                         <div className='edit-post-title'>Edit Post</div>
+                         <div className={`edit-post-title`}>Edit Post</div>
                           <div className='edit-title'>
                                 <input type='text' value={editedPost.title} className='IP-title-input' onChange={handleChange} name='title'></input>
                                 {submissionConditions.titleLengthMin === false && <div className='edit-error-message'>{errorMessages.titleLengthMin}</div>}
@@ -478,7 +484,7 @@ export default function EditPost() {
                             {fileConditions.fileType === false && <div className='edit-error-message'>{errorMessages.fileType}</div>} 
                                 </div>}
                             <ImportsDisplay />
-                            <button className='edit-button' onClick={() => validatePost(editedPost)}>
+                            <button className={`edit-button ${editInProgress && 'progress'}`} onClick={() => validatePost(editedPost)} disabled={editInProgress}>
                                 Edit
                             </button>
                       </div>}

@@ -17,7 +17,6 @@ export default function Post() {
     const { user } = useAuth();
     const backendURL = process.env.REACT_APP_BACKEND_URL
     const APILINK = `${backendURL}/api/v1/codeIn`
-
     const navigate = useNavigate();
     const [formData, setFormData] = React.useState({
         title: '',

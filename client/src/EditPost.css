@@ -41,6 +41,12 @@
     cursor: pointer;
 }
 
+.edit-button.progress {
+    background-color: rgba(94, 82, 165, 0.521);
+    cursor: default;
+    pointer-events: none;
+}
+
 .edit-button:hover {
     background-color: rgb(195, 255, 221);
     color: rgb(114, 114, 114);

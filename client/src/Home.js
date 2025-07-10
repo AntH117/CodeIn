@@ -148,7 +148,9 @@ export default function Home() {
     
     // Forces render on location change
     React.useEffect(() => {
-        setForcedRefresh((preVal) => preVal += 1)
+        if (location.pathname !== '/post') {
+            setForcedRefresh((preVal) => preVal += 1)
+        }
     }, [location])
 
     //get liked posts
