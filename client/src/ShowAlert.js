@@ -39,7 +39,8 @@ export default function ShowAlert({message, redirect, confirm, setConfirmation, 
             {confirm && <div className="custom-alert">
                 <span style={{fontSize: '1.1rem'}}>{message}</span>
                 <div className='custom-alert-confirmation'>
-                <button className='custom-alert-button' style={{backgroundColor: 'rgba(112,94,218,255)'}} onClick={() => {callback(); setConfirmation(null)}}>Yes</button>
+                <button className='custom-alert-button' style={{backgroundColor: 'rgba(112,94,218,255)'}} onClick={() => {if (callback) callback();
+                    setConfirmation(null)}}>Yes</button>
                 <button className='custom-alert-button' style={{backgroundColor: 'rgb(243, 136, 136)'}} onClick={() => setConfirmation(null)}>No</button>
                 </div>
             </div>}

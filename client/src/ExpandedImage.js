@@ -5,11 +5,10 @@ import { Link, Outlet, Navigate, useLocation, useNavigate} from 'react-router-do
 export default function ExpandedImage() {
     const navigate = useNavigate()
     const location  = useLocation()
-    const backendURL = process.env.REACT_APP_BACKEND_URL
     const id = location.pathname.split('/').at(-1)
     return <div className='expanded-image-body' onClick={() => navigate(-1)}>
         <div className='expanded-image-container'>
-            <img src={`${backendURL}/uploads/final/${id}`}>
+            <img src={`https://res.cloudinary.com/dvc16neqe/image/upload/v1752025154/codein/${id}`}>
             </img>
         </div>
     </div>

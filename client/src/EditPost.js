@@ -100,12 +100,10 @@ export default function EditPost() {
 
     //IMPORTS
     function FileImports({name}) {
-        const isCloudinaryUrl = (url) =>
-            typeof url === 'string' && url.includes('res.cloudinary.com');
         const fileName = (typeof name === 'object' && name !== null) ? name.url : name
         const uniqueFile = (typeof name === 'object' && name !== null) ? fileName.split('/').at(-1) : fileName.slice(50)
-        const fileType = fileName.includes(isCloudinaryUrl) ? 'final' : 'temp'
-        const deleteTempFile = async (e) => {
+        const fileType = fileName.includes('res.cloudinary.com') ? 'final' : 'temp'
+        const deleteTempFile = async () => {
             const res = await fetch(`${APILINK}/temp-upload`, {
                 method: 'DELETE',
                 headers: {
@@ -119,7 +117,7 @@ export default function EditPost() {
             if (data.status === 'success') {
                 setEditedPost((preVal) => ({
                     ...preVal,
-                    files: preVal.files.filter((x) => x.url !== fileName)
+                    files: preVal.files.filter((x) => (typeof x === 'object' ? x.url : x) !== fileName)
                 }))
             } else {
                 console.error('Unable to delete file')
@@ -139,7 +137,7 @@ export default function EditPost() {
                     {uniqueFile}
                 </p>
             </div>
-            <div className='file-import-delete' onClick={() => fileType == 'temp' ? deleteTempFile() : deleteFinalFile()}>
+            <div className='file-import-delete' onClick={() => {fileType == 'temp' ? deleteTempFile() : deleteFinalFile()}}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                 </svg>
@@ -272,11 +270,6 @@ export default function EditPost() {
             navigate(postPath)
         }
     }
-    React.useEffect(() => {
-        if (cancelConfirmation) {
-            navigate(postPath)
-        }
-    }, [cancelConfirmation])
 
     const handleCodeChange = (value) => {
         setEditedPost((preVal) => ({
@@ -430,7 +423,7 @@ export default function EditPost() {
 
 
     return <div className='EP-outer-body'>
-       {cancelConfirmation == false && <ShowAlert confirm={true} message={'Discard all changes?'} setConfirmation={setCancelConfirmation}/>}
+       {cancelConfirmation == false && <ShowAlert confirm={true} message={'Discard all changes?'} setConfirmation={setCancelConfirmation} callback={() => navigate(postPath)}/>}
       {editedPost && <div className='EP-inner-body'>
                          <div className='edit-post-title'>Edit Post</div>
                           <div className='edit-title'>
