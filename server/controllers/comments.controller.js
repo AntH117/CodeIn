@@ -41,7 +41,6 @@ class CommentsCtrl {
         try {
             const commentId = req.params.commentId
             const {postId} = req.body
-            console.log(commentId)
             const commentResponse = await CommentsDao.deleteComment(
                 commentId,
                 postId

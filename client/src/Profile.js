@@ -10,6 +10,8 @@ import IndividualPost from './IndividualPost';
 import { doc, getDoc, setDoc, updateDoc, increment  } from "firebase/firestore";
 import { arrayUnion, arrayRemove  } from "firebase/firestore";
 import NotFound from './NotFound';
+import notify from './Toast';
+import ShowAlert from './ShowAlert';
 
 export default function Profile () {
     const { user } = useAuth();
@@ -201,32 +203,33 @@ export default function Profile () {
             }
 
             //handle delete comments
-            function handleDeleteComment(commentId, postId) {
-                if (window.confirm('Are you sure you want to delete this comment?')) {
-                    deleteComment(commentId, postId)
+            const [confirmDeleteComment, setConfirmDeleteComment] = React.useState(null)
+            function handleDeleteComment() {
+                setConfirmDeleteComment(false)
+            }
+            const deleteComment = async (commentId, postId) => {
+                notify.progress('Deleting comment...')
+            try {
+                const response = await fetch(`${CommentAPILINK}/${commentId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({postId})
+                });
+                
+                const result = await response.json();
+                if (result.status === 'success') {
+                    notify.success('Comment deleted successfully')
+                    window.location.reload()
+                } else {
+                    console.error('Backend Error', result.error)
                 }
-              }
-              const deleteComment = async (commentId, postId) => {
-                try {
-                    const response = await fetch(`${CommentAPILINK}/${commentId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({postId})
-                    });
-                    
-                    const result = await response.json();
-                    if (result.status === 'success') {
-                        alert('Comment deleted')
-                        window.location.reload()
-                    } else {
-                        console.error('Backend Error', result.error)
-                    }
-                } catch (e) {
-                    console.error('failed to delete comment:', e)
-                }
-              };
+            } catch (e) {
+                notify.error('Error deleting comment')
+                console.error('failed to delete comment:', e)
+            }
+            };
 
             //get comment posters info
             React.useEffect(() => {
@@ -235,7 +238,11 @@ export default function Profile () {
             //If user, allow delete post
             return (
                 <div className='individual-comment-body'>
-                    {user?.uid === userInfo?.uid &&<div className='IC-delete' onClick={() => handleDeleteComment(data._id, data.postId)}>
+                    {confirmDeleteComment === false && <ShowAlert confirm={true} message={'Are you sure you want to delete this comment?'} 
+                        setConfirmation={setConfirmDeleteComment}
+                        callback={() => deleteComment(data._id, data.postId)}
+                    />}
+                    {user?.uid === userInfo?.uid &&<div className='IC-delete' onClick={() => handleDeleteComment()}>
                         <Icons.Trash />
                     </div>}
                     <div className='individual-comment-navigate' onClick={() => navigate(`/posts/${data.postId}`)}>
@@ -255,11 +262,14 @@ export default function Profile () {
                 </div>
             )
         }
+
         return <>
-            {userComments.length > 0 && userComments.map((comment) => {
-                return <IndividualComment data={comment}/>
-            })}
-            {(userComments.length == 0 && loaded) && <p>No comments yet!</p>}
+            <div className='user-comments-body'>
+                {userComments.length > 0 && userComments.map((comment) => {
+                    return <IndividualComment data={comment}/>
+                })}
+                {(userComments.length == 0 && loaded) && <p>No comments yet!</p>}
+            </div>
         </>
     }
 

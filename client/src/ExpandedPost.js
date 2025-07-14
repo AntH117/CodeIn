@@ -218,8 +218,11 @@ export default function ExpandedPost () {
         </>
     }
     //create comment
+    const [commentCD, setCommentCD] = React.useState(false)
     const CommentAPILINK = `${backendURL}/api/v1/comments`
     const saveComment = async (currentComment) => {
+        setCommentCD(true)
+        notify.progress('Posting comment...')
         const savedComment = {
             postId: post._id,
             text: currentComment,
@@ -236,13 +239,17 @@ export default function ExpandedPost () {
             
             const result = await response.json();
             if (result.status === 'success') {
-                notify.success('Comment created successfully!')
+                notify.success('Comment posted!')
                 getComments()
             } else {
                 console.error('Backend Error', result.error)
             }
         } catch (e) {
+            notify.error('Error posting comment')
             console.error('failed to save comment:', e)
+            setCommentCD(false)
+        } finally {
+            setCommentCD(false)
         }
       };
       
@@ -367,7 +374,7 @@ export default function ExpandedPost () {
             <div className='EP-comments-body'>
                 {user && <div className='EP-add-comment'>
                     <input type='text' className='EP-comment-input' placeholder='Add a comment...' id='comment-input'  onChange={(e) => setCurrentComment(e.target.value)} value={currentComment} autocomplete="off"></input>
-                    <button className='EP-comment-post' onClick={() => currentComment.length > 0 ? saveComment(currentComment) : console.error('Comment invalid')}>Post</button>
+                    <button className={`EP-comment-post ${commentCD && 'disabled'}`} onClick={() => currentComment.length > 0 ? saveComment(currentComment) : console.error('Comment invalid')}>Post</button>
                 </div>}
                 <div className='EP-comments'>
                     {comments?.length > 0 && comments.map((x) => {

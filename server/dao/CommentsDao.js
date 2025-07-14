@@ -39,11 +39,11 @@ export default class CommentsDao {
 
     static async deleteComment(commentId, postId) {
         const deleteResult = await comments.deleteOne({ _id: new ObjectId(commentId) })
+        const updatedCommentCount = await comments.countDocuments({ postId });
         await posts.updateOne(
             { _id: new ObjectId(postId) },
-            { $inc: { commentCount: -1 } }
+            { $inc: { commentCount: updatedCommentCount } }
           )
-        console.log("Delete Result:", deleteResult);
         return deleteResult;
       }
 

@@ -206,6 +206,13 @@
     gap: 15px;
 }
 
+.user-comments-body {
+    height: fit-content;
+    width: 100%;
+    position: flex;
+    overflow-y: scroll;
+}
+
 .individual-comment-body {
     width: 100%;
     min-height: 80px;

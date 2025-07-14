@@ -6,7 +6,6 @@ import { Navigate, useNavigate } from 'react-router-dom';
 export default function ShowAlert({message, redirect, confirm, setConfirmation, callback}) {
     const navigate = useNavigate()
     const [countDown, setCountDown] = React.useState(3)
-    
     React.useEffect(() => {
         if (!confirm) {
         const timer = setInterval(() => {
@@ -27,8 +26,7 @@ export default function ShowAlert({message, redirect, confirm, setConfirmation, 
     function handleRedirect() {
         navigate(redirect)
     }
-    
-    
+
     return ReactDOM.createPortal(
         <div className="alert-overlay">
             {!confirm && <div className="custom-alert">
