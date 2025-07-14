@@ -12,6 +12,7 @@ import { arrayUnion, arrayRemove  } from "firebase/firestore";
 import NotFound from './NotFound';
 import notify from './Toast';
 import ShowAlert from './ShowAlert';
+import Skeleton from './skeleton/Skeleton';
 
 export default function Profile () {
     const { user } = useAuth();
@@ -24,6 +25,7 @@ export default function Profile () {
     const { profileId } = useParams();
     const navigate = useNavigate()
     const [loadingError, setLoadingError] = React.useState(false)
+    const [forcedRefresh, setForcedRefresh] = React.useState(0)
 
     //handle loading
     const [loading, setLoading] = React.useState(true)
@@ -39,7 +41,6 @@ export default function Profile () {
             return null;
         }
     }
-    console.log(loggedUserInfo)
     React.useEffect(() => {
         if (profileInfo) {
             setLoading(false)
@@ -155,6 +156,7 @@ export default function Profile () {
     function UserComments({onLoaded}) {
         const [userComments, setUserComments] = React.useState([])
         const [loaded, setLoaded] = React.useState(false)
+        const [forcedRefresh, setForcedRefresh] = React.useState(0)
         const CommentAPILINK = `${backendURL}/api/v1/comments`
         const getUserComments = async() => {
             try {
@@ -181,7 +183,7 @@ export default function Profile () {
 
         React.useEffect(() => {
             getUserComments()
-        }, [])
+        }, [forcedRefresh])
 
         //individual comments
         function IndividualComment({data}) {
@@ -221,7 +223,7 @@ export default function Profile () {
                 const result = await response.json();
                 if (result.status === 'success') {
                     notify.success('Comment deleted successfully')
-                    window.location.reload()
+                    setForcedRefresh((preVal) => preVal += 1)
                 } else {
                     console.error('Backend Error', result.error)
                 }
@@ -484,10 +486,10 @@ export default function Profile () {
             </p>
         )
     }
+
     return <div className='user-profile-outer-body'>
-        {(loading && !loadingError) && <div className='loading-body'>
-            <span class="loader"></span>
-        </div>}
+        {(loading && !loadingError) && <Skeleton.Profile />}
+        {/* <span class="loader"></span> */}
         {loadingError && <NotFound />}
         {!loading && <div className='user-profile-inner-body'>
             <div className='user-background'>
