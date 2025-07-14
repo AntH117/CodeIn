@@ -24,10 +24,10 @@ export default class CommentsDao {
             userId: userId,
         }
         const insertResult = await comments.insertOne(commentDoc)
-
+        const updatedCommentCount = await comments.countDocuments({ postId });
         await posts.updateOne(
             { _id: new ObjectId(postId) },
-            { $inc: { commentCount: 1 } }
+            { $inc: { commentCount: updatedCommentCount } }
         );
 
         return insertResult
