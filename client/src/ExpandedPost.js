@@ -14,6 +14,7 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import NotFound from './NotFound';
 import ShowAlert from './ShowAlert';
 import notify from './Toast';
+import Skeleton from './skeleton/Skeleton';
 
 
 function LikeWrapper({user, isLiked}) {
@@ -542,9 +543,7 @@ export default function ExpandedPost () {
     }
     const imageChecker = location.pathname.split('/').includes('image')
     return (<div className='EP-outer-body' style={imageChecker ? {overflowY: 'hidden'} : {}}>
-    {(loading && !loadingError) && <div className='loading-body'>
-        <span class="loader"></span>
-    </div>}
+    {(loading && !loadingError) && <Skeleton.ExpandedPost />}
     {loadingError && <NotFound />}
     <Outlet />
     {confirmDeletePost == false && <ShowAlert message={'Are you sure you want to delete this post?'} confirm={true} setConfirmation={setConfirmDeletePost} callback={() => {

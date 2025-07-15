@@ -399,10 +399,7 @@ export default function Home() {
                         <FilterByTag />
                         <Filters filters={filters} setFilters={setFilters} />
                     </div>}
-                {(loading && !loadingError) &&
-                    // <div className='loader-body'>
-                    //     <span class="loader"></span>
-                    // </div>
+                {(loading && location.pathname == '/') &&
                     <Skeleton.Home />
                 }
                 {loadingError && <div>Error loading posts</div>}

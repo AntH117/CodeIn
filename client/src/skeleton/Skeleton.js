@@ -114,7 +114,7 @@ const SkeletonPlus = ({width, height}) => (
 
 const SkeletonIP = () => {
     return (
-        <div className='skeleton-home-IP'>
+    <div className='skeleton-home-IP'>
         <div className='skeleton-IP-body'>
             <SkeletonBox width={'200px'} height={'30px'}/>
             <div className='skeleton-author-info'>
@@ -201,8 +201,63 @@ const SkeletonProfile = () => {
     )
 }
 
+const SkeletonExpandedPost = () => {
+    return (
+        <div className='skeleton-EP-outer'>
+            <div className='skeleton-EP-body'>
+                <div className='skeleton-EP-content'>
+                        <SkeletonBox width={'200px'} height={'30px'}/>
+                    <div className='skeleton-author-info'>
+                        <SkeletonCircle height={'40px'} width={'40px'}/>
+                        <SkeletonBox width={'200px'} height={'20px'}/>
+                        <SkeletonCircle height={'20px'} width={'20px'}/>
+                    </div>
+                    <SkeletonBox width={'100%'} height={'150px'}/>
+                    <div className='skeleton-IP-tags'>
+                        <SkeletonPill width={'80px'} height={'25px'}/>
+                        <SkeletonPill width={'80px'} height={'25px'}/>
+                    </div>
+                    <div className='skeleton-IP-socials'>
+                        <div className='skeleton-IP-socials-group'>
+                        <SkeletonHeart height={'20px'} width={'20px'}/>
+                        <SkeletonBox width={'15px'} height={'20'}/>
+                        </div>
+                        <div className='skeleton-IP-socials-group'>
+                        <SkeletonComment height={'20px'} width={'20px'}/>
+                        <SkeletonBox width={'15px'} height={'20'}/>
+                        </div>
+                        <div className='skeleton-IP-socials-group'>
+                        <SkeletonShare height={'20px'} width={'20px'}/>
+                        <SkeletonBox width={'15px'} height={'20'}/>
+                        </div>
+                    </div>
+                    <div className='skeleton-IP-interact'>
+                        <SkeletonBox width={'80px'} height={'25px'}/>
+                        <SkeletonBox width={'80px'} height={'25px'}/>
+                    </div>
+                    <div className='skeleton-EP-comment'>
+                        <div className='skeleton-author-info'>
+                            <SkeletonCircle height={'40px'} width={'40px'}/>
+                            <SkeletonBox width={'200px'} height={'20px'}/>
+                        </div>
+                        <SkeletonBox width={'200px'} height={'20px'}/>
+                    </div>
+                    <div className='skeleton-EP-comment'>
+                        <div className='skeleton-author-info'>
+                            <SkeletonCircle height={'40px'} width={'40px'}/>
+                            <SkeletonBox width={'150px'} height={'20px'}/>
+                        </div>
+                        <SkeletonBox width={'300px'} height={'20px'}/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 const Skeleton = {
     Profile: SkeletonProfile,
-    Home: SkeletonHome
+    Home: SkeletonHome,
+    ExpandedPost: SkeletonExpandedPost
 }
 export default Skeleton;
