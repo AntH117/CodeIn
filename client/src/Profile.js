@@ -42,9 +42,10 @@ export default function Profile () {
             return null;
         }
     }
+
+
     React.useEffect(() => {
         if (profileInfo) {
-            setLoading(false)
             setTempFollowCount(profileInfo?.followCount)
             setFollowed(loggedUserInfo?.followed.includes(profileId))
         }
@@ -80,6 +81,8 @@ export default function Profile () {
             }
         } catch (e) {
             console.error('Error getting profile info')
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -90,6 +93,7 @@ export default function Profile () {
     }
 
     React.useEffect(() => {
+        setLoading(true)
         getAuthorInfo()
     },[location])
 
