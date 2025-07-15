@@ -14,6 +14,7 @@ import ShowAlert from './ShowAlert';
 import { Toaster, toast } from 'react-hot-toast';
 import notify from './Toast';
 import CodeInLogo from './images/codeIn-logo.png'
+import Skeleton from './skeleton/Skeleton';
 
 function Filters({filters, setFilters}) {
     const { user } = useAuth();
@@ -379,14 +380,14 @@ export default function Home() {
 
     return <div className='home'>
         <Toaster />
-        <NavBar />
+        {<NavBar />}
         {confirmSignOut == false && <ShowAlert confirm={true} message={'Are you sure you want to sign out?'} setConfirmation={setConfirmSignOut} callback={() => {
             signOut(auth)
             notify.success('Successfully signed out')
         }}/>}
         <div className='news-feed-body'>
-                <div className='news-feed' ref={scrollRef}>
-                    {location.pathname == '/' && <div className='home-interaction'>
+                <div className='news-feed' ref={scrollRef} style={{paddingTop: loading ? '1.5rem' : '3.5rem'}}>
+                    {(location.pathname == '/' && !loading) && <div className='home-interaction'>
                         {(!loading && user) && <div className='create-post'>
                         <button className='create-post-button'>
                             <Link to={'/post'} style={{textDecoration: 'none', color: 'white'}}>Create Post</Link>
@@ -399,9 +400,10 @@ export default function Home() {
                         <Filters filters={filters} setFilters={setFilters} />
                     </div>}
                 {(loading && !loadingError) &&
-                    <div className='loader-body'>
-                        <span class="loader"></span>
-                    </div>
+                    // <div className='loader-body'>
+                    //     <span class="loader"></span>
+                    // </div>
+                    <Skeleton.Home />
                 }
                 {loadingError && <div>Error loading posts</div>}
                 {!loading && <div className='individual-post-bodies'>

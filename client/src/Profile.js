@@ -31,6 +31,7 @@ export default function Profile () {
     const [loading, setLoading] = React.useState(true)
     const isUser = user?.uid == profileId
 
+    //handle image loading
     async function getUserInfo(uid) {
         const docRef = doc(db, "users", uid);
         const docSnap = await getDoc(docRef);
