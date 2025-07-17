@@ -71,7 +71,6 @@ export default function ExpandedPost () {
         const response = await getUserInfo(user?.uid)
         setLoggedUserData(response)
     }
-    console.log('isLiked', isLiked)
     React.useEffect(() => {
         if (user) {
             awaitUserData()

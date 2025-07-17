@@ -17,14 +17,21 @@ import CodeInLogo from './images/codeIn-logo.png'
 import Skeleton from './skeleton/Skeleton';
 
 function Filters({filters, setFilters}) {
+    const location = useLocation()
+    const [forcedRefresh, setForcedRefresh] = React.useState(0)
+    React.useEffect(() => {
+        setForcedRefresh((preVal) => preVal += 1)
+        console.log(filters.tag)
+    }, [location.search])
+
     const { user } = useAuth();
     const [expand, setExpand] = React.useState()
     const sortBy = ['newest', 'oldest', 'likes', 'comments']
+
     const [temp, setTemp] = React.useState({
         sort: filters.sort,
         tag: filters.tag
     })
-
     function capitalizeFirstLetter(val) {
         return String(val).charAt(0).toUpperCase() + String(val).slice(1);
     }
@@ -110,6 +117,7 @@ export default function Home() {
     const [loading, setLoading] = React.useState(true)
     const [forcedRefresh, setForcedRefresh] = React.useState(0)
     const [profileImageLoaded, setProfileImageLoaded] = React.useState(false)
+    const [postLoad, setPostLoad] = React.useState(false)
     // Force posts to reload on params change
     const [forceParams, setForceParams] = React.useState(0)
 
@@ -145,15 +153,12 @@ export default function Home() {
     // Forces render on search params change
     React.useEffect(() => {
         setForceParams((preVal) => preVal += 1)
+        setFilters({
+            tag: searchParams.getAll("tag") || [],
+            sort: searchParams.get("sort") || "",
+            })
     }, [searchParams])
     
-    // Forces render on location change
-    // React.useEffect(() => {
-    //     if (location.pathname !== '/post') {
-    //         setForcedRefresh((preVal) => preVal += 1)
-    //     }
-    // }, [location])
-
     //get liked posts
     const [loggedUserData, setLoggedUserData] = React.useState(null)
     React.useEffect(() => {
@@ -165,6 +170,12 @@ export default function Home() {
             getPublicPosts()
         }
     },[user, forcedRefresh])
+
+    React.useEffect(() => {
+        if (postLoad) {
+            setLoading(false)
+        }
+    })
 
     const applyFilters = () => {
         const params = new URLSearchParams();
@@ -284,7 +295,7 @@ export default function Home() {
             console.error('Unable to load posts:', e)
             setLoadingError(true)
         } finally {
-            setLoading(false)
+            // setLoading(false)
         }
       };
     const tailoredAPI = `${backendURL}/api/v1/codeIn/posts/tailored`
@@ -304,7 +315,7 @@ export default function Home() {
             console.error('Unable to load posts:', e)
             setLoadingError(true)
         } finally {
-            setLoading(false)
+            // setLoading(false)
         }
     };
 
@@ -336,7 +347,6 @@ export default function Home() {
 
         function UserDisplay() {
             const [open, setOpen] = React.useState(false)
-            console.log(profileImageLoaded)
             return <>
             <div className='nav-user-display'>
                 <div className='nav-user-image' onClick={() => navigate(`/users/${user.uid}`)}>
@@ -406,12 +416,12 @@ export default function Home() {
                     <Skeleton.Home />
                 }
                 {loadingError && <div>Error loading posts</div>}
-                {!loading && <div className='individual-post-bodies'>
+                <div className='individual-post-bodies' style={loading ? {display: 'hidden'} : {}}>
                     {(location.pathname == '/' || location.pathname == '/post') && visiblePosts.map((data) => {
-                        return <IndividualPost data={data} key={data._id} handleSearchParams={handleSearchParams}/>
+                        return <IndividualPost data={data} key={data._id} handleSearchParams={handleSearchParams} setPostLoad={setPostLoad}/>
                     })}
                     {filteredPosts.length == 0 && <div>No posts found</div>}
-                </div>}
+                </div>
             </div>
             {
             location.pathname !== '/' && 

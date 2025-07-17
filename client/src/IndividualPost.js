@@ -23,7 +23,7 @@ function LikeWrapper({loggedUserData, data, user}) {
 }
 
 
-export default function IndividualPost({data, handleSearchParams}) {
+export default function IndividualPost({data, handleSearchParams, setPostLoad}) {
     const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -159,8 +159,14 @@ export default function IndividualPost({data, handleSearchParams}) {
       }
 
     async function getAuthorInfo() {
-        const authorInfo = await getUserInfo(data.user)
-        setAuthorInfo(authorInfo)
+        try {
+            const authorInfo = await getUserInfo(data.user)
+            setAuthorInfo(authorInfo)
+        } catch (e) {
+            console.error('Unable to get author info')
+        } finally {
+            setPostLoad(true)
+        }
     }
 
     React.useEffect(() => {

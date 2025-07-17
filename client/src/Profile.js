@@ -26,6 +26,7 @@ export default function Profile () {
     const navigate = useNavigate()
     const [loadingError, setLoadingError] = React.useState(false)
     const [forcedRefresh, setForcedRefresh] = React.useState(0)
+    
 
     //handle loading
     const [loading, setLoading] = React.useState(true)
@@ -100,7 +101,15 @@ export default function Profile () {
 
     //display user only posts
     function UserPosts({onLoaded}) {
-         //get user only posts
+    const [postLoad, setPostLoad] = React.useState(false)
+
+    React.useEffect(() => {
+        if (postLoad) {
+            onLoaded()
+        }
+    }, [postLoad])
+
+    //get user only posts
     const [userPosts, setUserPosts] = React.useState()  
     const APILINK = `${backendURL}/api/v1/codeIn`
 
@@ -117,8 +126,6 @@ export default function Profile () {
             setUserPosts(data)
         } catch (e) {
             console.error('Unable to load posts:', e)
-        } finally {
-            onLoaded()
         }
       };
 
@@ -137,7 +144,7 @@ export default function Profile () {
         
         return <div className='individual-post-body'>
             {userPosts && filteredPosts.map((post) => 
-                <IndividualPost data={post} />
+                <IndividualPost data={post} setPostLoad={setPostLoad}/>
             )}
             {userPosts?.length == 0 && <p>No posts yet!</p>}
         </div>
@@ -282,6 +289,12 @@ export default function Profile () {
 
     //User likes
     function UserLikes({onLoaded}) {
+        const [postLoad, setPostLoad] = React.useState(false)
+        React.useEffect(() => {
+            if (postLoad) {
+                onLoaded()
+            }
+        }, [postLoad])
         //get liked posts
         const [loggedUserData, setLoggedUserData] = React.useState(null)
         const [likedPosts, setLikedPosts] = React.useState(null)
@@ -321,15 +334,13 @@ export default function Profile () {
                 setLikedPosts(data); 
             } catch (e) {
                 console.error('Unable to load posts:', e);
-            } finally {
-                onLoaded();
             }
     }
 
     return (
         <div className='individual-post-body'>
             {likedPosts?.length > 0 && likedPosts.map((post) => {
-            return <IndividualPost data={post}/>
+            return <IndividualPost data={post} setPostLoad={setPostLoad}/>
         })}
         {likedPosts?.length < 1 && <p>Nothing liked yet!</p>}
         </div>
