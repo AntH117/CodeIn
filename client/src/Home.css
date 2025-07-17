@@ -334,10 +334,10 @@
   .nav-user-image {
     width: 3rem;
     height: 3rem;
-    background-color: #e79898;
     overflow: hidden;
     border-radius: 3rem;
     cursor: pointer;
+    position: relative;
   }
 
   .nav-user-image img {

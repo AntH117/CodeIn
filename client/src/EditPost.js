@@ -473,7 +473,7 @@ export default function EditPost() {
                                 {submissionConditions.codeLanguage === false && <div className='edit-error-message'>{errorMessages.codeLanguage}</div>} 
                             </div>
                             <Tags />
-                            <button className='cancel-button' onClick={() => handleCancelEdits()}>
+                            <button className={`cancel-button ${(editInProgress || fileCD) && 'disabled'}`} onClick={() => handleCancelEdits()} disabled={editInProgress || fileCD}>
                                 <Icons.X />
                             </button>
                             {editedPost.files.length > 0 && <div className='file-imports-body'>
@@ -484,7 +484,7 @@ export default function EditPost() {
                             {fileConditions.fileType === false && <div className='edit-error-message'>{errorMessages.fileType}</div>} 
                                 </div>}
                             <ImportsDisplay />
-                            <button className={`edit-button ${editInProgress && 'progress'}`} onClick={() => validatePost(editedPost)} disabled={editInProgress}>
+                            <button className={`edit-button ${(editInProgress || fileCD) && 'progress'}`} onClick={() => validatePost(editedPost)} disabled={editInProgress || fileCD}>
                                 Edit
                             </button>
                       </div>}

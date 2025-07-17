@@ -360,7 +360,7 @@ export default function Post() {
 
     return <div className='post-outer-body'>
         <div className='post-body'>
-        <button className='cancel-button' onClick={() => {
+        <button className={`cancel-button ${fileCD && 'disabled'}`} disabled={fileCD} onClick={() => {
             cancelPost();
             navigate(-1)
         }}>
@@ -443,7 +443,7 @@ export default function Post() {
                 </div>
             </div>
         </form>
-        <button className='post-button' onClick={() => validatePost(formData)}>
+        <button className={`post-button ${fileCD && 'disabled'}`} onClick={() => validatePost(formData)} disabled={fileCD}>
             Post
         </button>
     </div>

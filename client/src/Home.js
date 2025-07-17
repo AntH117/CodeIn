@@ -109,7 +109,7 @@ export default function Home() {
     //handle loading
     const [loading, setLoading] = React.useState(true)
     const [forcedRefresh, setForcedRefresh] = React.useState(0)
-    
+    const [profileImageLoaded, setProfileImageLoaded] = React.useState(false)
     // Force posts to reload on params change
     const [forceParams, setForceParams] = React.useState(0)
 
@@ -148,11 +148,11 @@ export default function Home() {
     }, [searchParams])
     
     // Forces render on location change
-    React.useEffect(() => {
-        if (location.pathname !== '/post') {
-            setForcedRefresh((preVal) => preVal += 1)
-        }
-    }, [location])
+    // React.useEffect(() => {
+    //     if (location.pathname !== '/post') {
+    //         setForcedRefresh((preVal) => preVal += 1)
+    //     }
+    // }, [location])
 
     //get liked posts
     const [loggedUserData, setLoggedUserData] = React.useState(null)
@@ -333,12 +333,15 @@ export default function Home() {
     }
     // onClick={() => navigate(`/users/${user.uid}`)}
     function NavBar () {
+
         function UserDisplay() {
             const [open, setOpen] = React.useState(false)
+            console.log(profileImageLoaded)
             return <>
             <div className='nav-user-display'>
                 <div className='nav-user-image' onClick={() => navigate(`/users/${user.uid}`)}>
-                    <img src={loggedUserData?.photoURL || `${backendURL}/uploads/final/Temp-profile-pic.png`}>
+                    {!profileImageLoaded && <Skeleton.Circle width={'3rem'} height={'3rem'}/>}
+                    <img src={loggedUserData?.photoURL || `${backendURL}/uploads/final/Temp-profile-pic.png`} onLoad={() => setProfileImageLoaded(true)} style={!profileImageLoaded ? {display: 'hidden'} : {}}>
                     </img>
                 </div>
                 <div className='nav-user-name'>

@@ -258,6 +258,7 @@ const SkeletonExpandedPost = () => {
 const Skeleton = {
     Profile: SkeletonProfile,
     Home: SkeletonHome,
-    ExpandedPost: SkeletonExpandedPost
+    ExpandedPost: SkeletonExpandedPost,
+    Circle: SkeletonCircle
 }
 export default Skeleton;
