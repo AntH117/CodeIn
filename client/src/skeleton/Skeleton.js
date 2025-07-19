@@ -255,10 +255,30 @@ const SkeletonExpandedPost = () => {
     )
 }
 
+const SkeletonComments = () => {
+
+    return (
+        <div className='skeleton-comments-body'>
+            <SkeletonBox width={'80%'} height={'50px'}/>
+            <div className='skeleton-comments-post'>
+                <SkeletonBox width={'80px'} height={'35px'}/>
+            </div>
+            <div className='skeleton-comments-individual'>
+                <div className='skeleton-comments-author'>
+                    <SkeletonCircle width={'2rem'} height={'2rem'}/>
+                    <SkeletonBox width={'10rem'} height={'1rem'}/>
+                </div>
+                <SkeletonBox width={'10rem'} height={'1.5rem'}/>
+            </div>
+        </div>
+    )
+}
+
 const Skeleton = {
     Profile: SkeletonProfile,
     Home: SkeletonHome,
     ExpandedPost: SkeletonExpandedPost,
-    Circle: SkeletonCircle
+    Circle: SkeletonCircle,
+    Comments: SkeletonComments
 }
 export default Skeleton;

@@ -298,6 +298,7 @@ export default function ExpandedPost () {
       }
       
       //get comments by post
+      const [loadComments, setLoadComments] = React.useState(false)
       const getComments = async () => {
         try {
             const response = await fetch(`${CommentAPILINK}/post/${post._id}`, {
@@ -315,6 +316,8 @@ export default function ExpandedPost () {
             }
         } catch (e) {
             console.error('failed to receive comments:', e)
+        } finally {
+            setLoadComments(true)
         }
       }
 
@@ -595,7 +598,8 @@ export default function ExpandedPost () {
                             {user && <h5 onClick={() => handleLike(post._id)} style={likeCooldown ? {color: 'gray', cursor: 'default'} : {}}>{isLiked ? 'Unlike' : 'Like'}</h5>}
                             <h5>Share</h5>
                         </div>
-                        <Comments />
+                        {loadComments && <Comments />}
+                        {!loadComments && <Skeleton.Comments />}
                 </div>}
             </div>)
 }
