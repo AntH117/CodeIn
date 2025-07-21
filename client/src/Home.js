@@ -330,7 +330,7 @@ export default function Home() {
 
     function FilterByTag() {
         const handleAddTag = () => {
-            const tagName = document.getElementById('tag-name').value
+            const tagName = document.getElementById('tag-name').value.trim();
             if (tagName && !filters.tag.includes(tagName)) {
                 setFilters({ ...filters, tag: [...filters.tag, tagName] })
             }
