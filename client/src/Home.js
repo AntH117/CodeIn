@@ -162,20 +162,23 @@ export default function Home() {
     //get liked posts
     const [loggedUserData, setLoggedUserData] = React.useState(null)
     React.useEffect(() => {
-        setLoading(true)
+        if (!postLoad) {
+            setLoading(true)
+        }
         if (user) {
             awaitUserData()
         } else {
             //Get public posts
             getPublicPosts()
         }
-    },[user, forcedRefresh])
+    },[user, forcedRefresh, location.pathname])
 
     React.useEffect(() => {
         if (postLoad) {
             setLoading(false)
         }
-    })
+
+    }, [postLoad])
 
     const applyFilters = () => {
         const params = new URLSearchParams();
@@ -416,7 +419,7 @@ export default function Home() {
                     <Skeleton.Home />
                 }
                 {loadingError && <div>Error loading posts</div>}
-                <div className='individual-post-bodies' style={loading ? {display: 'hidden'} : {}}>
+                <div className='individual-post-bodies' style={postLoad ? {display: 'hidden'} : {}}>
                     {(location.pathname == '/' || location.pathname == '/post') && visiblePosts.map((data) => {
                         return <IndividualPost data={data} key={data._id} handleSearchParams={handleSearchParams} setPostLoad={setPostLoad}/>
                     })}

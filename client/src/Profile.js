@@ -262,6 +262,7 @@ export default function Profile () {
                     <div className='individual-comment-navigate' onClick={() => navigate(`/posts/${data.postId}`)}>
                         <Icons.ArrowRight />
                     </div>
+                    {userInfo && <>
                     <div className='individual-comment-user-info'>
                         <div className='IC-user-image'>
                             <img src={userInfo?.photoURL || null}></img>
@@ -273,6 +274,7 @@ export default function Profile () {
                     <div className='individual-comment-comment'>
                         <p>{data.comment.text}</p>
                     </div>
+                    </>}
                 </div>
             )
         }
