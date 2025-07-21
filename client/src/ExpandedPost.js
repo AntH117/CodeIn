@@ -325,6 +325,7 @@ export default function ExpandedPost () {
       //display individual comment
     function IndividualComment({data}) {
         const [userInfo, setUserInfo] = React.useState()
+        const [loaded, setLoaded] = React.useState(false)
         //get User Info
         async function getUserInfo(uid) {
             const docRef = doc(db, "users", uid);
@@ -337,8 +338,14 @@ export default function ExpandedPost () {
             }
         }
         async function getuserInfo() {
-            const userInfo = await getUserInfo(data.userId)
-            setUserInfo(userInfo)
+            try {
+                const userInfo = await getUserInfo(data.userId)
+                setUserInfo(userInfo)
+            } catch (e) {
+                console.error('error loading comment')
+            } finally {
+                setLoaded(true)
+            }
         }
 
         //get comment posters info
@@ -347,11 +354,11 @@ export default function ExpandedPost () {
         }, [])
         //If user, allow delete post
         return (
-
             <div className='IC-body'>
                 {user?.uid === userInfo?.uid &&<div className='IC-delete' onClick={() => handleDeleteComment(data._id, post._id)}>
                     <Icons.Trash />
                 </div>}
+                {loaded && <>
                 <div className='IC-user-info'>
                     <div className='IC-user-image' onClick={() => navigate(`/users/${userInfo?.uid}`)}>
                         <img src={userInfo?.photoURL || null}></img>
@@ -363,6 +370,7 @@ export default function ExpandedPost () {
                 <div className='IC-comment'>
                     <p>{data.comment.text}</p>
                 </div>
+                </>}
             </div>
         )
     }
