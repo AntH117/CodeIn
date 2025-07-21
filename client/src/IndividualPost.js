@@ -250,9 +250,12 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
                 <div className='IP-author-image' onClick={() => navigate(`/users/${data.user}`)}>
                     <img src={authorInfo?.photoURL}></img>
                 </div>
-                <h4><span style={{cursor: 'pointer'}} onClick={() => navigate(`/users/${data.user}`)}>{ 
-                authorInfo?.displayName || `@${authorInfo?.displayTag}`
-                }</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(data.postContent.time)}</span></h4>
+                <h4>
+                    <span style={{cursor: 'pointer'}} onClick={() => navigate(`/users/${data.user}`)}>
+                        {authorInfo?.displayName || `@${authorInfo?.displayTag}`}
+                    </span> 
+                    <span style={{fontWeight: '200'}}> <span className='IP-dot'>&#9679;</span> {convertTime(data.postContent.time)}</span>
+                </h4>
                 <span style={{fontWeight: '400', marginLeft: '5px'}}>{data.postContent?.edited ? ' (Edited)' : ''}</span>
                 <div className='IP-visibility-icon'>
                     {visibilityIcon(data.postContent.visibility)}

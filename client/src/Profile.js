@@ -103,15 +103,15 @@ export default function Profile () {
     function UserPosts({onLoaded}) {
     const [postLoad, setPostLoad] = React.useState(false)
 
-    React.useEffect(() => {
-        if (postLoad) {
-            onLoaded()
-        }
-    }, [postLoad])
-
     //get user only posts
     const [userPosts, setUserPosts] = React.useState()  
     const APILINK = `${backendURL}/api/v1/codeIn`
+
+    React.useEffect(() => {
+        if (postLoad || userPosts?.length == 0) {
+            onLoaded()
+        }
+    }, [userPosts])
 
 
     const getPosts = async () => {
