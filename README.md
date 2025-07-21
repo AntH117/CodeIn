@@ -26,3 +26,7 @@ This is my personal portfolio website showcasing my projects, technical skills, 
 ### **Version Control & Deployment**
 - Github
 - Github Pages
+
+## Future Improvements
+- Add a dark mode toggle
+- Add more animations
