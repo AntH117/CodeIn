@@ -93,6 +93,10 @@
     gap: 20px;
 }
 
+.individual-post-bodies.hidden {
+  display: none;
+}
+
 .create-post {
     width: fit-content;
     height: fit-content;
