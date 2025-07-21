@@ -2,7 +2,7 @@
 Developer style LinkedIn
 
 ## Overview
-This is my first full-stack project, created to showcase my front-end projects I've created.
+"This is my first full-stack project, designed to showcase the front-end projects I’ve built, while also demonstrating my ability to integrate a Node.js/Express backend with a MongoDB database, implement authentication with Firebase, and deploy a fully responsive application.
 
 ## Live Demo
 [CodeIn](https://anth117.github.io/CodeIn)
