@@ -153,7 +153,7 @@ export default function Post() {
             "text/html",                // for .html
             "application/json",         // for .json
             "text/plain",    ]
-            const maxFileSizeMb = 35;
+            const maxFileSizeMb = 10;
         
         const valid = {
             fileSize: file.size <= maxFileSizeMb * 1024 * 1024, 

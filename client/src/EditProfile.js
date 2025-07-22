@@ -83,7 +83,7 @@ export default function EditProfile() {
             "image/jpeg",
             "image/png",
         ]
-        const maxFileSizeMb = 35;
+        const maxFileSizeMb = 10;
         
         const valid = {
             fileSize: file.size <= maxFileSizeMb * 1024 * 1024, 
