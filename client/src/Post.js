@@ -65,7 +65,7 @@ export default function Post() {
         paragraphCharacters: 'Paragraph contains invalid characters',
         codeLanguage: 'Please select a language',
         tagLengthMin: 'Please include a tag name',
-        tagLengthMax: 'Tag must not be more than 10 characters',
+        tagLengthMax: 'Tag must not be more than 12 characters',
         tagExisting: 'Tag already exists'
     }
     function sanitiseCode(code) {
@@ -332,7 +332,7 @@ export default function Post() {
             } else if (expanded) {
                 tagConditionsRef.current = {
                     lengthMin: tag.length > 0,
-                    lengthMax: tag.length < 10,
+                    lengthMax: tag.length <= 12,
                     notExisting: !formData.tags.includes(tag)
                   };
                 // setTagConditions(conditions)

@@ -71,9 +71,13 @@ export default function EditProfile() {
     }
     //handle file change
     const APILINK = `${backendURL}/api/v1/codeIn`
+
+    const [fileCD, setFileCD] = React.useState(false)
     const handleImageChange = async (e, type) => {
         const file = e.target.files[0];
         if (!file) return;
+        setFileCD(true)
+        notify.warn("Working on it...", "🛠️")
         //file conditions
         const validFiles = [  
             "image/jpeg",
@@ -87,6 +91,7 @@ export default function EditProfile() {
         }
         const allTrue = Object.values(valid).every(value => value === true);
         if (!allTrue) {
+            setFileCD(false)
             return
         }
 
@@ -101,6 +106,7 @@ export default function EditProfile() {
 
         const data = await res.json();
         setUploadedFiles((preval) => [...preval, data.filePath])
+        setFileCD(false)
         setProfileInfo((preval) => {
             return {
                 ...preval,
@@ -169,7 +175,7 @@ export default function EditProfile() {
         
                     const data = await res.json();
                     if (res.ok) {
-                        updatedUserData.backgroundURL = `http://localhost:5000/${data.newPath}`;
+                        updatedUserData.backgroundURL = `${backendURL}/${data.newPath}`;
                         finalisedFiles.push(bgPath);
                     } else {
                         console.error('Failed to finalize background image:', data.error);
@@ -281,7 +287,6 @@ export default function EditProfile() {
                 setErrors(error.message.match(/\(([^)]+)\)/)[1])
               }
         }
-        console.log(passwordCd)
         return <div className='user-sensitive-body'>
             <div className='user-sensitive-toggle' onClick={() => setToggle((preVal) => !preVal)}>{toggle ? <Icons.LockOpen /> : <Icons.LockClosed />}</div>
             <div className={`user-sensitive-inner-body ${toggle ? 'open' : ''}`}>
@@ -339,7 +344,7 @@ export default function EditProfile() {
                     </textarea>
                 </div>
                 <div className='user-save'>
-                    <div className='user-edit-save' onClick={() => setConfirmation(false)}> Save</div>
+                    <div className={`user-edit-save ${fileCD && 'disabled'}`} onClick={() => setConfirmation(false)} disabled={fileCD}> Save</div>
                     {confirmation == false && <ShowAlert message={'Save Edits?'} confirm={true} setConfirmation={setConfirmation} callback={() => handleSaveEdits()}/>}
                 </div>
             </div>

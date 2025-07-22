@@ -163,20 +163,21 @@ export default function Home() {
     const [loggedUserData, setLoggedUserData] = React.useState(null)
 
     React.useEffect(() => {
-        setLoading(true)
-        setTimeout(() => {
-            if (postLoad) {
-                setLoading(false)
+        if (location.pathname !== '/post') {
+            setLoading(true)
+            setTimeout(() => {
+                if (postLoad) {
+                    setLoading(false)
+                }
+            }, [1000])
+            if (user) {
+                awaitUserData()
+            } else {
+                //Get public posts
+                getPublicPosts()
             }
-        }, [1000])
-        if (user) {
-            awaitUserData()
-        } else {
-            //Get public posts
-            getPublicPosts()
         }
     },[user, forcedRefresh, location.pathname])
-
     React.useEffect(() => {
         if (postLoad) {
             setLoading(false)

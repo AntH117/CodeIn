@@ -105,42 +105,47 @@ export default function Profile () {
 
     //get user only posts
     const [userPosts, setUserPosts] = React.useState()  
-    const APILINK = `${backendURL}/api/v1/codeIn`
-
-    React.useEffect(() => {
-        if (postLoad || userPosts?.length == 0) {
-            onLoaded()
-        }
-    }, [userPosts])
-
-
-    const getPosts = async () => {
-        try {
-            const response = await fetch(`${APILINK}/user/${profileId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            const data = await response.json();
-            setUserPosts(data)
-        } catch (e) {
-            console.error('Unable to load posts:', e)
-        }
-      };
+        const APILINK = `${backendURL}/api/v1/codeIn`
 
         React.useEffect(() => {
-            getPosts()
-        }, [location])
+            if (postLoad || userPosts?.length == 0) {
+                onLoaded()
+            }
+        }, [userPosts])
 
-        let filteredPosts = []
-        if (!user || !loggedUserInfo?.followed.includes(profileId)) {
-            filteredPosts = userPosts?.filter((post) => post.postContent.visibility === 'Public');
-        } else if (user && loggedUserInfo?.followed.includes(profileId)) {
-            filteredPosts = userPosts?.filter((post) => post.postContent.visibility !== 'Private')
-        } else if (user && loggedUserInfo.uid == profileId) {
-            filteredPosts = userPosts;
-        }
+
+        const getPosts = async () => {
+            try {
+                const response = await fetch(`${APILINK}/user/${profileId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+                setUserPosts(data)
+            } catch (e) {
+                console.error('Unable to load posts:', e)
+            }
+        };
+
+            React.useEffect(() => {
+                getPosts()
+            }, [location])
+
+            let filteredPosts = []
+            if (user && loggedUserInfo.uid == profileId) {
+                console.log('all')
+                filteredPosts = userPosts;
+            } else if (user && loggedUserInfo?.followed.includes(profileId)) {
+                console.log('followed')
+                filteredPosts = userPosts?.filter((post) => post.postContent.visibility !== 'Private')
+            }
+             else if (!user || !loggedUserInfo?.followed.includes(profileId)) {
+                console.log('public')
+                filteredPosts = userPosts?.filter((post) => post.postContent.visibility === 'Public');
+            }
+
         
         return <div className='individual-post-body'>
             {userPosts && filteredPosts.map((post) => 
