@@ -13,11 +13,12 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import notify from './Toast';
 
-function LikeWrapper({loggedUserData, data, user}) {
+function LikeWrapper({loggedUserData, data, user }) {
+    const isLiked = user && loggedUserData?.likes?.includes(data._id);
 
     return (
-    <div className={`like-icon ${loggedUserData?.likes?.includes(data._id) && 'liked'}`}>
-        {user ? loggedUserData?.likes?.includes(data._id) ? <Icons.HeartFilled /> : <Icons.Heart /> : <Icons.Heart />}
+    <div className={`like-icon ${isLiked && 'liked'}`}>
+          {user ? (isLiked ? <Icons.HeartFilled /> : <Icons.Heart />) : <Icons.Heart />}
     </div>
     )
 }
@@ -41,6 +42,7 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
             awaitUserData()
         }
     },[user])
+    
     
     function convertTime(time) {
         const date = new Date(time);

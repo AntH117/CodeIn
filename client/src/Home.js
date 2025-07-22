@@ -161,6 +161,7 @@ export default function Home() {
     
     //get liked posts
     const [loggedUserData, setLoggedUserData] = React.useState(null)
+
     React.useEffect(() => {
         setLoading(true)
         setTimeout(() => {
@@ -327,8 +328,12 @@ export default function Home() {
     const [confirmSignOut, setConfirmSignOut] = React.useState(null)
 
     function handleSignOut() {
-        setConfirmSignOut(false)
+        signOut(auth)
+        notify.success('Successfully signed out')
+        
     }
+
+
 
     function FilterByTag() {
         const handleAddTag = () => {
@@ -372,7 +377,7 @@ export default function Home() {
                 </div>
                 {<div className={`nav-user-options ${open ? 'open' : ''}`}>
                     <div className='user-dropdown-option'onClick={() => navigate(`/users/${user?.uid}`)}>Profile</div>
-                    <div className='user-dropdown-option' onClick={handleSignOut}>Sign Out</div>
+                    <div className='user-dropdown-option' onClick={() => setConfirmSignOut(false)}>Sign Out</div>
                 </div>}
             </div>
             </>
@@ -395,14 +400,10 @@ export default function Home() {
         </div>
         )
     }
-    console.log(loading)
     return <div className='home'>
         <Toaster />
         {<NavBar />}
-        {confirmSignOut == false && <ShowAlert confirm={true} message={'Are you sure you want to sign out?'} setConfirmation={setConfirmSignOut} callback={() => {
-            signOut(auth)
-            notify.success('Successfully signed out')
-        }}/>}
+        {confirmSignOut == false && <ShowAlert confirm={true} message={'Are you sure you want to sign out?'} setConfirmation={setConfirmSignOut} callback={() => handleSignOut()}/>}
         <div className='news-feed-body'>
                 <div className='news-feed' ref={scrollRef} style={{paddingTop: loading ? '1.5rem' : '3.5rem'}}>
                     {(location.pathname == '/' && !loading) && <div className='home-interaction'>
@@ -423,7 +424,7 @@ export default function Home() {
                 {loadingError && <div>Error loading posts</div>}
                 <div className={`individual-post-bodies ${loading ? 'hidden' : ''}`}>
                     {(location.pathname == '/' || location.pathname == '/post') && visiblePosts.map((data) => {
-                        return <IndividualPost data={data} key={data._id} handleSearchParams={handleSearchParams} setPostLoad={setPostLoad}/>
+                        return <IndividualPost data={data} key={data._id} handleSearchParams={handleSearchParams} setPostLoad={setPostLoad} />
                     })}
                     {filteredPosts.length == 0 && <div>No posts found</div>}
                 </div>
