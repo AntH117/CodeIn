@@ -135,14 +135,11 @@ export default function Profile () {
 
             let filteredPosts = []
             if (user && loggedUserInfo.uid == profileId) {
-                console.log('all')
                 filteredPosts = userPosts;
             } else if (user && loggedUserInfo?.followed.includes(profileId)) {
-                console.log('followed')
                 filteredPosts = userPosts?.filter((post) => post.postContent.visibility !== 'Private')
             }
              else if (!user || !loggedUserInfo?.followed.includes(profileId)) {
-                console.log('public')
                 filteredPosts = userPosts?.filter((post) => post.postContent.visibility === 'Public');
             }
 
@@ -439,6 +436,7 @@ export default function Profile () {
 
     function UserFollowed({onLoaded}) {
         const [followed, setFollowed] = React.useState([])
+        const [loaded, setLoaded] = React.useState(false)
         async function getUserInfo(uid) {
             const docRef = doc(db, "users", uid);
             const docSnap = await getDoc(docRef);
@@ -461,6 +459,7 @@ export default function Profile () {
             } catch (e) {
                 console.error('User not found')
             } finally {
+                setLoaded(true)
                 onLoaded()
             }
         }
@@ -500,13 +499,13 @@ export default function Profile () {
         }
 
         return (
-            followed.length > 0 ? <div className='user-profile-followed-body'>
+            (followed.length > 0) ? <div className='user-profile-followed-body'>
                 {followed.map((user) => {
                     return IndividualUser({user: user})
                 })}
-            </div> : <p>
+            </div> : (loaded ? <p>
                 No-one followed yet!
-            </p>
+            </p> : null)
         )
     }
 

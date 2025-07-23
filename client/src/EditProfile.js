@@ -137,6 +137,8 @@ export default function EditProfile() {
     const [confirmation, setConfirmation] = React.useState(null)
     const [alert , setAlert] = React.useState(null)
 
+
+    const [savingCD, setSavingCD] = React.useState(false)
     const handleSaveEdits = async () => {
         const updatedUserData = { 
             ...profileInfo, 
@@ -146,6 +148,8 @@ export default function EditProfile() {
 
 
         try {
+            setSavingCD(true)
+            notify.progress('Saving profile...')
             //check for profile photo && background images
            if (uploadedFiles.length > 0) {
                 // 1. Handle profile photo update
@@ -206,6 +210,7 @@ export default function EditProfile() {
         navigate(`/users/${user.uid}`)
         notify.success('Profile saved!', '💾')
         } catch (e) {
+            setSavingCD(false)
             console.error('Error saving profile')
         }
     }
@@ -344,7 +349,7 @@ export default function EditProfile() {
                     </textarea>
                 </div>
                 <div className='user-save'>
-                    <div className={`user-edit-save ${fileCD && 'disabled'}`} onClick={() => setConfirmation(false)} disabled={fileCD}> Save</div>
+                    <div className={`user-edit-save ${(fileCD || savingCD) && 'disabled'}`} onClick={() => setConfirmation(false)} disabled={fileCD}> Save</div>
                     {confirmation == false && <ShowAlert message={'Save Edits?'} confirm={true} setConfirmation={setConfirmation} callback={() => handleSaveEdits()}/>}
                 </div>
             </div>
