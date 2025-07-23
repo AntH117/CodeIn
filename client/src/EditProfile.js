@@ -159,7 +159,7 @@ export default function EditProfile() {
         
                     const data = await res.json();
                     if (res.ok) {
-                        updatedUserData.photoURL = `${backendURL}/${data.newPath}`;
+                        updatedUserData.photoURL = data.secure_url;
                         finalisedFiles.push(photoPath);
                     } else {
                         console.error('Failed to finalize profile image:', data.error);
@@ -175,7 +175,7 @@ export default function EditProfile() {
         
                     const data = await res.json();
                     if (res.ok) {
-                        updatedUserData.backgroundURL = `${backendURL}/${data.newPath}`;
+                        updatedUserData.backgroundURL = data.secure_url;
                         finalisedFiles.push(bgPath);
                     } else {
                         console.error('Failed to finalize background image:', data.error);

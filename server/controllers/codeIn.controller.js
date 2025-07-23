@@ -29,7 +29,7 @@ export default class CodeInController {
                         // Delete the temp file after upload
                         fs.unlinkSync(absolutePath);
         
-                        // Save the Cloudinary URL
+                        // Save the Cloudinary
                         uploadedURLs.push({
                             url: result.secure_url,
                             public_id: result.public_id
@@ -248,22 +248,27 @@ export default class CodeInController {
         }
     }
 
-    static handleFinalUpload (req, res, next) {
-        const { filePath } = req.body; // e.g., "uploads/temp/image123.png"
-        const __filename = fileURLToPath(import.meta.url);
-        const __dirname = path.dirname(__filename);
-        const fileName = path.basename(filePath);
-        const oldPath = path.join(__dirname, '..', filePath);
-        const newPath = path.join(__dirname, '..', 'uploads/final', fileName);
-      
-        fs.rename(oldPath, newPath, (err) => {
-          if (err) {
-            console.error('Error moving file:', err);
-            return res.status(500).json({ error: 'Failed to move file' });
-          }
-      
-          return res.json({ newPath: `uploads/final/${fileName}` });
-        });
+    static async handleFinalUpload (req, res, next) {
+        try {
+            const { filePath } = req.body;  
+            const absolutePath = path.resolve(`.${filePath}`);
+    
+            // Upload to Cloudinary
+            const result = await cloudinary.uploader.upload(absolutePath, {
+                folder: 'codein/profile',  // Keep profile pics separate
+            });
+    
+            // Delete the temp file
+            fs.unlinkSync(absolutePath);
+    
+            return res.json({
+                secure_url: result.secure_url,
+                public_id: result.public_id
+            });
+        } catch (error) {
+            console.error('Error finalizing upload:', error);
+            return res.status(500).json({ error: 'Failed to finalize image upload.' });
+        }
       };
 
     static async apiLikePost (req, res) {
