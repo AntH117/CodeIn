@@ -13,7 +13,7 @@ import CodeEditor from './CodeEditor';
 import TextSettings from './TextSettings';
 import ShowAlert from './ShowAlert';
 import notify from './Toast';
-
+import Skeleton from './skeleton/Skeleton';
 
 export default function EditPost() {
     const backendURL = process.env.REACT_APP_BACKEND_URL
@@ -21,12 +21,13 @@ export default function EditPost() {
     const [editedPost, setEditedPost] = React.useState()
     const [deletedFiles, setDeletedFiles] = React.useState([])
     const [userInfo, setUserInfo] = React.useState()
-    const [alert ,setAlert] = React.useState(null)
     const APILINK = `${backendURL}/api/v1/codeIn`
     const navigate = useNavigate()
     const location = useLocation()
     const id = location.pathname.split('/').at(-2)
     const visibilityTypes = ['Public', 'Followers', 'Private']
+
+    const [loaded, setLoaded] = React.useState(false)
     
     const postPath = location.pathname.split("/edit")[0];
 
@@ -55,6 +56,8 @@ export default function EditPost() {
             setEditedPost(data.postContent)
         } catch (e) {
             console.error(`Unable to load post:`, e)
+        } finally {
+            setLoaded(true)
         }
     }
     React.useEffect(() => {
@@ -323,7 +326,7 @@ export default function EditPost() {
              titleLengthMin: 'Please include a title',
              titleLengthMax: 'Title must not be more than 30 characters',
              titleCharacters: 'Title contains invalid characters',
-             fileSize: 'File must be less than 35mb',
+             fileSize: 'File must be less than 10mb',
              fileType: 'Invalid file format',
             //  paragraphCharacters: 'Paragraph contains invalid characters',
              codeLanguage: 'Please select a language',
@@ -427,10 +430,11 @@ export default function EditPost() {
             </div>
         }
 
-
+    
     return <div className='EP-outer-body'>
-       {cancelConfirmation == false && <ShowAlert confirm={true} message={'Discard all changes?'} setConfirmation={setCancelConfirmation} callback={() => navigate(postPath)}/>}
-      {editedPost && <div className='EP-inner-body'>
+        {cancelConfirmation == false && <ShowAlert confirm={true} message={'Discard all changes?'} setConfirmation={setCancelConfirmation} callback={() => navigate(postPath)}/>}
+        {!loaded && <Skeleton.EditPost />}
+      {editedPost && <div className={`EP-inner-body ${!loaded && 'hidden'}`}>
                          <div className={`edit-post-title`}>Edit Post</div>
                           <div className='edit-title'>
                                 <input type='text' value={editedPost.title} className='IP-title-input' onChange={handleChange} name='title'></input>

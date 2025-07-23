@@ -22,6 +22,10 @@
     margin-top: 3rem;
 }
 
+.EP-inner-body.hidden {
+    display: none;
+}
+
 .EP-delete {
     width: 23px;
     height: 20px;

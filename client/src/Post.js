@@ -428,14 +428,16 @@ export default function Post() {
                         })}
                 </div>
                 <div className='form-imports'>
-                    <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handleImageClick} disabled={fileCD}>
-                        <img src={image_upload}></img>
-                        <input type='file' name='file' className='file-upload' onChange={handleFileChange} ref={imageInputRef}></input>
-                    </button>
-                    <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handleFileClick} disabled={fileCD}>
-                        <img src={file_upload}></img>
-                        <input type='file' name='file' className='file-upload' onChange={handleFileChange} ref={fileInputRef}></input>
-                    </button>
+                    <div className='form-imports-buttons'>
+                        <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handleImageClick} disabled={fileCD}>
+                            <img src={image_upload}></img>
+                            <input type='file' name='file' className='file-upload' onChange={handleFileChange} ref={imageInputRef}></input>
+                        </button>
+                        <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handleFileClick} disabled={fileCD}>
+                            <img src={file_upload}></img>
+                            <input type='file' name='file' className='file-upload' onChange={handleFileChange} ref={fileInputRef}></input>
+                        </button>
+                    </div>
                     <div className='form-imports-error'>
                         {fileConditions.fileSize === false && <p>{errorMessages.fileSize}</p>}
                         {fileConditions.fileType === false && <p>{errorMessages.fileType}</p>}

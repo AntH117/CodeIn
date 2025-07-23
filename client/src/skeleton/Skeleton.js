@@ -274,11 +274,51 @@ const SkeletonComments = () => {
     )
 }
 
+const SkeletonEditPost = () => {
+    return (
+        <div className='skeleton-edit-post-body'>
+            <div className='skeleton-edit-title'>
+                <SkeletonBox width={'80%'} height={'2.5rem'}/>
+            </div>
+            <div className='skeleton-edit-author'>
+                <SkeletonCircle height={'40px'} width={'40px'}/>
+                <SkeletonBox width={'200px'} height={'20px'}/>
+                <SkeletonBox width={'70px'} height={'20px'}/>
+            </div>
+            <SkeletonBox width={'80%'} height={'6rem'}/>
+            <div className='skeleton-edit-tags'>
+                <span style={{display: 'flex', flexDirection: 'row', gap:'10px'}}>
+                    <SkeletonBox width={'50px'} height={'1.5rem'}/>
+                    <SkeletonPill width={'80px'} height={'1.5rem'}/>
+                    <SkeletonPill width={'80px'} height={'1.5rem'}/>
+                    <SkeletonPill width={'80px'} height={'1.5rem'}/>
+                    <SkeletonCircle width={'1.5rem'} height={'1.5rem'}/>
+                </span>
+                <span style={{display: 'flex', flexDirection: 'row', gap:'10px'}}>
+                    <SkeletonBox width={'150px'} height={'1.5rem'}/>
+                    <SkeletonBox width={'1.5rem'} height={'1.5rem'}/>
+                </span>
+                <span style={{display: 'flex', flexDirection: 'row', gap:'10px'}}>
+                    <SkeletonCircle width={'2rem'} height={'2rem'}/>
+                    <SkeletonCircle width={'2rem'} height={'2rem'}/>
+                </span>
+            </div>
+            <div className='skeleton-edit-button'>
+                <SkeletonBox width={'70px'} height={'30px'}/>
+            </div>
+            <div className='skeleton-edit-cancel'>
+             <SkeletonCircle width={'30px'} height={'30px'}/>
+            </div>
+        </div>
+    )
+}
+
 const Skeleton = {
     Profile: SkeletonProfile,
     Home: SkeletonHome,
     ExpandedPost: SkeletonExpandedPost,
     Circle: SkeletonCircle,
-    Comments: SkeletonComments
+    Comments: SkeletonComments,
+    EditPost: SkeletonEditPost
 }
 export default Skeleton;
