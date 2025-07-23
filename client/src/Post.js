@@ -116,7 +116,9 @@ export default function Post() {
         }
       };
     //validate if all post conditions are met
+    const [postCD, setPostCD] = React.useState(false)
     function validatePost(postData) {
+        setPostCD(true)
         const conditions = {
             titleLengthMin: postData.title?.length > 0,
             titleLengthMax: postData.title?.length <= 30,
@@ -129,6 +131,8 @@ export default function Post() {
         if (allTrue) {
             savePost(formData)
         } else {
+            setPostCD(false)
+            setFileCD(false)
             return
         }
     }
@@ -445,7 +449,7 @@ export default function Post() {
                 </div>
             </div>
         </form>
-        <button className={`post-button ${fileCD && 'disabled'}`} onClick={() => validatePost(formData)} disabled={fileCD}>
+        <button className={`post-button ${(fileCD || postCD) ? 'disabled' : ''}`} onClick={() => validatePost(formData)} disabled={fileCD}>
             Post
         </button>
     </div>
