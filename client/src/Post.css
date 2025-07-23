@@ -51,8 +51,8 @@
 }
 
 .cancel-button:hover {
-    background-color: rgb(255, 159, 159);
-    color: rgb(117, 117, 117);
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .post-button {
@@ -68,6 +68,7 @@
     padding: 6px 12px;
     transition: all ease-in-out 0.2s;
     cursor: pointer;
+    font-size: 0.8rem;
 }
 
 .post-button.disabled {
@@ -77,8 +78,9 @@
 }
 
 .post-button:hover {
-    background-color: rgb(195, 255, 221);
-    color: rgb(114, 114, 114);
+    font-size: 0.9rem;
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -358,6 +360,12 @@ svg {
     justify-content: center;
     align-items: center;
     background-color: white;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-import-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .form-import-button.CD {
@@ -377,6 +385,7 @@ svg {
     z-index: 3;
     display: none;
 }
+
 
 .imported-content {
     width: 80%;

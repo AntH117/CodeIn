@@ -37,7 +37,7 @@
     border: none;
     border-radius: 6px;
     padding: 6px 12px;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease-in-out;
     cursor: pointer;
 }
 
@@ -48,8 +48,8 @@
 }
 
 .edit-button:hover {
-    background-color: rgb(195, 255, 221);
-    color: rgb(114, 114, 114);
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .edit-form-imports {
@@ -101,6 +101,7 @@
     background-color: #fefefe;
     border: 1px solid #bbb;
     color: #333;
+    cursor: pointer;
 }
 
 .IP-visibility select:focus {

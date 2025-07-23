@@ -111,10 +111,11 @@
     font-size: 15px;
     cursor: pointer;
     font-weight: 500;
-    transition: background-color 0.4s ease;
+    transition: all 0.2s ease-in-out
 }
 .create-post-button:hover {
-  background-color: #916fd1;
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .home-filter-body {

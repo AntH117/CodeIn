@@ -94,6 +94,7 @@
     cursor: pointer;
 }
 
+
 .follow-button.active {
     background-color: rgb(87, 87, 255);
     color: white;
@@ -103,7 +104,9 @@
 .follow-button:hover {
     background-color: rgb(87, 87, 255);
     color: white;
-    border: 1px solid transparent
+    border: 1px solid transparent;
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .user-edit {
