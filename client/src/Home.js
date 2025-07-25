@@ -16,12 +16,91 @@ import notify from './Toast';
 import CodeInLogo from './images/codeIn-logo.png'
 import Skeleton from './skeleton/Skeleton';
 
+function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut}) {
+    const [navHidden, setNavHidden] = React.useState(false)
+    const lastScrollTop = React.useRef(0);
+    const navigate = useNavigate()
+    const [profileImageLoaded, setProfileImageLoaded] = React.useState(false)
+    const backendURL = process.env.REACT_APP_BACKEND_URL
+    const { user } = useAuth();
+
+    // Handle scroll event listener
+    React.useEffect(() => {
+        if (!scrollRef.current) return;
+
+        const handleScroll = () => {
+          const currentScroll = scrollRef.current.scrollTop;
+    
+          if (Math.abs(currentScroll - lastScrollTop.current) < 10) return;
+    
+          if (currentScroll > lastScrollTop.current) {
+            setNavHidden(true);
+          } else {
+            setNavHidden(false);
+          }
+    
+          lastScrollTop.current = currentScroll <= 0 ? 0 : currentScroll;
+        };
+    
+        scrollRef.current.addEventListener("scroll", handleScroll);
+    
+        // return () => {
+        //     scrollRef.current.removeEventListener("scroll", handleScroll);
+        // };
+      }, []);
+
+    function UserDisplay() {
+        const [open, setOpen] = React.useState(false)
+
+        return <>
+        <div className={`nav-user-display ${navHidden && 'hidden'}`}>
+            <div className='nav-user-image' onClick={() => navigate(`/users/${user.uid}`)}>
+                {!profileImageLoaded && <Skeleton.Circle width={'3rem'} height={'3rem'}/>}
+                <img src={loggedUserData?.photoURL || `${backendURL}/uploads/final/Temp-profile-pic.png`} onLoad={() => setProfileImageLoaded(true)} style={!profileImageLoaded ? {display: 'hidden'} : {}}>
+                </img>
+            </div>
+            <div className='nav-user-name'>
+                <div className='nav-user-display-name'>
+                        {loggedUserData?.displayName}
+                    </div>
+                <div className='nav-user-display-tag'>
+                    @{loggedUserData?.displayTag}
+                </div>
+            </div>
+            <div className='nav-user-dropdown' onClick={() => setOpen((preVal) => !preVal)}>
+                <Icons.ArrowDown />
+            </div>
+            {<div className={`nav-user-options ${open ? 'open' : ''}`}>
+                <div className='user-dropdown-option'onClick={() => navigate(`/users/${user?.uid}`)}>Profile</div>
+                <div className='user-dropdown-option' onClick={() => setConfirmSignOut(false)}>Sign Out</div>
+            </div>}
+        </div>
+        </>
+    }
+
+    return (
+        <div className={`nav-bar ${navHidden && 'hidden'}`}>
+            <div className='nav-bar-home'>
+                <img src={CodeInLogo} className='codeIn-logo' onClick={() => {
+                setFilters({tag: [], sort: ''});
+                navigate('/')
+            }}>
+                </img>    
+            </div>
+            {user ? 
+            <UserDisplay />
+            : 
+            <Link to={'/login'} style={{color: 'black', textDecoration: 'none'}}>Login</Link>  
+            }
+    </div>
+    )
+}
+
 function Filters({filters, setFilters}) {
     const location = useLocation()
     const [forcedRefresh, setForcedRefresh] = React.useState(0)
     React.useEffect(() => {
         setForcedRefresh((preVal) => preVal += 1)
-        console.log(filters.tag)
     }, [location.search])
 
     const { user } = useAuth();
@@ -56,6 +135,7 @@ function Filters({filters, setFilters}) {
         </div>}
     </div>
     }
+    
 
     function FilterTag({tag}) {
 
@@ -116,10 +196,12 @@ export default function Home() {
     //handle loading
     const [loading, setLoading] = React.useState(true)
     const [forcedRefresh, setForcedRefresh] = React.useState(0)
-    const [profileImageLoaded, setProfileImageLoaded] = React.useState(false)
     const [postLoad, setPostLoad] = React.useState(false)
     // Force posts to reload on params change
     const [forceParams, setForceParams] = React.useState(0)
+
+    //scrollable div
+    const scrollContainerRef = React.useRef(null)
 
     //Get logged in user into
     async function getUserInfo(uid) {
@@ -353,60 +435,13 @@ export default function Home() {
             </button>
         </div>
     }
-    // onClick={() => navigate(`/users/${user.uid}`)}
-    function NavBar () {
 
-        function UserDisplay() {
-            const [open, setOpen] = React.useState(false)
-            return <>
-            <div className='nav-user-display'>
-                <div className='nav-user-image' onClick={() => navigate(`/users/${user.uid}`)}>
-                    {!profileImageLoaded && <Skeleton.Circle width={'3rem'} height={'3rem'}/>}
-                    <img src={loggedUserData?.photoURL || `${backendURL}/uploads/final/Temp-profile-pic.png`} onLoad={() => setProfileImageLoaded(true)} style={!profileImageLoaded ? {display: 'hidden'} : {}}>
-                    </img>
-                </div>
-                <div className='nav-user-name'>
-                    <div className='nav-user-display-name'>
-                            {loggedUserData?.displayName}
-                        </div>
-                    <div className='nav-user-display-tag'>
-                        @{loggedUserData?.displayTag}
-                    </div>
-                </div>
-                <div className='nav-user-dropdown' onClick={() => setOpen((preVal) => !preVal)}>
-                    <Icons.ArrowDown />
-                </div>
-                {<div className={`nav-user-options ${open ? 'open' : ''}`}>
-                    <div className='user-dropdown-option'onClick={() => navigate(`/users/${user?.uid}`)}>Profile</div>
-                    <div className='user-dropdown-option' onClick={() => setConfirmSignOut(false)}>Sign Out</div>
-                </div>}
-            </div>
-            </>
-        }
-
-        return (
-            <div className='nav-bar'>
-                <div className='nav-bar-home'>
-                    <img src={CodeInLogo} className='codeIn-logo' onClick={() => {
-                    setFilters({tag: [], sort: ''});
-                    navigate('/')
-                }}>
-                    </img>    
-                </div>
-                {user ? 
-                <UserDisplay />
-                : 
-                <Link to={'/login'} style={{color: 'black', textDecoration: 'none'}}>Login</Link>  
-                }
-        </div>
-        )
-    }
     return <div className='home'>
         <Toaster />
-        {<NavBar />}
+        {<NavBar scrollRef={scrollRef} loggedUserData={loggedUserData} setFilters={setFilters} setConfirmSignOut ={setConfirmSignOut}/>}
         {confirmSignOut == false && <ShowAlert confirm={true} message={'Are you sure you want to sign out?'} setConfirmation={setConfirmSignOut} callback={() => handleSignOut()}/>}
         <div className='news-feed-body'>
-                <div className='news-feed' ref={scrollRef} style={{paddingTop: loading ? '1.5rem' : '3.5rem'}}>
+                {<div className='news-feed' ref={scrollRef} >
                     {(location.pathname == '/' && !loading) && <div className='home-interaction'>
                         {(!loading && user) && <div className='create-post'>
                         <button className='create-post-button'>
@@ -419,17 +454,17 @@ export default function Home() {
                         <FilterByTag />
                         <Filters filters={filters} setFilters={setFilters} />
                     </div>}
-                {(loading && location.pathname == '/') &&
-                    <Skeleton.Home />
-                }
-                {loadingError && <div>Error loading posts</div>}
-                <div className={`individual-post-bodies ${loading ? 'hidden' : ''}`}>
-                    {(location.pathname == '/' || location.pathname == '/post') && visiblePosts.map((data) => {
-                        return <IndividualPost data={data} key={data._id} handleSearchParams={handleSearchParams} setPostLoad={setPostLoad} />
-                    })}
-                    {filteredPosts.length == 0 && <div>No posts found</div>}
-                </div>
-            </div>
+                    {(loading && location.pathname == '/') &&
+                        <Skeleton.Home />
+                    }
+                    {loadingError && <div>Error loading posts</div>}
+                    {(location.pathname == '/' || '/post') && <div className={`individual-post-bodies ${loading ? 'hidden' : ''}`}>
+                        {(location.pathname == '/' || location.pathname == '/post') && visiblePosts.map((data) => {
+                            return <IndividualPost data={data} key={data._id} handleSearchParams={handleSearchParams} setPostLoad={setPostLoad} />
+                        })}
+                        {filteredPosts.length == 0 && <div>No posts found</div>}
+                    </div>}
+                </div>}
             {
             location.pathname !== '/' && 
             <div className='outlet'>
