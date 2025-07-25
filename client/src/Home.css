@@ -135,8 +135,8 @@
     align-items: center;
     background-color: rgba(112,94,218,255);
     color: white;
-    padding-left: 15px;
-    padding-right: 5px;
+    padding-left: 1rem;
+    padding-right: 0.5rem;
     border-radius: 20px;
 }
 
@@ -149,8 +149,8 @@
     align-items: center;
     background-color: rgb(252, 128, 128);
     color: white;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 1rem;
+    padding-right: 1rem;
     border-radius: 20px;
     border: 0px solid transparent;
     cursor: pointer;
@@ -219,7 +219,7 @@
     align-items: center;
     border: 0px transparent;
     gap: 8px;
-    padding: 10px 12px;
+    padding: 0.6rem 0.8rem;
     font-size: 0.9rem;
     background-color: #fff;
     color: #333;
@@ -239,7 +239,7 @@
     align-items: center;
     border: 0px transparent;
     gap: 8px;
-    padding: 10px 12px;
+    padding: 0.6rem 0.8rem;
     font-size: 0.9rem;
     background-color: #ffffff44;
     color: #ececec;
@@ -253,7 +253,7 @@
     align-items: center;
     border: 0px transparent;
     gap: 8px;
-    padding: 10px 12px;
+    padding: 0.6rem 0.8rem;
     font-size: 0.9rem;
     background-color: #ffffff00;
     color: #ececec;
@@ -305,8 +305,8 @@
     width: 3.5rem;
     border: 0px solid transparent;
     border-radius: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
 
   .filter-by-tag-input:focus {
@@ -388,7 +388,6 @@
   .nav-user-options {
     width: 100%;
     position: absolute;
-    background-color: #2BC0E4;
     top: 110%;
     border-radius: 0.5rem;
     overflow: hidden;
@@ -399,13 +398,13 @@
   }
 
   .nav-user-options.open {
-    height: 4.5rem;
+    height: fit-content
   }
 
   .user-dropdown-option {
     display: flex;
     align-items: center;
-    padding: 10px 12px;
+    padding: 0.6rem 0.8rem;
     font-size: 0.9rem;
     background-color: #fff;
     color: #333;
