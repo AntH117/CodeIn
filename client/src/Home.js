@@ -16,7 +16,7 @@ import notify from './Toast';
 import CodeInLogo from './images/codeIn-logo.png'
 import Skeleton from './skeleton/Skeleton';
 
-function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut}) {
+function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setToTop}) {
     const [navHidden, setNavHidden] = React.useState(false)
     const lastScrollTop = React.useRef(0);
     const navigate = useNavigate()
@@ -28,25 +28,29 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut}) {
     React.useEffect(() => {
         if (!scrollRef.current) return;
 
+        const scroll = scrollRef.current
         const handleScroll = () => {
-          const currentScroll = scrollRef.current.scrollTop;
+          const { scrollTop, scrollHeight, clientHeight } = scroll;
+          if (Math.abs(scrollTop - lastScrollTop.current) < 10) return;
     
-          if (Math.abs(currentScroll - lastScrollTop.current) < 10) return;
-    
-          if (currentScroll > lastScrollTop.current) {
+          if (scrollTop > lastScrollTop.current) {
             setNavHidden(true);
           } else {
             setNavHidden(false);
           }
-    
-          lastScrollTop.current = currentScroll <= 0 ? 0 : currentScroll;
+          if (scrollTop > clientHeight) {
+            setToTop(true)
+          } else if (scrollTop < clientHeight) {
+            setToTop(false)
+          }
+          lastScrollTop.current = scrollTop <= 0 ? 0 : scrollTop;
         };
     
         scrollRef.current.addEventListener("scroll", handleScroll);
     
-        // return () => {
-        //     scrollRef.current.removeEventListener("scroll", handleScroll);
-        // };
+        return () => {
+            scroll.removeEventListener("scroll", handleScroll);
+        };
       }, []);
 
     function UserDisplay() {
@@ -279,6 +283,8 @@ export default function Home() {
     const visiblePosts = filteredPosts.slice(0, visibleCount);
     
     const scrollRef = React.useRef(null);
+    //Display to top button
+    const [toTop, setToTop] = React.useState(false)
 
     //Handle lazy loading
     React.useEffect(() => {
@@ -436,12 +442,26 @@ export default function Home() {
         </div>
     }
 
+    const scrollToTop = () => {
+        scrollRef.current?.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      };
+
     return <div className='home'>
         <Toaster />
-        {<NavBar scrollRef={scrollRef} loggedUserData={loggedUserData} setFilters={setFilters} setConfirmSignOut ={setConfirmSignOut}/>}
+        {<NavBar scrollRef={scrollRef} loggedUserData={loggedUserData} setFilters={setFilters} setConfirmSignOut ={setConfirmSignOut} setToTop={setToTop}/>}
         {confirmSignOut == false && <ShowAlert confirm={true} message={'Are you sure you want to sign out?'} setConfirmation={setConfirmSignOut} callback={() => handleSignOut()}/>}
         <div className='news-feed-body'>
-                {<div className='news-feed' ref={scrollRef} >
+                <div className='news-feed-absolute-container'>  
+                    <div className='news-feed-relative-container'>
+                        <button className={`to-top-button ${!toTop && 'hidden'}`} disabled={!toTop} onClick={scrollToTop}>
+                            <Icons.ArrowUp color={'white'}/>
+                        </button>
+                    </div>
+                </div>
+                <div className='news-feed' ref={scrollRef} >
                     {(location.pathname == '/' && !loading) && <div className='home-interaction'>
                         {(!loading && user) && <div className='create-post'>
                         <button className='create-post-button'>
@@ -464,7 +484,7 @@ export default function Home() {
                         })}
                         {filteredPosts.length == 0 && <div>No posts found</div>}
                     </div>}
-                </div>}
+                </div>
             {
             location.pathname !== '/' && 
             <div className='outlet'>
