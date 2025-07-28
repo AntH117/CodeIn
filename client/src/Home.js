@@ -156,7 +156,7 @@ function Filters({filters, setFilters}) {
               scale: { type: 'spring', bounce: 0.4 },
             }}
             onAnimationComplete={() => {
-                // Mark as rendered after animation is complete
+                // Only add to ref once animation is completed
                 if (isNew) {
                   renderedTagsRef.current.add(tag);
                 }
@@ -212,14 +212,12 @@ function Filters({filters, setFilters}) {
             return <FilterTag key={tag} tag={tag}/>
         })}
     </AnimatePresence>
-    {filters.tag?.length > 1 &&  <motion.div className='filter-clear-all' onClick={() => {setFilters((preVal) => { return {...preVal, tag: []}});  renderedTagsRef.current.clear()}}
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
+    {filters.tag?.length > 1 && <motion.div className='filter-clear-all' onClick={() => {setFilters((preVal) => { return {...preVal, tag: []}});  renderedTagsRef.current.clear()}}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         transition={{
             duration: 0.4,
-            scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
+            scale: { type: "spring" },
         }}
         >
         Clear All

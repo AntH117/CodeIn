@@ -13,6 +13,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import notify from './Toast';
 import { motion } from "motion/react"
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 function LikeWrapper({loggedUserData, data, user }) {
     const isLiked = user && loggedUserData?.likes?.includes(data._id);
@@ -202,12 +203,20 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
         return (
           <div style={imageFiles.length === 1 ? {} : gridStyle} className={`IP-image-container ${imageFiles.length === 1 ? 'single' : ''}`}  onClick={() => navigate(`/posts/${data._id}`)}>
             {imageFiles.map((image, idx) => (
-              <img
-                className='IP-image'
-                key={idx}
-                src={image.url}
+            //   <img
+            //     className='IP-image'
+            //     key={idx}
+            //     src={image.url}
+            //     alt={`Image ${idx + 1}`}
+            //   />
+            <LazyLoadImage
                 alt={`Image ${idx + 1}`}
-              />
+                src={image.url}
+                height="100%"
+                width="100%"
+                className="IP-image"
+                effect="blur"        
+          />
             ))}
           </div>
         );

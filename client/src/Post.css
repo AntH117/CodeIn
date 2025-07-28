@@ -25,6 +25,7 @@
     align-items: center;
     color: #333;
     z-index: 11;
+    margin-top: 2rem;
 }
 
 .cancel-button {
