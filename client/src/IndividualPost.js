@@ -12,6 +12,7 @@ import { arrayUnion, arrayRemove  } from "firebase/firestore";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import notify from './Toast';
+import { motion } from "motion/react"
 
 function LikeWrapper({loggedUserData, data, user }) {
     const isLiked = user && loggedUserData?.likes?.includes(data._id);
@@ -223,9 +224,13 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
 
     function IndividualTag({tagName}) {
 
-        return <div className='IP-individual-tag' onClick={() => handleSearchParams(tagName)}>
+        return <motion.div className='IP-individual-tag' onClick={() => handleSearchParams(tagName)}
+         whileHover={{ scale: 1.1, backgroundColor: 'rgb(87, 87, 255)', color: 'rgb(255,255,255)', border: '1px solid transparent'
+          }}
+          transition={{ duration: 0.2 }}
+          >
             {tagName}
-        </div>
+        </motion.div>
     }
 
     function visibilityIcon(visibility) {

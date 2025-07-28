@@ -15,7 +15,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import notify from './Toast';
 import CodeInLogo from './images/codeIn-logo.png'
 import Skeleton from './skeleton/Skeleton';
-import { motion } from "motion/react"
+import { AnimatePresence, motion } from "motion/react"
 
 function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setToTop}) {
     const [navHidden, setNavHidden] = React.useState(false)
@@ -141,21 +141,45 @@ function Filters({filters, setFilters}) {
     </div>
     }
     
-
-    function FilterTag({tag}) {
-
-        return <div className='filter-tag-body'>
-                {tag || null}
-                <div className='form-tag-delete' onClick={() => setFilters((preVal) => {
-                    return {
-                        ...preVal,
-                        tag: preVal.tag.filter(x => x!== tag)
-                    }
-                })}>
-                  <Icons.X />
-                </div>
-        </div>
-    }
+    const renderedTagsRef = React.useRef(new Set());
+    function FilterTag({ tag }) {
+        const isNew = !renderedTagsRef.current.has(tag);
+        return (
+          <motion.div   
+            className="filter-tag-body"
+            initial={isNew  ? { opacity: 0, scale: 0 } : false}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            layout 
+            transition={{
+              duration: 0.3,
+              scale: { type: 'spring', bounce: 0.4 },
+            }}
+            onAnimationComplete={() => {
+                // Mark as rendered after animation is complete
+                if (isNew) {
+                  renderedTagsRef.current.add(tag);
+                }
+            }}
+          >
+            {tag}
+            <div
+              className="form-tag-delete"
+              onClick={() =>
+              {
+                setFilters((prev) => ({
+                    ...prev,
+                    tag: prev.tag.filter((x) => x !== tag),
+                  }));
+                renderedTagsRef.current.delete(tag)
+              }
+              }
+            >
+              <Icons.X />
+            </div>
+          </motion.div>
+        );
+      }
 
     React.useEffect(() => {
         if (expand) {
@@ -182,12 +206,24 @@ function Filters({filters, setFilters}) {
             </div>
         </div>
     </div>
-    {filters.tag?.length > 0 && filters.tag.map((tag) => {return  <FilterTag tag={tag}/>})}
-    {filters.tag?.length > 1 && <div className='filter-clear-all' onClick={() => setFilters((preVal) => {
-        return {...preVal, tag: []}
-    })}> 
+    <AnimatePresence>
+        {filters.tag?.length > 0 &&
+            filters.tag.map((tag) => {
+            return <FilterTag key={tag} tag={tag}/>
+        })}
+    </AnimatePresence>
+    {filters.tag?.length > 1 &&  <motion.div className='filter-clear-all' onClick={() => {setFilters((preVal) => { return {...preVal, tag: []}});  renderedTagsRef.current.clear()}}
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        transition={{
+            duration: 0.4,
+            scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
+        }}
+        >
         Clear All
-    </div>}
+    </motion.div>}
     </>
     )
 }
@@ -450,6 +486,24 @@ export default function Home() {
         });
       };
 
+    function CreatePostButton() {
+
+        return (
+            <motion.button className='create-post-button'  whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} transition={{ type: 'spring', stiffness: 300 }}>
+                <Link to={'/post'} style={{textDecoration: 'none', color: 'white'}}>Create Post</Link>
+            </motion.button>
+        )
+    }
+
+    function ForceRefreshButton() {
+
+        return (
+            <motion.div className='forced-refresh'   initial={{ rotate: 0 }} whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }}>
+            <Icons.Refresh />
+             </motion.div>
+        )
+    }
+
     return <div className='home'>
         <Toaster />
         {<NavBar scrollRef={scrollRef} loggedUserData={loggedUserData} setFilters={setFilters} setConfirmSignOut ={setConfirmSignOut} setToTop={setToTop}/>}
@@ -465,15 +519,8 @@ export default function Home() {
                 <div className='news-feed' ref={scrollRef} >
                     {(location.pathname == '/' && !loading) && <div className='home-interaction'>
                         {(!loading && user) && <div className='create-post'>
-                        <button className='create-post-button'>
-                            <Link to={'/post'} style={{textDecoration: 'none', color: 'white'}}>Create Post</Link>
-                        </button>
-                        {/* <div className='forced-refresh' onClick={() => setForcedRefresh((preVal) => preVal += 1)}>
-                            <Icons.Refresh />
-                        </div> */}
-                        <motion.div className='forced-refresh'   initial={{ rotate: 0 }} whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }}>
-                            <Icons.Refresh />
-                        </motion.div>
+                        <CreatePostButton />
+                        <ForceRefreshButton />
                         </div>}
                         <FilterByTag />
                         <Filters filters={filters} setFilters={setFilters} />

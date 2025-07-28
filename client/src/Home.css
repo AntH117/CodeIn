@@ -109,6 +109,7 @@
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
+    padding-top: 1rem
   }
 
   @media (max-width: 450px) {
@@ -154,12 +155,8 @@
     font-size: 15px;
     cursor: pointer;
     font-weight: 500;
-    transition: all 0.2s ease-in-out
 }
-.create-post-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
+
 
 .home-filter-body {
     width: fit-content;
