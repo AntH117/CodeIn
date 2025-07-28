@@ -15,6 +15,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import notify from './Toast';
 import CodeInLogo from './images/codeIn-logo.png'
 import Skeleton from './skeleton/Skeleton';
+import { motion } from "motion/react"
 
 function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setToTop}) {
     const [navHidden, setNavHidden] = React.useState(false)
@@ -467,9 +468,12 @@ export default function Home() {
                         <button className='create-post-button'>
                             <Link to={'/post'} style={{textDecoration: 'none', color: 'white'}}>Create Post</Link>
                         </button>
-                        <div className='forced-refresh' onClick={() => setForcedRefresh((preVal) => preVal += 1)}>
+                        {/* <div className='forced-refresh' onClick={() => setForcedRefresh((preVal) => preVal += 1)}>
                             <Icons.Refresh />
-                        </div>
+                        </div> */}
+                        <motion.div className='forced-refresh'   initial={{ rotate: 0 }} whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }}>
+                            <Icons.Refresh />
+                        </motion.div>
                         </div>}
                         <FilterByTag />
                         <Filters filters={filters} setFilters={setFilters} />
