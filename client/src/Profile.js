@@ -540,9 +540,9 @@ export default function Profile () {
                 {isUser && <EditUser />}
                 <div className='user-follow'>
                     Followers: {tempFollowCount}
-                    {!isUser && <button className={`follow-button ${followed ? 'active' : ''}`} onClick={handleFollow}>
+                    {!isUser && <motion.button className={`follow-button ${followed ? 'active' : ''}`} onClick={handleFollow}  whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
                         {followed? 'Unfollow' : 'Follow'}
-                    </button>}
+                    </motion.button>}
                 </div>
                 <div className='user-creation-date'>
                    <Icons.Calendar /> Joined {convertDate(profileInfo?.creationDate)}
