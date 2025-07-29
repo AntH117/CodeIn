@@ -18,7 +18,6 @@
     width: 100%;
     height: 4.5rem;
     position: absolute;
-    background-color: rgba(247,238,226,255);
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -27,12 +26,12 @@
     box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.137);
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    transition: all 0.3s ease-in-out;
 }
 
 .nav-bar.hidden {
   height: 0rem;
   overflow: hidden;
+  background-color: rgb(49, 49, 49);
 }
 
 .news-feed-body {
@@ -90,7 +89,6 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    background-color: rgba(247,238,226,255);
     box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.137);
     position: relative;
     gap: 20px;

@@ -14,6 +14,8 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import notify from './Toast';
 import { motion } from "motion/react"
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { useTheme } from "./ThemeContext";
+
 
 function LikeWrapper({loggedUserData, data, user }) {
     const isLiked = user && loggedUserData?.likes?.includes(data._id);
@@ -27,6 +29,7 @@ function LikeWrapper({loggedUserData, data, user }) {
 
 
 export default function IndividualPost({data, handleSearchParams, setPostLoad}) {
+    const { isDarkMode } = useTheme()
     const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -252,7 +255,10 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
         notify.success('Copied to clipboard!','📋')
     }
 
-    return <div className='IP-body'>
+    return (
+    <div className='IP-body'
+        style={isDarkMode ? {backgroundColor: 'rgb(70, 68, 68)', color: 'white'} : {backgroundColor: 'rgba(253,245,234,255)'}}
+    >
         <div className='IP-title'>
             <h2 onClick={() => navigate(`/posts/${data._id}`)}>{data.postContent.title}</h2>
         </div>
@@ -312,5 +318,5 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
             <h5 onClick={() => navigate(`/posts/${data._id}`)}>Comment</h5>
             <h5>Share</h5>
         </div>
-    </div>
+    </div>)
 }

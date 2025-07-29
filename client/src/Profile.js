@@ -14,8 +14,10 @@ import notify from './Toast';
 import ShowAlert from './ShowAlert';
 import Skeleton from './skeleton/Skeleton';
 import { motion } from "motion/react"
+import { useTheme } from "./ThemeContext";
 
 export default function Profile () {
+    const { isDarkMode } = useTheme();
     const { user } = useAuth();
     const backendURL = process.env.REACT_APP_BACKEND_URL
     const [profileInfo, setProfileInfo] = React.useState()
@@ -360,7 +362,9 @@ export default function Profile () {
             setToggleLoading(true)
         }, [selectToggle])
         function ToggleOption({name}) {
-            return <div className={`user-toggle-option ${name === selectToggle ? 'selected' : ''}`} onClick={() => setSelectToggle(name)}>
+            return <div className={`user-toggle-option ${name === selectToggle ? 'selected' : ''}`} onClick={() => setSelectToggle(name)}
+                    style={isDarkMode ? {backgroundColor: 'black', color: 'white'} : {backgroundColor: '#f0f0f7'}}
+                >
                 {name}
                 {name === selectToggle && <div className='user-toggled'>
                     
@@ -523,7 +527,10 @@ export default function Profile () {
         {(loading && !loadingError) && <Skeleton.Profile />}
         {/* <span class="loader"></span> */}
         {loadingError && <NotFound />}
-        {!loading && <div className='user-profile-inner-body'>
+        {!loading && (
+        <div className='user-profile-inner-body'
+            style={isDarkMode ? {backgroundColor: 'gray'} : {backgroundColor: 'rgba(253, 245, 234, 255)'}}
+        >
             <div className='user-background'>
                 {profileInfo?.backgroundURL ? <img className='user-background-image' src={profileInfo?.backgroundURL}>
                 </img> : <div className='default-background'></div>}
@@ -552,6 +559,6 @@ export default function Profile () {
                 </div>
             </div>
             <UserProfileToggle />
-        </div>}
+        </div>)}
     </div>
 }

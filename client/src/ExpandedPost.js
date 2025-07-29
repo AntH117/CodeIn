@@ -16,6 +16,7 @@ import ShowAlert from './ShowAlert';
 import notify from './Toast';
 import Skeleton from './skeleton/Skeleton';
 import { AnimatePresence, motion } from "motion/react"
+import { useTheme } from "./ThemeContext";
 
 
 function LikeWrapper({user, isLiked}) {
@@ -47,6 +48,7 @@ function Socials({post, tempLikeCount, user, isLiked}) {
 }
 
 export default function ExpandedPost () {
+    const { isDarkMode } = useTheme()
     const backendURL = process.env.REACT_APP_BACKEND_URL
     const { user } = useAuth();
     const [post, setPost] = React.useState(null)
@@ -569,7 +571,9 @@ export default function ExpandedPost () {
         deleteComment(selectedComment, postId)
         setSelectedComment(null)
     }}/>}
-    {!loading && <div className='EP-inner-body'>
+    {!loading && <div className='EP-inner-body'
+                    style={isDarkMode ? {backgroundColor: 'gray', color: 'white'} : {backgroundColor: 'rgba(253, 245, 234, 255)'}}
+                 >
                     {user?.uid == post.user && <DropDownMenu />}
                     <div className='IP-title'>
                             <h2>{post?.postContent.title}</h2>

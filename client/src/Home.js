@@ -113,7 +113,7 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
 
     return (
         <div className={`nav-bar ${navHidden && 'hidden'}`}
-            style={isDarkMode ? {backgroundColor: 'black'} : {backgroundColor: 'rgba(247,238,226,255)'}}
+            style={isDarkMode ? {backgroundColor: 'black', color: 'white'} : {backgroundColor: 'rgba(247,238,226,255)'}}
         >
             <div className='nav-bar-home'>
                 <img src={CodeInLogo} className='codeIn-logo' onClick={() => {
@@ -135,6 +135,7 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
 }
 
 function Filters({filters, setFilters}) {
+    const { isDarkMode } = useTheme()
     const location = useLocation()
     const [forcedRefresh, setForcedRefresh] = React.useState(0)
     React.useEffect(() => {
@@ -274,6 +275,9 @@ export default function Home() {
 
     //scrollable div
     const scrollContainerRef = React.useRef(null)
+
+    //dark mode
+    const { isDarkMode } = useTheme();
 
     //Get logged in user into
     async function getUserInfo(uid) {
@@ -501,13 +505,16 @@ export default function Home() {
         }
         
 
-        return <div className='filter-by-tag'>
-            <input type='text' className='filter-by-tag-input' placeholder='Tags' id='tag-name' autocomplete="off">
+        return (
+        <div className='filter-by-tag'>
+            <input type='text' className='filter-by-tag-input' placeholder='Tags' id='tag-name' autocomplete="off"
+                style={isDarkMode ? {backgroundColor: 'gray', color: 'white'} : {backgroundColor: 'white'}}
+            >
             </input>
             <button className='filter-by-tag-add' onClick={handleAddTag}>
                 <Icons.PlusLarge />
             </button>
-        </div>
+        </div>)
     }
 
     const scrollToTop = () => {
@@ -547,7 +554,9 @@ export default function Home() {
                         </button>
                     </div>
                 </div>
-                <div className='news-feed' ref={scrollRef} >
+                <div className='news-feed' ref={scrollRef}
+                    style={isDarkMode ? {backgroundColor: 'black'} : {backgroundColor: 'rgba(247,238,226,255)'}}
+                >
                     {(location.pathname == '/' && !loading) && <div className='home-interaction'>
                         {(!loading && user) && <div className='create-post'>
                         <CreatePostButton />

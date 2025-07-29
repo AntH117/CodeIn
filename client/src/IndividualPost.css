@@ -1,7 +1,6 @@
 .IP-body {
     width: 100%;
     height: fit-content;
-    background-color: rgba(253,245,234,255);
     border-radius: 25px;
     display: flex;
     flex-direction: column;
