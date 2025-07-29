@@ -479,7 +479,7 @@
   .forced-refresh {
     position: absolute;
     right: -4%;
-    top: 0;
+    top: 30%;
     width: 2rem;
     height: 2rem;
     cursor: pointer;
@@ -495,7 +495,7 @@
     animation: spin-once 0.6s ease-in-out;
   }
 
-  @keyframes spin-once {
+  @keyframesspin-once {
     from {
       transform: rotate(0deg);
     }
@@ -513,4 +513,48 @@
     position: relative;
   }
 
- 
+ .nav-bar-right {
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+ }
+
+ .toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border: none;
+  border-radius: 2rem;
+  background-color: #82d7f8;
+  cursor: pointer;
+  width: 3.2rem;
+  transition: all 0.3s ease-in-out
+}
+
+.toggle-container.dark {
+  background-color: #1E1E2F
+}
+
+ .toggle-handle {
+    width: 1.2rem;
+    height: 1.2rem;
+    background-color: #f1d884;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    box-shadow: 
+    0 0 8px 4px rgba(255, 215, 0, 0.5), 
+    inset 0 0 4px rgba(255, 255, 255, 0.6); 
+ }
+
+ .toggle-handle.dark {
+    background-color: #B0C4DE;
+    box-shadow: 
+    0 0 6px 3px rgba(176, 196, 222, 0.3), 
+    inset -2px -2px 4px rgba(255, 255, 255, 0.1), 
+    inset 2px 2px 4px rgba(0, 0, 0, 0.2);     
+ }

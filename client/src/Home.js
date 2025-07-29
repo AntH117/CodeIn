@@ -83,6 +83,32 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
         </>
     }
 
+    function DarkModeToggle() {
+        const [toggle, setToggle] = React.useState(false)
+        const toggleSwitch = () => setToggle(!toggle)
+
+        return (
+        <button 
+            className={`toggle-container ${toggle && 'dark'}`} 
+            onClick={toggleSwitch}
+            style={{
+                justifyContent: "flex-" + (!toggle ? "start" : "end"),
+            }}
+        >
+            <motion.div
+                    className={`toggle-handle ${toggle && 'dark'}`}
+                    layout
+                    transition={{
+                        type: "spring",
+                        visualDuration: 0.2,
+                        bounce: 0.2,
+                    }}
+            >
+            </motion.div>
+        </button>
+        )
+    }
+
     return (
         <div className={`nav-bar ${navHidden && 'hidden'}`}>
             <div className='nav-bar-home'>
@@ -92,11 +118,14 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
             }}>
                 </img>    
             </div>
-            {user ? 
-            <UserDisplay />
-            : 
-            <Link to={'/login'} style={{color: 'black', textDecoration: 'none'}}>Login</Link>  
-            }
+            <div className='nav-bar-right'>
+                {user ? 
+                <UserDisplay />
+                : 
+                <Link to={'/login'} style={{color: 'black', textDecoration: 'none'}}>Login</Link>  
+                }
+                <DarkModeToggle />
+            </div>
     </div>
     )
 }
