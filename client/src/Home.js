@@ -16,8 +16,10 @@ import notify from './Toast';
 import CodeInLogo from './images/codeIn-logo.png'
 import Skeleton from './skeleton/Skeleton';
 import { AnimatePresence, motion } from "motion/react"
+import { useTheme } from "./ThemeContext";
 
 function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setToTop}) {
+    const { isDarkMode } = useTheme();
     const [navHidden, setNavHidden] = React.useState(false)
     const lastScrollTop = React.useRef(0);
     const navigate = useNavigate()
@@ -84,19 +86,19 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
     }
 
     function DarkModeToggle() {
-        const [toggle, setToggle] = React.useState(false)
-        const toggleSwitch = () => setToggle(!toggle)
+        const { isDarkMode, setIsDarkMode } = useTheme();
+        const toggleSwitch = () => setIsDarkMode(!isDarkMode)
 
         return (
         <button 
-            className={`toggle-container ${toggle && 'dark'}`} 
+            className={`toggle-container ${isDarkMode && 'dark'}`} 
             onClick={toggleSwitch}
             style={{
-                justifyContent: "flex-" + (!toggle ? "start" : "end"),
+                justifyContent: "flex-" + (!isDarkMode ? "start" : "end"),
             }}
         >
             <motion.div
-                    className={`toggle-handle ${toggle && 'dark'}`}
+                    className={`toggle-handle ${isDarkMode && 'dark'}`}
                     layout
                     transition={{
                         type: "spring",
@@ -110,7 +112,9 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
     }
 
     return (
-        <div className={`nav-bar ${navHidden && 'hidden'}`}>
+        <div className={`nav-bar ${navHidden && 'hidden'}`}
+            style={isDarkMode ? {backgroundColor: 'black'} : {backgroundColor: 'rgba(247,238,226,255)'}}
+        >
             <div className='nav-bar-home'>
                 <img src={CodeInLogo} className='codeIn-logo' onClick={() => {
                 setFilters({tag: [], sort: ''});

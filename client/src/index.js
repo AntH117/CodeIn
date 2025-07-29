@@ -14,11 +14,11 @@ import Profile from './Profile';
 import EditProfile from './EditProfile';
 import { AuthProvider } from './AuthContext';
 import NotFound from './NotFound';
-
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import { ThemeProvider } from './ThemeContext';
 
 const basename = "/CodeIn";
 
@@ -76,8 +76,10 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={router}/>
-    </AuthProvider>
+      <ThemeProvider>
+          <RouterProvider router={router}/>
+        </ThemeProvider>   
+      </AuthProvider>
   </React.StrictMode>
 );
 
