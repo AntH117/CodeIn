@@ -13,6 +13,7 @@ import NotFound from './NotFound';
 import notify from './Toast';
 import ShowAlert from './ShowAlert';
 import Skeleton from './skeleton/Skeleton';
+import { motion } from "motion/react"
 
 export default function Profile () {
     const { user } = useAuth();
@@ -509,6 +510,15 @@ export default function Profile () {
         )
     }
 
+    function EditUser() {
+
+        return (
+            <motion.div className='user-edit-body' whileHover={{ width: '70px' }}>
+                <div className='user-edit-content' onClick={() => navigate('edit')}> <Icons.Edit /> Edit </div>
+            </motion.div>
+        )
+    }
+
     return <div className='user-profile-outer-body'>
         {(loading && !loadingError) && <Skeleton.Profile />}
         {/* <span class="loader"></span> */}
@@ -527,9 +537,7 @@ export default function Profile () {
                 <div className='user-info-tag'>
                     @{profileInfo?.displayTag}
                 </div>
-                {isUser && <div className='user-edit'>
-                        <div className='EP-dropdown-option' onClick={() => navigate('edit')}> <Icons.Edit /> Edit</div>
-                </div>}
+                {isUser && <EditUser />}
                 <div className='user-follow'>
                     Followers: {tempFollowCount}
                     {!isUser && <button className={`follow-button ${followed ? 'active' : ''}`} onClick={handleFollow}>

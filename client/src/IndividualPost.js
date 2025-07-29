@@ -202,13 +202,7 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
       
         return (
           <div style={imageFiles.length === 1 ? {} : gridStyle} className={`IP-image-container ${imageFiles.length === 1 ? 'single' : ''}`}  onClick={() => navigate(`/posts/${data._id}`)}>
-            {imageFiles.map((image, idx) => (
-            //   <img
-            //     className='IP-image'
-            //     key={idx}
-            //     src={image.url}
-            //     alt={`Image ${idx + 1}`}
-            //   />
+            {imageFiles.map((image, idx) => ( 
             <LazyLoadImage
                 alt={`Image ${idx + 1}`}
                 src={image.url}

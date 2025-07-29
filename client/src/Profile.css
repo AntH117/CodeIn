@@ -109,11 +109,11 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.user-edit {
+.user-edit-body {
     position: absolute;
     right: 0;
     top: 10px;
-    width: fit-content;
+    width: 35px;
     display: flex;
     flex-direction: column;
     border: 1px solid #ddd;
@@ -122,7 +122,36 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     z-index: 10;
+    overflow: hidden;
 }
+
+.user-edit-content {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 10px;
+    font-size: 0.9rem;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+}
+
+.user-edit-content:hover {
+    background-color: #f0f0ff;
+    color: #2a2a99;
+}
+
+.user-edit-content svg {
+    width: 16px;
+    height: 16px;
+    fill: #666;
+    transition: fill 0.2s ease;
+}
+
+.user-edit-content:hover svg {
+    fill: #2a2a99;
+  }
 
 .user-background-image {
     width: 100%;

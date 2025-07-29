@@ -337,8 +337,8 @@ export default function EditProfile() {
                 <div className='user-edit-info-tag'>
                     <span style={{fontSize: '0.9rem'}}>@</span><input placeholder='Display Tag' name='displayTag' onChange={handleChange} value={profileInfo.displayTag} className='user-display-tag-input'></input>
                 </div>
-                <div className='user-edit'>
-                        <div className='user-edit-cancel' onClick={handleCancelEdits}> <Icons.X /> Cancel</div>
+                <div className='user-edit-cancel-body'>
+                        <div className='user-edit-cancel' onClick={handleCancelEdits}> <Icons.X /></div>
                 </div>
                 <div className='user-creation-date'>
                    <Icons.Calendar /> Joined {convertDate(profileInfo?.creationDate)}

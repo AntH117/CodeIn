@@ -1,5 +1,18 @@
-.user-edit {
-    width: fit-content;
+
+.user-edit-cancel-body {
+  position: absolute;
+  right: 0;
+  top: 10px;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 10;
+  overflow: hidden;
 }
 
 .user-edit-cancel {
@@ -7,7 +20,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 12px;
+    padding: 5px 5px;
     font-size: 0.9rem;
     background-color: #fff;
     color: #333;
@@ -137,7 +150,6 @@
 .user-sensitive-inner-body {
   width: 100%;
   height: 0px;
-  transition: all 0.5s ease-in-out;
   overflow-y: hidden;
   display: flex;
   flex-direction: column;
@@ -207,3 +219,4 @@
   font-size: 0.8rem;
   color: rgb(250, 83, 83);
 }
+
