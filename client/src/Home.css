@@ -8,7 +8,7 @@
     display: flex;
     overflow-x: hidden;
     justify-content: center;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 
@@ -23,9 +23,7 @@
     justify-content: space-around;
     align-items: center;
     z-index: 1;
-    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.137);
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    transition: height 0.3s ease-in-out;
 }
 
 .nav-bar.hidden {
@@ -245,13 +243,17 @@
     width: 6rem;
     display: flex;
     flex-direction: column;
-    border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #fff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     z-index: 10;
     top: 100%;
 }
+
+.filter-drop-down.dark {
+
+}
+
 .filter-drop-option {
     display: flex;
     align-items: center;
@@ -263,6 +265,16 @@
     color: #333;
     cursor: pointer;
     transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.filter-drop-option.dark {
+  background-color: #282A36; 
+  color: #CCCCCC;
+}
+
+.filter-drop-option.dark:hover {
+  background-color: #3C3F51;  
+  color: #A3C8FF;
 }
 
 .filter-drop-option:hover {
@@ -329,7 +341,20 @@
   ::-webkit-scrollbar-thumb:hover {
     background-color: rgba(100, 100, 100, 0.8);
   }
-  
+
+/* Dark mode Toggle */
+body.dark ::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+body.dark ::-webkit-scrollbar-thumb {
+  background-color: rgba(120, 120, 120, 0.6);
+  border: 2px solid #1e1e1e;
+}
+
+body.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(200, 200, 200, 0.7);
+}
 
   .filter-by-tag {
     width: fit-content;
@@ -350,6 +375,10 @@
 
   .filter-by-tag-input:focus {
     outline: none;
+  }
+
+  .filter-by-tag-input.dark::placeholder {
+    color: #bbb;
   }
 
   .filter-by-tag-add {
@@ -453,9 +482,19 @@
     z-index: 98;
   }
 
+  .user-dropdown-option.dark {
+    background-color: #282A36; 
+    color: #CCCCCC;
+  }
+
   .user-dropdown-option:hover {
     background-color: #f0f0ff;
     color: #2a2a99;
+  }
+  
+  .user-dropdown-option.dark:hover {
+    background-color: #3C3F51; 
+    color: #A3C8FF;
   }
   
   .nav-bar-home {

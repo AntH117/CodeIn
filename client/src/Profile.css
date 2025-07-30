@@ -201,11 +201,6 @@
     position: relative;
 }
 
-.user-toggle-option:hover {
-    background-color: 	#aad6ff;
-    box-shadow: 0 0 4px #c8a8ff;
-}
-
 
 .user-toggle-option.selected {
     background-color: #c0e7ff;
@@ -216,8 +211,12 @@
     width: 40%;
     height: 7px;
     background-color: #68bdfa;
-    border-radius: 20%;
+    border-radius: 5px;
     bottom: 0;
+}
+
+.user-toggled.dark {
+    background-color: #4a91c8
 }
 
 .user-toggle-outlet {
@@ -325,6 +324,11 @@
 
 .IU-body:hover {
     background-color: #daefff;
+}
+
+.IU-body.dark:hover {
+    background-color: #3C3F51;  
+    color: #A3C8FF;
 }
 
 .IU-pfp {

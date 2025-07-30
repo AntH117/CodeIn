@@ -21,14 +21,18 @@ import { useTheme } from "./ThemeContext";
 
 function LikeWrapper({user, isLiked}) {
     const location  = useLocation()
+    const { isDarkMode } = useTheme()
     const postId = location.pathname.split('/').at(-1)
     return (
-    <div className={`like-icon ${isLiked && 'liked'}`}>
-        {(user && isLiked) ? <Icons.HeartFilled /> : <Icons.Heart />}
-    </div>
+        <div className={`like-icon ${isLiked && 'liked'}`}>
+            {user ? (isLiked ? <Icons.HeartFilled color={isDarkMode ? '#F87171': "rgb(252, 100, 100)"}/> 
+            : 
+            <Icons.Heart color={isDarkMode ? '#B0B0B0': "black"}/>) : <Icons.Heart color={isDarkMode ? '#B0B0B0': "black"}/>}
+        </div>
     )
 }
 function Socials({post, tempLikeCount, user, isLiked}) {
+    const { isDarkMode } = useTheme()
     return (
     <div className='IP-socials'>
             <div className='IP-socials-individual'>
@@ -36,11 +40,11 @@ function Socials({post, tempLikeCount, user, isLiked}) {
                 {tempLikeCount}
             </div>
             <div className='IP-socials-individual'>
-                <Icons.Comment />
+                <Icons.Comment color={isDarkMode ? '#B0B0B0' : 'black'}/>
                 {post.commentCount}
             </div>
             <div className='IP-socials-individual'>
-                <Icons.Share />
+                <Icons.Share color={isDarkMode ? '#B0B0B0' : 'black'}/>
                 {post.shareCount}
             </div>
     </div>
@@ -527,9 +531,18 @@ export default function ExpandedPost () {
     function CodeBlock({ code, language}) {
 
         return (
-            <SyntaxHighlighter language={language} style={vscDarkPlus}>
-              {code}
-            </SyntaxHighlighter>
+            <div style={{ width: 'fit-content', minWidth: '100%' }}>
+                <SyntaxHighlighter language={language} style={vscDarkPlus} 
+                customStyle={{
+                    backgroundColor: isDarkMode ? '#181818' : undefined,
+                    borderRadius: '8px',
+                    minWidth: '100%',  
+                    overflowX: 'auto',
+                }}
+                >
+                {code}
+                </SyntaxHighlighter>
+            </div>
           );
     }
 
@@ -539,6 +552,7 @@ export default function ExpandedPost () {
             whileHover={{ scale: 1.1, backgroundColor: 'rgb(87, 87, 255)', color: 'rgb(255,255,255)', border: '1px solid transparent'
             }}
             transition={{ duration: 0.2 }}
+            style={isDarkMode ? {border: '1px solid #A78BFA', color: ' #A78BFA'} : {border: '1px solid black', color: 'black'}}
             >
             {tagName}
         </motion.div>
@@ -572,7 +586,7 @@ export default function ExpandedPost () {
         setSelectedComment(null)
     }}/>}
     {!loading && <div className='EP-inner-body'
-                    style={isDarkMode ? {backgroundColor: 'gray', color: 'white'} : {backgroundColor: 'rgba(253, 245, 234, 255)'}}
+                    style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#EDEDED'} : {backgroundColor: 'rgba(253, 245, 234, 255)'}}
                  >
                     {user?.uid == post.user && <DropDownMenu />}
                     <div className='IP-title'>

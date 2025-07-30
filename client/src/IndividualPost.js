@@ -18,11 +18,14 @@ import { useTheme } from "./ThemeContext";
 
 
 function LikeWrapper({loggedUserData, data, user }) {
+    const { isDarkMode } = useTheme()
     const isLiked = user && loggedUserData?.likes?.includes(data._id);
 
     return (
     <div className={`like-icon ${isLiked && 'liked'}`}>
-          {user ? (isLiked ? <Icons.HeartFilled /> : <Icons.Heart />) : <Icons.Heart />}
+          {user ? (isLiked ? <Icons.HeartFilled color={isDarkMode ? '#F87171': "rgb(252, 100, 100)"}/> 
+          : 
+          <Icons.Heart color={isDarkMode ? '#B0B0B0': "black"}/>) : <Icons.Heart color={isDarkMode ? '#B0B0B0': "black"}/>}
     </div>
     )
 }
@@ -222,9 +225,18 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
     function CodeBlock({ code, language}) {
 
         return (
-            <SyntaxHighlighter language={language} style={vscDarkPlus}>
-              {code}
-            </SyntaxHighlighter>
+            <div style={{ width: 'fit-content', minWidth: '100%' }}>
+                <SyntaxHighlighter language={language} style={vscDarkPlus} 
+                customStyle={{
+                    backgroundColor: isDarkMode ? '#181818' : undefined,
+                    borderRadius: '8px',
+                    minWidth: '100%',  
+                    overflowX: 'auto',
+                }}
+                >
+                {code}
+                </SyntaxHighlighter>
+            </div>
           );
     }
 
@@ -234,6 +246,7 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
          whileHover={{ scale: 1.1, backgroundColor: 'rgb(87, 87, 255)', color: 'rgb(255,255,255)', border: '1px solid transparent'
           }}
           transition={{ duration: 0.2 }}
+          style={isDarkMode ? {border: '1px solid #A78BFA', color: ' #A78BFA'} : {border: '1px solid black', color: 'black'}}
           >
             {tagName}
         </motion.div>
@@ -257,7 +270,7 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
 
     return (
     <div className='IP-body'
-        style={isDarkMode ? {backgroundColor: 'rgb(70, 68, 68)', color: 'white'} : {backgroundColor: 'rgba(253,245,234,255)'}}
+        style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#EDEDED'} : {backgroundColor: 'rgba(253,245,234,255)'}}
     >
         <div className='IP-title'>
             <h2 onClick={() => navigate(`/posts/${data._id}`)}>{data.postContent.title}</h2>
@@ -277,11 +290,11 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
                     {visibilityIcon(data.postContent.visibility)}
                 </div>
             </div>
-        {data.postContent.paragraph && <div className='IP-paragraph'>
+        {data.postContent.paragraph && <div className='IP-paragraph' style={isDarkMode ? {color: '	#B0B0B0'} : {color: 'black'}}>
             <p>{data.postContent.paragraph}</p>
         </div>}
         
-        {data?.postContent?.codeSnippet && <div className='IP-code-display'>
+        {data?.postContent?.codeSnippet && <div className={`IP-code-display ${isDarkMode && 'dark'}`}>
             <div className='IP-code-display-copy' onClick={() => handleCopy(data.postContent.codeSnippet)}>
                 <Icons.Copy />
             </div>
@@ -305,15 +318,15 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
                 {tempLikeCount}
             </div>
             <div className='IP-socials-individual'>
-                <Icons.Comment />
+                <Icons.Comment color={isDarkMode ? '#B0B0B0' : 'black'}/>
                 {data.commentCount}
             </div>
             <div className='IP-socials-individual'>
-                <Icons.Share />
+                <Icons.Share color={isDarkMode ? '#B0B0B0' : 'black'}/>
                 {data.shareCount}
             </div>
         </div>
-        <div className='IP-interact'>
+        <div className='IP-interact' style={isDarkMode ? {color: '#A78BFA'} : {color: 'rgb(87, 87, 255)'}}>
             {user && <h5 onClick={() => handleLike(data._id)} style={likeCooldown ? {color: 'gray', cursor: 'default'} : {}}>{loggedUserData?.likes.includes(data._id) ? 'Unlike' : 'Like'}</h5>}
             <h5 onClick={() => navigate(`/posts/${data._id}`)}>Comment</h5>
             <h5>Share</h5>

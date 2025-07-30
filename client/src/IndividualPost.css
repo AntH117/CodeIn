@@ -50,7 +50,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    color: rgb(87, 87, 255);
     align-items: center;
     padding-bottom: 0.5rem;
 }
@@ -160,12 +159,12 @@
 }
 
 .IP-code-display {
-    width: 80%;
-    height: fit-content;
-    max-height: 300px;
-    overflow: scroll;
-    margin-top: 5px;
-    position: relative;
+  width: 80%;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: auto;
+  margin-top: 5px;
+  position: relative;
 }
 
 .IP-code-display-copy {
@@ -176,12 +175,12 @@
 }
 
 .IP-code-display::-webkit-scrollbar {
-    width: 0;
-}
+    width: 10px;
+    height: 10px;
+} 
 
-.IP-code-display pre::-webkit-scrollbar {
-    height: 6px; /* horizontal scrollbar */
-    width: 6px;  /* vertical scrollbar */
+  .IP-code-display::-webkit-scrollbar-corner {
+    background: transparent;
   }
   
   .IP-code-display pre::-webkit-scrollbar-track {
@@ -198,6 +197,20 @@
   .IP-code-display pre::-webkit-scrollbar-thumb:hover {
     background-color: rgba(100, 100, 100, 0.8);
   }
+
+ /* Dark mode scroller for code display */
+ .IP-code-display.dark ::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+.IP-code-display.dark ::-webkit-scrollbar-thumb {
+  background-color: rgba(120, 120, 120, 0.6);
+  border: 2px solid #1e1e1e;
+}
+
+.IP-code-display.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(200, 200, 200, 0.7);
+}
 
   .IP-tags {
     width: 80%;
@@ -217,7 +230,6 @@
     height: 20px;
     justify-content: center;
     align-items: center;
-    border: 1px solid black;
     border-radius: 10px;
     padding-left: 10px;
     padding-right: 10px;

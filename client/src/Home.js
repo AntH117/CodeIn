@@ -78,8 +78,8 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
                 <Icons.ArrowDown />
             </div>
             {<div className={`nav-user-options ${open ? 'open' : ''}`}>
-                <div className='user-dropdown-option'onClick={() => navigate(`/users/${user?.uid}`)}>Profile</div>
-                <div className='user-dropdown-option' onClick={() => setConfirmSignOut(false)}>Sign Out</div>
+                <div className={`user-dropdown-option ${isDarkMode && 'dark'}`} onClick={() => navigate(`/users/${user?.uid}`)}>Profile</div>
+                <div className={`user-dropdown-option ${isDarkMode && 'dark'}`}  onClick={() => setConfirmSignOut(false)}>Sign Out</div>
             </div>}
         </div>
         </>
@@ -113,7 +113,7 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
 
     return (
         <div className={`nav-bar ${navHidden && 'hidden'}`}
-            style={isDarkMode ? {backgroundColor: 'black', color: 'white'} : {backgroundColor: 'rgba(247,238,226,255)'}}
+            style={isDarkMode ? {backgroundColor: '#121212', color: '	#EDEDED', borderBottom: '1px solid #2C2C2C'} : {backgroundColor: 'rgba(247,238,226,255)', boxShadow: '0px 2px 2px 0px rgba(0, 0, 0, 0.137)'}}
         >
             <div className='nav-bar-home'>
                 <img src={CodeInLogo} className='codeIn-logo' onClick={() => {
@@ -165,9 +165,9 @@ function Filters({filters, setFilters}) {
         <button class="filter-drop-toggle" type="button" onClick={() => setOpen((preVal) => !preVal)}>
             {temp.sort ? capitalizeFirstLetter(temp.sort) : 'Sort By'}
         </button>
-        {open && <div class="filter-drop-down">
+        {open && <div class={`filter-drop-down ${isDarkMode && 'dark'}`}>
             {options.map((item) => {
-                return <button className='filter-drop-option' onClick={() => setTemp((preVal) => {return {...preVal, ['sort']: item}})}>
+                return <button className={`filter-drop-option ${isDarkMode && 'dark'}`} onClick={() => setTemp((preVal) => {return {...preVal, ['sort']: item}})}>
                     {capitalizeFirstLetter(item)}
                 </button>
             })}
@@ -507,8 +507,8 @@ export default function Home() {
 
         return (
         <div className='filter-by-tag'>
-            <input type='text' className='filter-by-tag-input' placeholder='Tags' id='tag-name' autocomplete="off"
-                style={isDarkMode ? {backgroundColor: 'gray', color: 'white'} : {backgroundColor: 'white'}}
+            <input type='text' className={`filter-by-tag-input ${isDarkMode && 'dark'}`} placeholder='Tags' id='tag-name' autocomplete="off"
+                style={isDarkMode ? {backgroundColor: '	#1E1E1E', color: '	#EDEDED'} : {backgroundColor: 'white'}}
             >
             </input>
             <button className='filter-by-tag-add' onClick={handleAddTag}>
@@ -527,8 +527,10 @@ export default function Home() {
     function CreatePostButton() {
 
         return (
-            <motion.button className='create-post-button'  whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} transition={{ type: 'spring', stiffness: 300 }}>
-                <Link to={'/post'} style={{textDecoration: 'none', color: 'white'}}>Create Post</Link>
+            <motion.button className='create-post-button'  whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} transition={{ type: 'spring', stiffness: 300 }} 
+
+            >
+                <Link to={'/post'} style={{textDecoration: 'none', color: '	#EDEDED'}}>Create Post</Link>
             </motion.button>
         )
     }
@@ -555,7 +557,7 @@ export default function Home() {
                     </div>
                 </div>
                 <div className='news-feed' ref={scrollRef}
-                    style={isDarkMode ? {backgroundColor: 'black'} : {backgroundColor: 'rgba(247,238,226,255)'}}
+                    style={isDarkMode ? {backgroundColor: '#121212'} : {backgroundColor: 'rgba(247,238,226,255)'}}
                 >
                     {(location.pathname == '/' && !loading) && <div className='home-interaction'>
                         {(!loading && user) && <div className='create-post'>

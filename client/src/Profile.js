@@ -147,7 +147,7 @@ export default function Profile () {
             }
 
         
-        return <div className='individual-post-body'>
+        return <div className='individual-post-body' style={isDarkMode ? {backgroundColor: '#121212'} : {backgroundColor: 'rgba(247,238,226,255)'}}>
             {userPosts && filteredPosts.map((post) => 
                 <IndividualPost data={post} setPostLoad={setPostLoad}/>
             )}
@@ -345,7 +345,7 @@ export default function Profile () {
     }
 
     return (
-        <div className='individual-post-body'>
+        <div className='individual-post-body' style={isDarkMode ? {backgroundColor: '#121212'} : {backgroundColor: 'rgba(247,238,226,255)'}}>
             {likedPosts?.length > 0 && likedPosts.map((post) => {
             return <IndividualPost data={post} setPostLoad={setPostLoad}/>
         })}
@@ -361,16 +361,40 @@ export default function Profile () {
         React.useEffect(() => {
             setToggleLoading(true)
         }, [selectToggle])
-        function ToggleOption({name}) {
-            return <div className={`user-toggle-option ${name === selectToggle ? 'selected' : ''}`} onClick={() => setSelectToggle(name)}
-                    style={isDarkMode ? {backgroundColor: 'black', color: 'white'} : {backgroundColor: '#f0f0f7'}}
+
+        function ToggleOption({ name }) {
+            const isSelected = name === selectToggle;
+        
+            return (
+                <motion.div
+                    className={`user-toggle-option ${isSelected ? 'selected' : ''}`}
+                    onClick={() => setSelectToggle(name)}
+                    style={{
+                        ...(isDarkMode
+                            ? { backgroundColor: '#1e1e2e', color: '#f0f0f0' }
+                            : { backgroundColor: '#f0f0f7' }
+                        )
+                    }}
+                    whileHover={{
+                        backgroundColor: isDarkMode ? '#34495e' : '#dceeff',
+                        transition: { duration: 0.2 }
+                    }}
                 >
-                {name}
-                {name === selectToggle && <div className='user-toggled'>
-                    
-                </div>}
-            </div>
+                    {name}
+                    {isSelected && (
+                        <motion.div
+                            layoutId="selected-indicator"
+                            className={`user-toggled ${isDarkMode && 'dark'}`}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.2 }}
+                        />
+                    )}
+                </motion.div>
+            );
         }
+
+
         const toggleDisplay = () => {
             switch(selectToggle) {
                 case 'Posts': 
@@ -485,7 +509,7 @@ export default function Profile () {
 
         function IndividualUser({user}) {
             return (
-                <div className='IU-body' onClick={() => navigate(`/users/${user.uid}`)}>
+                <div className={`IU-body ${isDarkMode && 'dark'}`} onClick={() => navigate(`/users/${user.uid}`)}>
                     <div className='IU-left'>
                         <div className='IU-pfp'>
                             <img src={user.photoURL}>
@@ -529,7 +553,7 @@ export default function Profile () {
         {loadingError && <NotFound />}
         {!loading && (
         <div className='user-profile-inner-body'
-            style={isDarkMode ? {backgroundColor: 'gray'} : {backgroundColor: 'rgba(253, 245, 234, 255)'}}
+             style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#EDEDED'} : {backgroundColor: 'rgba(253,245,234,255)'}}
         >
             <div className='user-background'>
                 {profileInfo?.backgroundURL ? <img className='user-background-image' src={profileInfo?.backgroundURL}>
