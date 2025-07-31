@@ -208,16 +208,15 @@ export default function ExpandedPost () {
     //Edit && Delete
     function DropDownMenu() {
         const [open, setOpen] = React.useState(false)
-
         return <>
         <div className='EP-delete' onClick={() => setOpen((preVal) => !preVal)}>
-            <div className='dot'></div>
-            <div className='dot'></div>
-            <div className='dot'></div>
+            <div className={`dot ${isDarkMode && 'dark'}`}></div>
+            <div className={`dot ${isDarkMode && 'dark'}`}></div>
+            <div className={`dot ${isDarkMode && 'dark'}`}></div>
         </div>
         {open && <div className='EP-dropdown'>
-                <div className='EP-dropdown-option' onClick={() => navigate('edit')}> <Icons.Edit /> Edit</div>
-                <div className='EP-dropdown-option' onClick={() => handleDeletePost()}>
+                <div className={`EP-dropdown-option ${isDarkMode && 'dark'}`} onClick={() => navigate('edit')}> <Icons.Edit /> Edit</div>
+                <div className={`EP-dropdown-option ${isDarkMode && 'dark'}`} onClick={() => handleDeletePost()}>
                         <Icons.Trash />
                         Delete
                 </div>
@@ -574,7 +573,7 @@ export default function ExpandedPost () {
     }
     const imageChecker = location.pathname.split('/').includes('image')
     return (<div className='EP-outer-body' style={imageChecker ? {overflowY: 'hidden'} : {}}>
-    {(loading && !loadingError) && <Skeleton.ExpandedPost />}
+    {(loading && !loadingError) && <Skeleton.ExpandedPost darkMode={isDarkMode} />}
     {loadingError && <NotFound />}
     <Outlet />
     {confirmDeletePost == false && <ShowAlert message={'Are you sure you want to delete this post?'} confirm={true} setConfirmation={setConfirmDeletePost} callback={() => {

@@ -46,6 +46,10 @@
     justify-content: space-between;
 }
 
+.skeleton-profile-body.dark {
+    background-color: #222222;
+}
+
 .skeleton-profile-upper {
     position: relative;
     display: flex;
@@ -127,6 +131,10 @@
     justify-content: center;
 }
 
+.skeleton-home-IP.dark {
+    background-color: #222222;
+}
+
 .skeleton-IP-body {
     width: 80%;
     height: 90%;
@@ -203,6 +211,10 @@
     justify-content: center;
 }
 
+.skeleton-EP-body.dark {
+    background-color: #222222
+}
+
 .skeleton-EP-content {
     width: 80%;
     height: 95%;
@@ -264,6 +276,10 @@
     position: relative;
     margin-top: 3rem;
     gap: 15px;
+}
+
+.skeleton-edit-post-body.dark {
+    background-color: #222222;
 }
 
 .skeleton-edit-title {

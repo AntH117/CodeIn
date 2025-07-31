@@ -12,8 +12,11 @@ import 'emoji-picker-element';
 import TextSettings from './TextSettings';
 import ShowAlert from './ShowAlert';
 import { Toaster, toast } from 'react-hot-toast';
+import { useTheme } from "./ThemeContext";
+
 
 export default function Post() {
+    const { isDarkMode } = useTheme()
     const { user } = useAuth();
     const backendURL = process.env.REACT_APP_BACKEND_URL
     const APILINK = `${backendURL}/api/v1/codeIn`
@@ -300,7 +303,9 @@ export default function Post() {
                     }
                 })
             }
-            return <div className='form-individual-tag'>
+            return <div className='form-individual-tag'
+                style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #A78BFA'} : {backgroundColor: 'white'}}
+            >
                 {name}
                 <div className='form-tag-delete' onClick={handleDeleteTag}>
                   <Icons.X />
@@ -354,7 +359,9 @@ export default function Post() {
                 }
             }
         }
-        return <div className={`form-add-tag-body ${expanded ? 'expanded' : ''}`}>
+        return <div className={`form-add-tag-body ${expanded ? 'expanded' : ''}`}
+            style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #A78BFA'} : {backgroundColor: 'white'}}
+        >
             <input className={`form-tag-input ${expanded ? 'expanded' : ''}`} type ='text' placeholder='Tag' value={tag} onChange={handleTagChange}></input>
             <div className='form-add-tag' onClick={handleClick}>
               <Icons.Plus />
@@ -363,7 +370,7 @@ export default function Post() {
     }
 
     return <div className='post-outer-body'>
-        <div className='post-body'>
+        <div className='post-body' style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#EDEDED', border: '1px solid #ddd'} : {backgroundColor: '#fffaf5'}}>
         <button className={`cancel-button ${fileCD && 'disabled'}`} disabled={fileCD} onClick={() => {
             cancelPost();
             navigate(-1)
@@ -375,7 +382,9 @@ export default function Post() {
             <div className='form-top'>
                 <div className='form-title'>
                     <h3>Title</h3>
-                    <input type='text' className='form-title-input' name='title' onChange={handleChange}></input>
+                    <input type='text' className='form-title-input' name='title' onChange={handleChange}
+                        style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                    ></input>
                 </div>
                 <div className='form-title-error'>
                         <span>{submissionConditions.titleLengthMin === false && errorMessages.titleLengthMin}</span>
@@ -384,7 +393,9 @@ export default function Post() {
                 </div>
                 <div className='form-visibility'>
                     <h3 className='form-visibility-title'>Visibility</h3>
-                   <select name='visibility' onChange={handleChange}>
+                   <select name='visibility' onChange={handleChange}
+                    style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                   >
                         {visibilityTypes.map((x) => (
                             <option key={x} value={x}>
                                 {x}
@@ -396,15 +407,19 @@ export default function Post() {
             <div className='form-description'>
                 <div className='form-description-toggle'>
                     <h3 className='form-description-title'>Description</h3>
-                    <button className='form-toggle-button' name='description' onClick={handleToggle}>
+                    <button className='form-toggle-button' name='description' onClick={handleToggle}
+                        style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                    >
                         {toggle.description ? <Icons.Minus /> : <Icons.Plus />}
                     </button>
                 </div>
                 <div className={`form-paragraph ${toggle.description !== null ? toggle.description ? 'open' : 'closed' : ''}`}>
-                    <textarea className='form-paragraph-textarea' name='paragraph' onChange={handleChange} disabled={!toggle.description} value={formData.paragraph}>
+                    <textarea className='form-paragraph-textarea' name='paragraph' onChange={handleChange} disabled={!toggle.description} value={formData.paragraph}
+                        style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                    >
                     </textarea>
                 </div>
-                {toggle.description && <TextSettings setFormData={setFormData}/>}
+                {toggle.description && <TextSettings setFormData={setFormData} darkMode={isDarkMode}/>}
                 {submissionConditions.paragraphCharacters === false && <div className='form-paragraph-error'>
                     <p>{errorMessages.paragraphCharacters}</p>
                 </div>}
@@ -412,12 +427,14 @@ export default function Post() {
             <div className='form-description' style={{marginTop: '5px'}}>
                 <div className='form-description-toggle'>
                     <h3 className='form-description-title'>Code snippet</h3>
-                    <button className='form-toggle-button' name='codeSnippet' onClick={handleToggle}>
+                    <button className='form-toggle-button' name='codeSnippet' onClick={handleToggle}
+                        style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                    >
                         {toggle.codeSnippet ? <Icons.Minus /> : <Icons.Plus />}
                     </button>
                 </div>
                 <div className={`form-code-editor ${toggle.codeSnippet !== null ? toggle.codeSnippet ? 'open' : 'closed' : ''}`}>
-                 <CodeEditor handleCodeChange={handleCodeChange} value={formData.codeSnippet} handleLanguageChange={handleChange} languageValue={formData.codeLanguage}/>  
+                 <CodeEditor handleCodeChange={handleCodeChange} value={formData.codeSnippet} handleLanguageChange={handleChange} languageValue={formData.codeLanguage} darkMode={isDarkMode}/>  
                 </div>
                 {submissionConditions.codeLanguage === false && <div className='form-language-error'>
                     <p>{errorMessages.codeLanguage}</p>
@@ -433,11 +450,15 @@ export default function Post() {
                 </div>
                 <div className='form-imports'>
                     <div className='form-imports-buttons'>
-                        <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handleImageClick} disabled={fileCD}>
+                        <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handleImageClick} disabled={fileCD}
+                            style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                        >
                             <img src={image_upload}></img>
                             <input type='file' name='file' className='file-upload' onChange={handleFileChange} ref={imageInputRef}></input>
                         </button>
-                        <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handleFileClick} disabled={fileCD}>
+                        <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handleFileClick} disabled={fileCD}
+                           style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                        >
                             <img src={file_upload}></img>
                             <input type='file' name='file' className='file-upload' onChange={handleFileChange} ref={fileInputRef}></input>
                         </button>

@@ -14,6 +14,8 @@ import TextSettings from './TextSettings';
 import ShowAlert from './ShowAlert';
 import notify from './Toast';
 import Skeleton from './skeleton/Skeleton';
+import { useTheme } from "./ThemeContext";
+
 
 export default function EditPost() {
     const backendURL = process.env.REACT_APP_BACKEND_URL
@@ -26,6 +28,8 @@ export default function EditPost() {
     const location = useLocation()
     const id = location.pathname.split('/').at(-2)
     const visibilityTypes = ['Public', 'Followers', 'Private']
+    
+    const {isDarkMode} = useTheme()
 
     const [loaded, setLoaded] = React.useState(false)
     
@@ -135,12 +139,16 @@ export default function EditPost() {
         }
 
         return <div className='file-import-body'>
-            <div className='file-import-name'>
+            <div className='file-import-name'
+             style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #A78BFA'} : {backgroundColor: 'white'}}
+            >
                 <p>
                     {uniqueFile}
                 </p>
             </div>
-            <div className='file-import-delete' onClick={() => {fileType == 'temp' ? deleteTempFile() : deleteFinalFile()}}>
+            <div className='file-import-delete' onClick={() => {fileType == 'temp' ? deleteTempFile() : deleteFinalFile()}}
+                style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #A78BFA'} : {backgroundColor: 'white'}}
+                >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                 </svg>
@@ -159,11 +167,15 @@ export default function EditPost() {
         const fileInputRef = React.useRef();
         return (
             <div className='edit-form-imports'>
-                <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handldeImageClick}>
+                <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handldeImageClick}
+                    style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                >
                     <img src={image_upload}></img>
                     <input type='file' name='file' className='file-upload' onChange={handleFileChange} ref={imagleInputRef}></input>
                 </button>
-                <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handleFileClick}>
+                <button className={`form-import-button ${fileCD && 'CD'}`} type="button" onClick={handleFileClick}
+                    style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                >
                     <img src={file_upload}></img>
                     <input type='file' name='file' className='file-upload' onChange={handleFileChange} ref={fileInputRef}></input>
                 </button>
@@ -369,7 +381,9 @@ export default function EditPost() {
                         }
                     })
                 }
-                return <div className='form-individual-tag'>
+                return <div className='form-individual-tag'
+                    style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #A78BFA'} : {backgroundColor: 'white'}}
+                >
                     <span style={{cursor: 'default'}}>{name}</span>
                     <div className='form-tag-delete' onClick={handleDeleteTag}>
                       <Icons.X />
@@ -422,8 +436,11 @@ export default function EditPost() {
                     }
                 }
             }
-            return <div className={`form-add-tag-body ${expanded ? 'expanded' : ''}`}>
-                <input className={`form-tag-input ${expanded ? 'expanded' : ''}`} type ='text' placeholder='Tag' value={tag} onChange={handleTagChange}></input>
+            return <div className={`form-add-tag-body ${expanded ? 'expanded' : ''}`}
+                style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #A78BFA'} : {backgroundColor: 'white'}}
+            >
+                <input className={`form-tag-input ${expanded ? 'expanded' : ''}`} type ='text' placeholder='Tag' value={tag} onChange={handleTagChange}
+                ></input>
                 <div className='form-add-tag' onClick={handleClick}>
                   <Icons.Plus />
                 </div>
@@ -433,11 +450,16 @@ export default function EditPost() {
     
     return <div className='EP-outer-body'>
         {cancelConfirmation == false && <ShowAlert confirm={true} message={'Discard all changes?'} setConfirmation={setCancelConfirmation} callback={() => navigate(postPath)}/>}
-        {!loaded && <Skeleton.EditPost />}
-      {editedPost && <div className={`EP-inner-body ${!loaded && 'hidden'}`}>
+        {!loaded && <Skeleton.EditPost darkMode={isDarkMode}/>}
+      {editedPost && <div className={`EP-inner-body ${!loaded && 'hidden'}`}
+                        style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#EDEDED'} : {backgroundColor: 'rgba(253, 245, 234, 255)'}}
+                     >
                          <div className={`edit-post-title`}>Edit Post</div>
                           <div className='edit-title'>
-                                <input type='text' value={editedPost.title} className='IP-title-input' onChange={handleChange} name='title'></input>
+                                <input type='text' value={editedPost.title} className='IP-title-input' onChange={handleChange} name='title'
+                                    style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                                >
+                                </input>
                                 {submissionConditions.titleLengthMin === false && <div className='edit-error-message'>{errorMessages.titleLengthMin}</div>}
                                 {submissionConditions.titleLengthMax === false && <div className='edit-error-message'>{errorMessages.titleLengthMax}</div>}
                                 {submissionConditions.titleCharacters === false && <div className='edit-error-message'>{errorMessages.titleCharacters}</div>}
@@ -450,7 +472,9 @@ export default function EditPost() {
                                     <h4><span style={{cursor: 'pointer'}}>{userInfo?.displayName || userInfo?.displayTag}</span> <span style={{fontWeight: '200'}}> &#9679; {convertTime(post.postContent.time)}</span></h4>
                                 </div>
                                 <div className='IP-visibility'>
-                                        <select name='visibility' onChange={handleChange} value={editedPost.visibility}>
+                                        <select name='visibility' onChange={handleChange} value={editedPost.visibility}
+                                            style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                                        >
                                                 {visibilityTypes.map((x) => (
                                                     <option key={x} value={x}>
                                                         {x}
@@ -460,19 +484,26 @@ export default function EditPost() {
                                     </div>
                             </div>
                             <div className='edit-paragraph'>
-                                <textarea className='IP-paragraph-textarea' value={editedPost.paragraph} onChange={handleChange} name='paragraph'></textarea>
-                                <TextSettings setFormData={setEditedPost}/>
+                                <textarea className='IP-paragraph-textarea' value={editedPost.paragraph} onChange={handleChange} name='paragraph'
+                                    style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                                ></textarea>
+                                <TextSettings setFormData={setEditedPost} darkMode={isDarkMode}/>
                                 {submissionConditions.paragraphCharacters === false && <div className='edit-error-message'>{errorMessages.paragraphCharacters}</div>}
                             </div>
                             <div className='code-edit-body'>
                                 <div className='form-description-toggle'>
                                     <h3 className='form-description-title'>Code snippet</h3>
-                                    <button className='form-toggle-button' name='codeSnippet' onClick={handleToggle}>
+                                    <button className='form-toggle-button' name='codeSnippet' onClick={handleToggle}
+                                        style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                                    >
                                         {toggle.codeSnippet ? <Icons.Minus /> : <Icons.Plus />}
                                     </button>
                                 </div>
                                 <div className={`form-code-editor ${toggle.codeSnippet !== null ? toggle.codeSnippet ? 'open' : 'closed' : ''}`}>
-                                 <CodeEditor handleCodeChange={handleCodeChange} value={editedPost.codeSnippet} handleLanguageChange={handleChange} languageValue={editedPost.codeLanguage}/> 
+                                    <CodeEditor handleCodeChange={handleCodeChange} value={editedPost.codeSnippet} handleLanguageChange={handleChange} 
+                                    languageValue={editedPost.codeLanguage}
+                                    darkMode={isDarkMode}
+                                /> 
                                 </div>
                                 {submissionConditions.codeLanguage === false && <div className='edit-error-message'>{errorMessages.codeLanguage}</div>} 
                             </div>

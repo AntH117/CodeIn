@@ -10,8 +10,11 @@ import Icons from './icons/Icons';
 import { getAuth, reauthenticateWithCredential, updatePassword, EmailAuthProvider } from "firebase/auth";
 import ShowAlert from './ShowAlert';
 import notify from './Toast';
+import { useTheme } from "./ThemeContext";
+import { motion } from "motion/react"
 
 export default function EditProfile() {
+    const {isDarkMode} = useTheme()
     const { user } = useAuth();
     const location = useLocation();
     const profileId = location?.pathname.split('/').at(-2)
@@ -297,18 +300,25 @@ export default function EditProfile() {
             <div className={`user-sensitive-inner-body ${toggle ? 'open' : ''}`}>
                 <div className='user-change-password'>
                     Current Password:
-                    <input type='password' className='user-change-password-input' name='current' onChange={handlePasswords}></input>
+                    <input type='password' className='user-change-password-input' name='current' onChange={handlePasswords}
+                        style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                    ></input>
                 </div>
                 <div className='user-change-password'>
                     New Password:
-                    <input type='password' className='user-change-password-input' name='new' onChange={handlePasswords}></input>
+                    <input type='password' className='user-change-password-input' name='new' onChange={handlePasswords}
+                        style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                    ></input>
                 </div>
                 {errors && <div className='password-error-div'>
                     {errorMessages[errors]}
                 </div>}
-                <button className={`user-submit-password ${passwordCd ? 'disabled' : 'active'}`} onClick={() => {changeUserPassword({currentPass: passwords.current, newPass: passwords.new})}} disabled={passwordCd}>
+                <motion.div className={`user-submit-password ${passwordCd ? 'disabled' : 'active'}`} onClick={() => {changeUserPassword({currentPass: passwords.current, newPass: passwords.new})}} disabled={passwordCd}
+                    style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                    whileHover={{scale: 1.1}} whileTap={{scale: 0.9}}
+                    >
                         Change Password
-                </button>
+                </motion.div>
             </div>
     </div>
     }    
@@ -316,7 +326,9 @@ export default function EditProfile() {
 
     return <div className='user-profile-outer-body'>
             {/* {alert && <ShowAlert message={alert?.message} redirect={alert?.redirect}/>} */}
-        {profileInfo && <div className='user-profile-inner-body'>
+        {profileInfo && <div className='user-profile-inner-body'
+        style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#EDEDED'} : {backgroundColor: 'rgba(253, 245, 234, 255)'}}
+        >
             <div className='user-background'>
                 <img className='user-background-image' src={profileInfo?.backgroundURL || null} onClick={handleBgClick}style={{cursor: 'pointer', zIndex: '5'}}>
                 </img>
@@ -331,27 +343,40 @@ export default function EditProfile() {
             </div>
             <div className='user-edit-info-name'>
                 <span style={{fontWeight: 'bold'}} className='user-edit-display'>
-                    <input placeholder={profileInfo.displayName || 'Display Name'} name='displayName' onChange={handleChange} value={profileInfo.displayName} style={{width: '100%'}} type='text'>
+                    <input placeholder={profileInfo.displayName || 'Display Name'} name='displayName' onChange={handleChange} value={profileInfo.displayName} 
+                        style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444', width: '100%'} : {backgroundColor: 'white', width: '100%'}}
+                        type='text'
+                    >
                     </input>
                 </span>
                 <div className='user-edit-info-tag'>
-                    <span style={{fontSize: '0.9rem'}}>@</span><input placeholder='Display Tag' name='displayTag' onChange={handleChange} value={profileInfo.displayTag} className='user-display-tag-input'></input>
+                    <span style={{fontSize: '0.9rem'}}>@</span>
+                    <input placeholder='Display Tag' name='displayTag' onChange={handleChange} value={profileInfo.displayTag} className='user-display-tag-input'
+                        style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                    >
+                    </input>
                 </div>
-                <div className='user-edit-cancel-body'>
-                        <div className='user-edit-cancel' onClick={handleCancelEdits}> <Icons.X /></div>
-                </div>
+                <motion.div className='user-edit-cancel-body' whileHover={{scale: 1.1}} whileTap={{scale: 0.9}}>
+                        <div className='user-edit-cancel' onClick={handleCancelEdits}
+                            style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                        > <Icons.X /></div>
+                </motion.div>
                 <div className='user-creation-date'>
                    <Icons.Calendar /> Joined {convertDate(profileInfo?.creationDate)}
                 </div>
                 <div className='user-edit-description'>
-                    <textarea type='text' placeholder='No info yet!' name='description' onChange={handleChange} value={profileInfo.description}>
+                    <textarea type='text' placeholder='No info yet!' name='description' onChange={handleChange} value={profileInfo.description}
+                        style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                    >
                         
                     </textarea>
                 </div>
-                <div className='user-save'>
-                    <div className={`user-edit-save ${(fileCD || savingCD) && 'disabled'}`} onClick={() => setConfirmation(false)} disabled={fileCD}> Save</div>
+                <motion.div className='user-save' whileHover={{scale: 1.1}} whileTap={{scale: 0.9}}>
+                    <div className={`user-edit-save ${(fileCD || savingCD) && 'disabled'}`} onClick={() => setConfirmation(false)} disabled={fileCD}
+                        style={isDarkMode ? {backgroundColor: '#2A2A2A', color: '#EDEDED', border: '1px solid #444'} : {backgroundColor: 'white'}}
+                    > Save</div>
                     {confirmation == false && <ShowAlert message={'Save Edits?'} confirm={true} setConfirmation={setConfirmation} callback={() => handleSaveEdits()}/>}
-                </div>
+                </motion.div>
             </div>
             <SensitiveData />
         </div>}

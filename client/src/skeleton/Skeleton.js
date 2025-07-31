@@ -1,3 +1,4 @@
+import { dark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import Icons from '../icons/Icons';
 import './Skeleton.css';
 
@@ -112,9 +113,9 @@ const SkeletonPlus = ({width, height}) => (
     </svg>
 )
 
-const SkeletonIP = () => {
+const SkeletonIP = ({darkMode}) => {
     return (
-    <div className='skeleton-home-IP'>
+    <div className={`skeleton-home-IP ${darkMode && 'dark'}`}>
         <div className='skeleton-IP-body'>
             <SkeletonBox width={'200px'} height={'30px'}/>
             <div className='skeleton-author-info'>
@@ -154,7 +155,7 @@ const SkeletonIP = () => {
     )
 }
 
-const SkeletonHome = () => {
+const SkeletonHome = ({darkMode}) => {
     return (
         <div className='skeleton-home-body'>
             <div className='skeleton-home-interaction'>
@@ -163,15 +164,15 @@ const SkeletonHome = () => {
                 <SkeletonPlus width={'1.5rem'} height={'1.5rem'}/>
                 <SkeletonCircle width={'2rem'} height={'2rem'}/>
             </div>
-            <SkeletonIP />
-            <SkeletonIP />
+            <SkeletonIP darkMode={darkMode}/>
+            <SkeletonIP darkMode={darkMode} />
         </div>
     )
 }
 
-const SkeletonProfile = () => {
+const SkeletonProfile = ({darkMode}) => {
     return (
-    <div className='skeleton-profile-body'>
+    <div className={`skeleton-profile-body ${darkMode && 'dark'}`}>
         <div className='skeleton-profile-upper'>
             <div className='skeleton-profile-background'>
                 <SkeletonBox width={'100%'} height={'100%'}/>
@@ -201,10 +202,10 @@ const SkeletonProfile = () => {
     )
 }
 
-const SkeletonExpandedPost = () => {
+const SkeletonExpandedPost = ({darkMode}) => {
     return (
         <div className='skeleton-EP-outer'>
-            <div className='skeleton-EP-body'>
+            <div className={`skeleton-EP-body ${darkMode && 'dark'}`}>
                 <div className='skeleton-EP-content'>
                         <SkeletonBox width={'200px'} height={'30px'}/>
                     <div className='skeleton-author-info'>
@@ -274,9 +275,9 @@ const SkeletonComments = () => {
     )
 }
 
-const SkeletonEditPost = () => {
+const SkeletonEditPost = ({darkMode}) => {
     return (
-        <div className='skeleton-edit-post-body'>
+        <div className={`skeleton-edit-post-body ${darkMode && 'dark'}`}>
             <div className='skeleton-edit-title'>
                 <SkeletonBox width={'80%'} height={'2.5rem'}/>
             </div>

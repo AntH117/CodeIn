@@ -548,7 +548,7 @@ export default function Profile () {
     }
 
     return <div className='user-profile-outer-body'>
-        {(loading && !loadingError) && <Skeleton.Profile />}
+        {(loading && !loadingError) && <Skeleton.Profile darkMode={isDarkMode}/>}
         {/* <span class="loader"></span> */}
         {loadingError && <NotFound />}
         {!loading && (

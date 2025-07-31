@@ -1,9 +1,10 @@
 import React from 'react';
 import Icons from './icons/Icons';
 import 'emoji-picker-element';
+import { dark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 
-function EmojiPicker({ handleEmoji }) {
+function EmojiPicker({ handleEmoji, darkMode }) {
     const pickerRef = React.useRef(null);
     React.useEffect(() => {
       const picker = pickerRef.current;
@@ -17,10 +18,10 @@ function EmojiPicker({ handleEmoji }) {
       }
     }, [handleEmoji]);
   
-    return <emoji-picker ref={pickerRef} class="light"></emoji-picker>;
+    return <emoji-picker ref={pickerRef} class={darkMode ? 'dark' : 'light'}></emoji-picker>;
   }
 
-export default  function TextSettings({setFormData}) {
+export default  function TextSettings({setFormData, darkMode}) {
     const [toggle, setToggle] = React.useState(false)
     const dropRef = React.useRef(null);
 
@@ -58,7 +59,7 @@ export default  function TextSettings({setFormData}) {
                     <Icons.SmilingEmoji />
                 </div>
                 <div className='emoji-drop-down'>
-                    {toggle && <EmojiPicker handleEmoji={handleEmoji}/>}
+                    {toggle && <EmojiPicker handleEmoji={handleEmoji} darkMode={darkMode}/>}
                 </div>
             </div>
         </div>

@@ -47,6 +47,10 @@
     background-color: black;
 }
 
+.dot.dark {
+    background-color: rgb(153, 153, 153);
+}
+
 .EP-dropdown {
     position: absolute;
     width: 120px;
@@ -74,9 +78,19 @@
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+.EP-dropdown-option.dark {
+    background-color: #282A36; 
+    color: #CCCCCC;
+}
+
 .EP-dropdown-option:hover {
     background-color: #f0f0ff;
     color: #2a2a99;
+  }
+
+  .EP-dropdown-option.dark:hover {
+    background-color: #3C3F51;  
+    color: #A3C8FF;
   }
   
   .EP-dropdown-option svg {

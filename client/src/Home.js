@@ -461,9 +461,7 @@ export default function Home() {
         } catch (e) {
             console.error('Unable to load posts:', e)
             setLoadingError(true)
-        } finally {
-            // setLoading(false)
-        }
+        } 
       };
     const tailoredAPI = `${backendURL}/api/v1/codeIn/posts/tailored`
     const getTailoredPosts = async (followedIds) => {
@@ -481,8 +479,6 @@ export default function Home() {
         } catch (e) {
             console.error('Unable to load posts:', e)
             setLoadingError(true)
-        } finally {
-            // setLoading(false)
         }
     };
 
@@ -568,7 +564,7 @@ export default function Home() {
                         <Filters filters={filters} setFilters={setFilters} />
                     </div>}
                     {(loading && location.pathname == '/') &&
-                        <Skeleton.Home />
+                        <Skeleton.Home darkMode={isDarkMode}/>
                     }
                     {loadingError && <div>Error loading posts</div>}
                     {(location.pathname == '/' || '/post') && <div className={`individual-post-bodies ${loading ? 'hidden' : ''}`}>
