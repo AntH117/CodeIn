@@ -540,7 +540,7 @@ export default function Home() {
         )
     }
 
-    return <div className='home'>
+    return <div className={`home ${isDarkMode && 'dark'}`}>
         <Toaster />
         {<NavBar scrollRef={scrollRef} loggedUserData={loggedUserData} setFilters={setFilters} setConfirmSignOut ={setConfirmSignOut} setToTop={setToTop}/>}
         {confirmSignOut == false && <ShowAlert confirm={true} message={'Are you sure you want to sign out?'} setConfirmation={setConfirmSignOut} callback={() => handleSignOut()}/>}

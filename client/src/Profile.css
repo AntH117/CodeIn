@@ -278,6 +278,7 @@
     align-items: center;
     left: 0;
     top: 20%;
+    z-index: 999;
 }
 
 .individual-post-body {
@@ -319,16 +320,6 @@
     padding: 1rem;
     border-bottom: 1px solid rgb(201, 201, 201);
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
-
-.IU-body:hover {
-    background-color: #daefff;
-}
-
-.IU-body.dark:hover {
-    background-color: #3C3F51;  
-    color: #A3C8FF;
 }
 
 .IU-pfp {

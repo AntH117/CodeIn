@@ -243,6 +243,7 @@
     transform: scale(1.05);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   } */
+   
 
   .IP-visibility-icon {
     width: 1rem;
@@ -251,6 +252,7 @@
     justify-content: center;
     align-items: center;
     margin-left: 5px;
+    background-color: rgb(100, 100, 100);
   }
 
   @media (max-width: 500px) {

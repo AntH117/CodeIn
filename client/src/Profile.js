@@ -303,7 +303,6 @@ export default function Profile () {
             }
         }, [postLoad])
         //get liked posts
-        const [loggedUserData, setLoggedUserData] = React.useState(null)
         const [likedPosts, setLikedPosts] = React.useState(null)
         async function getUserInfo(uid) {
             const docRef = doc(db, "users", uid);
@@ -361,7 +360,6 @@ export default function Profile () {
         React.useEffect(() => {
             setToggleLoading(true)
         }, [selectToggle])
-
         function ToggleOption({ name }) {
             const isSelected = name === selectToggle;
         
@@ -382,12 +380,8 @@ export default function Profile () {
                 >
                     {name}
                     {isSelected && (
-                        <motion.div
-                            layoutId="selected-indicator"
+                        <div
                             className={`user-toggled ${isDarkMode && 'dark'}`}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.2 }}
                         />
                     )}
                 </motion.div>
@@ -414,11 +408,11 @@ export default function Profile () {
                 <ToggleOption name={'Likes'}/>
                 <ToggleOption name={'Followed'}/>
             </div>
-            <div className='user-toggle-outlet'>
             {toggleLoading && <div className='toggle-loader'>
-                <span class="loader"></span>
+                    <span class="loader"></span>
             </div>}
-             {toggleDisplay()}
+            <div className='user-toggle-outlet' style={toggleLoading ? {opacity: '0'} : {}}>
+                {toggleDisplay()}
             </div>
         </>
         )
@@ -509,7 +503,9 @@ export default function Profile () {
 
         function IndividualUser({user}) {
             return (
-                <div className={`IU-body ${isDarkMode && 'dark'}`} onClick={() => navigate(`/users/${user.uid}`)}>
+                <motion.div className={`IU-body ${isDarkMode && 'dark'}`} onClick={() => navigate(`/users/${user.uid}`)}
+                    whileHover={isDarkMode ? {backgroundColor: '#3C3F51', color: '#A3C8FF'} : {backgroundColor: '#daefff'}}
+                >
                     <div className='IU-left'>
                         <div className='IU-pfp'>
                             <img src={user.photoURL}>
@@ -523,7 +519,7 @@ export default function Profile () {
                     <div className='user-creation-date'>
                         <Icons.Calendar /> Joined {convertDate(user.creationDate)}
                     </div>
-                </div>
+                </motion.div>
             )
         }
 

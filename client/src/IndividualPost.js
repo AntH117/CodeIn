@@ -223,13 +223,45 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
       }
 
     function CodeBlock({ code, language}) {
+        const vscLight = {
+            'code[class*="language-"]': {
+              color: '#333',
+              background: '#F3EDE3',
+              fontFamily: 'monospace',
+              fontSize: 13,
+            },
+            'pre[class*="language-"]': {
+              color: '#333',
+              background: '#F3EDE3',
+              padding: '1em',
+              margin: '0',
+              overflow: 'auto',
+              borderRadius: '8px',
+            },
+            comment: { color: '#9CA3AF', fontStyle: 'italic' },
+            keyword: { color: '#C586C0' },                 
+            string: { color: '#CE9178' },                         
+            number: { color: '#B5CEA8' },                            
+            function: { color: '#D16969' },                     
+            operator: { color: '#000' },
+            punctuation: { color: '#5D5D5D' },
+            variable: { color: '#569CD6' },                       
+            className: { color: '#4EC9B0' },                    
+            built_in: { color: '#C586C0' },  
+            boolean: { color: '#569CD6' },  
+            property: { color: '#9CDCFE' },                        
+            constant: { color: '#D16969' },                         
+            regex: { color: '#D16969' },
+            attrName: { color: '#C586C0' },
+            tag: { color: '#569CD6' },
+          };
 
         return (
             <div style={{ width: 'fit-content', minWidth: '100%' }}>
-                <SyntaxHighlighter language={language} style={vscDarkPlus} 
+                <SyntaxHighlighter language={language}   style={isDarkMode ? vscDarkPlus : vscLight}
                 customStyle={{
-                    backgroundColor: isDarkMode ? '#181818' : undefined,
-                    borderRadius: '8px',
+                    backgroundColor: isDarkMode ? '#181818' : '#F3EDE3',
+                    borderRadius: '0px',
                     minWidth: '100%',  
                     overflowX: 'auto',
                 }}
