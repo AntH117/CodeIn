@@ -301,7 +301,7 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
     }
 
     return (
-    <div className='IP-body'
+    <div className={`IP-body ${isDarkMode && 'dark'}`}
         style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#EDEDED'} : {backgroundColor: 'rgba(253,245,234,255)'}}
     >
         <div className='IP-title'>

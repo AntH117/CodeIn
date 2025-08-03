@@ -548,7 +548,7 @@ export default function Profile () {
         {/* <span class="loader"></span> */}
         {loadingError && <NotFound />}
         {!loading && (
-        <div className='user-profile-inner-body'
+        <div className={`user-profile-inner-body ${isDarkMode && 'dark'}`}
              style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#EDEDED'} : {backgroundColor: 'rgba(253,245,234,255)'}}
         >
             <div className='user-background'>
