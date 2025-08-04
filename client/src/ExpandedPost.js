@@ -530,7 +530,7 @@ export default function ExpandedPost () {
     function CodeBlock({ code, language}) {
 
         return (
-            <div style={{ width: 'fit-content', minWidth: '100%' }}>
+            <div style={{ width: 'fit-content', minWidth: '100%' }} id='code-block'>
                 <SyntaxHighlighter language={language} style={vscDarkPlus} 
                 customStyle={{
                     backgroundColor: isDarkMode ? '#181818' : undefined,
@@ -575,8 +575,10 @@ export default function ExpandedPost () {
 
     function ExpandedCodeSnippet() {
         const [expanded, setExpanded] = React.useState(false)
+        const height = Number(document.getElementById('code-block')?.offsetHeight) + 25
+        
         return (
-        <div className='EP-code-display-wrapper' style={expanded ? {height: 'fit-content'} : {height: '300px'}}>
+        <div className='EP-code-display-wrapper' style={expanded ? {height: `${height}px` || 'fit-content'} : {height: '300px'}}>
             <div className='IP-code-display-copy' onClick={() => handleCopy(post.postContent.codeSnippet)}>
                 <Icons.Copy />
             </div>
@@ -587,7 +589,7 @@ export default function ExpandedPost () {
                     <Icons.SquarePlus color={isDarkMode ? 'white': 'black'}/>
                 }
             </div>
-            <div className={`IP-code-display ${isDarkMode && 'dark'}`}>
+            <div className={`IP-code-display ${isDarkMode && 'dark'}`} id='IP-code-display'>
                 <CodeBlock language={post.postContent.codeLanguage} code={post.postContent.codeSnippet}/>
             </div>
         </div>

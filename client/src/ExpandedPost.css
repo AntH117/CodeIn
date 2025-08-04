@@ -258,6 +258,7 @@
 .EP-code-display-wrapper {
     position: relative;
     width: 80%;
+    transition: all 0.2s ease-in-out;
 }
 
 .EP-code-expand {
