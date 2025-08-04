@@ -547,9 +547,12 @@ export default function Home() {
         <div className='news-feed-body'>
                 <div className='news-feed-absolute-container'>  
                     <div className='news-feed-relative-container'>
-                        <button className={`to-top-button ${!toTop && 'hidden'}`} disabled={!toTop} onClick={scrollToTop}>
+                        {toTop && <motion.button className={`to-top-button`} disabled={!toTop} onClick={scrollToTop}
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.95 }}
+                        >
                             <Icons.ArrowUp color={'white'}/>
-                        </button>
+                        </motion.button>}
                     </div>
                 </div>
                 <div className='news-feed' ref={scrollRef}
