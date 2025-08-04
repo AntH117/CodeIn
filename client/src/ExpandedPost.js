@@ -560,11 +560,11 @@ export default function ExpandedPost () {
     function visibilityIcon(visibility) {
         switch(visibility) {
             case 'Public': 
-                return <Icons.Globe />
+                return <Icons.Globe color={isDarkMode ? 'rgb(255,255,255)' : 'rgb(29, 29, 29)'}/>
             case 'Followers':
-                return <Icons.Follower />
+                return <Icons.Follower color={isDarkMode ? 'rgb(255,255,255)' : 'rgb(29, 29, 29)'}/>
             case 'Private':
-                return <Icons.Private />
+                return <Icons.Private color={isDarkMode ? 'rgb(255,255,255)' : 'rgb(29, 29, 29)'}/>
         }
     }
     function handleCopy(data) {
