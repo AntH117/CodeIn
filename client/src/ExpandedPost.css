@@ -254,3 +254,18 @@
     align-items: center;
     cursor: pointer;
 }
+
+.EP-code-display-wrapper {
+    position: relative;
+    width: 80%;
+}
+
+.EP-code-expand {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    cursor: pointer;
+    z-index: 99;
+    width: fit-content;
+    height: fit-content;
+}

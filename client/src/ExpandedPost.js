@@ -572,64 +572,84 @@ export default function ExpandedPost () {
         notify.success('Copied to clipboard!','📋')
     }
     const imageChecker = location.pathname.split('/').includes('image')
+
+    function ExpandedCodeSnippet() {
+        const [expanded, setExpanded] = React.useState(false)
+        return (
+        <div className='EP-code-display-wrapper' style={expanded ? {height: 'fit-content'} : {height: '300px'}}>
+            <div className='IP-code-display-copy' onClick={() => handleCopy(post.postContent.codeSnippet)}>
+                <Icons.Copy />
+            </div>
+            <div className='EP-code-expand' onClick={() => setExpanded(!expanded)}>
+                {expanded ? 
+                    <Icons.SquareMinus color={isDarkMode ? 'white': 'black'}/>
+                    :
+                    <Icons.SquarePlus color={isDarkMode ? 'white': 'black'}/>
+                }
+            </div>
+            <div className={`IP-code-display ${isDarkMode && 'dark'}`}>
+                <CodeBlock language={post.postContent.codeLanguage} code={post.postContent.codeSnippet}/>
+            </div>
+        </div>
+        )
+    }
+
+
     return (<div className='EP-outer-body' style={imageChecker ? {overflowY: 'hidden'} : {}}>
-    {(loading && !loadingError) && <Skeleton.ExpandedPost darkMode={isDarkMode} />}
-    {loadingError && <NotFound />}
-    <Outlet />
-    {confirmDeletePost == false && <ShowAlert message={'Are you sure you want to delete this post?'} confirm={true} setConfirmation={setConfirmDeletePost} callback={() => {
-        handleDeleteAllComments(post._id);
-        deletePost()
-    }}/>}
-    {confirmDeleteComment == false && <ShowAlert message={'Are you sure you want to delete this comment?'} confirm={true} setConfirmation={setConfirmDeleteComment} callback={() => {
-        deleteComment(selectedComment, postId)
-        setSelectedComment(null)
-    }}/>}
-    {!loading && <div className='EP-inner-body'
-                    style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#EDEDED'} : {backgroundColor: 'rgba(253, 245, 234, 255)'}}
-                 >
-                    {user?.uid == post.user && <DropDownMenu />}
-                    <div className='IP-title'>
-                            <h2>{post?.postContent.title}</h2>
-                        </div>
-                        <div className='IP-author-date'>
-                            <div className='IP-author-image' onClick={() => navigate(`/users/${post?.user}`)}>
-                                <img src={authorInfo?.photoURL || testImage}></img>
+        {(loading && !loadingError) && <Skeleton.ExpandedPost darkMode={isDarkMode} />}
+        {loadingError && <NotFound />}
+        <Outlet />
+        {confirmDeletePost == false && <ShowAlert message={'Are you sure you want to delete this post?'} confirm={true} setConfirmation={setConfirmDeletePost} callback={() => {
+            handleDeleteAllComments(post._id);
+            deletePost()
+        }}/>}
+        {confirmDeleteComment == false && <ShowAlert message={'Are you sure you want to delete this comment?'} confirm={true} setConfirmation={setConfirmDeleteComment} callback={() => {
+            deleteComment(selectedComment, postId)
+            setSelectedComment(null)
+        }}/>}
+        {!loading && <div className='EP-inner-body'
+                        style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#EDEDED'} : {backgroundColor: 'rgba(253, 245, 234, 255)'}}
+                    >
+                        {user?.uid == post.user && <DropDownMenu />}
+                        <div className='IP-title'>
+                                <h2>{post?.postContent.title}</h2>
                             </div>
-                            <h4><span style={{cursor: 'pointer'}} onClick={() => navigate(`/users/${post?.user}`)}>{authorInfo?.displayName || `@${authorInfo?.displayTag}`}</span> 
-                            <span style={{fontWeight: '200'}}> &#9679; {convertTime(post.postContent.time)}</span>
-                            <span style={{fontWeight: '400'}}>{post.postContent?.edited ? ' (Edited)' : ''}</span>
-                            </h4>
-                            <div className='IP-visibility-icon'>
-                                {visibilityIcon(post.postContent.visibility)}
+                            <div className='IP-author-date'>
+                                <div className='IP-author-image' onClick={() => navigate(`/users/${post?.user}`)}>
+                                    <img src={authorInfo?.photoURL || testImage}></img>
+                                </div>
+                                <h4><span style={{cursor: 'pointer'}} onClick={() => navigate(`/users/${post?.user}`)}>{authorInfo?.displayName || `@${authorInfo?.displayTag}`}</span> 
+                                <span style={{fontWeight: '200'}}> &#9679; {convertTime(post.postContent.time)}</span>
+                                <span style={{fontWeight: '400'}}>{post.postContent?.edited ? ' (Edited)' : ''}</span>
+                                </h4>
+                                <div className='IP-visibility-icon'>
+                                    {visibilityIcon(post.postContent.visibility)}
+                                </div>
                             </div>
-                        </div>
-                       {post.postContent.paragraph && <div className='IP-paragraph'>
-                            <p>{post.postContent.paragraph}</p>
-                        </div>}
-                        {post?.postContent?.codeSnippet && <div className='IP-code-display'>
-                              <CodeBlock language={post.postContent.codeLanguage} code={post.postContent.codeSnippet}/>
-                              <div className='IP-code-display-copy' onClick={() => handleCopy(post.postContent.codeSnippet)}>
-                                <Icons.Copy />
-                              </div>
-                        </div>}
-                        {imageFiles && <ImageGrid imageFiles={imageFiles}/>}
-                        {otherFiles && <div className='IP-attachments'>
-                            {otherFiles.map((x) => {
-                                return <FileAttachment file={x}/>
-                            })}
-                        </div>}
-                        {post?.postContent?.tags.length > 0 && <div className='IP-tags'>
-                            {post?.postContent.tags.map((tag) => {
-                                return <IndividualTag tagName={tag}/>
-                            })}
-                        </div>}
-                        <Socials post={post} tempLikeCount={tempLikeCount} user={user} isLiked={isLiked}/>
-                        <div className='IP-interact' style={{marginBottom: '1rem'}}>
-                            {user && <h5 onClick={() => handleLike(post._id)} style={likeCooldown ? {color: 'gray', cursor: 'default'} : {}}>{isLiked ? 'Unlike' : 'Like'}</h5>}
-                            <h5>Share</h5>
-                        </div>
-                        {loadComments && <Comments />}
-                        {!loadComments && <Skeleton.Comments />}
-                </div>}
-            </div>)
+                        {post.postContent.paragraph && <div className='IP-paragraph'>
+                                <p>{post.postContent.paragraph}</p>
+                            </div>}
+
+                            {post?.postContent?.codeSnippet && <ExpandedCodeSnippet />}
+
+                            {imageFiles && <ImageGrid imageFiles={imageFiles}/>}
+                            {otherFiles && <div className='IP-attachments'>
+                                {otherFiles.map((x) => {
+                                    return <FileAttachment file={x}/>
+                                })}
+                            </div>}
+                            {post?.postContent?.tags.length > 0 && <div className='IP-tags'>
+                                {post?.postContent.tags.map((tag) => {
+                                    return <IndividualTag tagName={tag}/>
+                                })}
+                            </div>}
+                            <Socials post={post} tempLikeCount={tempLikeCount} user={user} isLiked={isLiked}/>
+                            <div className='IP-interact' style={{marginBottom: '1rem'}}>
+                                {user && <h5 onClick={() => handleLike(post._id)} style={likeCooldown ? {color: 'gray', cursor: 'default'} : {}}>{isLiked ? 'Unlike' : 'Like'}</h5>}
+                                <h5>Share</h5>
+                            </div>
+                            {loadComments && <Comments />}
+                            {!loadComments && <Skeleton.Comments />}
+                    </div>}
+                </div>)
 }

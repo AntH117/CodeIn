@@ -326,11 +326,14 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
             <p>{data.postContent.paragraph}</p>
         </div>}
         
-        {data?.postContent?.codeSnippet && <div className={`IP-code-display ${isDarkMode && 'dark'}`}>
+        {data?.postContent?.codeSnippet && 
+        <div className='IP-code-display-wrapper'>
             <div className='IP-code-display-copy' onClick={() => handleCopy(data.postContent.codeSnippet)}>
                 <Icons.Copy />
             </div>
-            {data?.postContent?.codeSnippet && <CodeBlock language={data.postContent.codeLanguage} code={data.postContent.codeSnippet}/>}
+            <div className={`IP-code-display ${isDarkMode && 'dark'}`}>
+                <CodeBlock language={data.postContent.codeLanguage} code={data.postContent.codeSnippet}/>
+            </div>
         </div>}
 
         {imageFiles?.length > 0 && <ImageGrid imageFiles={imageFiles} />}
