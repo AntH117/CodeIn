@@ -93,7 +93,7 @@ export default class CodeInDAO {
             if (!post.likedBy) {
                 post.likedBy = [];
             }
-            
+
             const alreadyLiked = post.likedBy.includes(userId);
 
             let update;
@@ -104,7 +104,7 @@ export default class CodeInDAO {
                     { _id: new ObjectId(postId) },
                     { 
                     $inc: { likeCount: -1 },
-                    $PULL: { likedBy: userId }
+                    $pull: { likedBy: userId }
                     }
                 );
                 operation = 'unliked'
@@ -121,7 +121,7 @@ export default class CodeInDAO {
 
             return {update, operation}
         } catch (e) {
-            console.error(`Unable to like post: ${e}`)
+            console.error(`Unable to like/unlike post: ${e}`)
             return {error: e}
         }
     }
