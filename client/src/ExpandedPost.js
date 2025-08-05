@@ -224,6 +224,7 @@ export default function ExpandedPost () {
         </>
     }
     //create comment
+    console.log(post)
     const [commentCD, setCommentCD] = React.useState(false)
     const CommentAPILINK = `${backendURL}/api/v1/comments`
     const saveComment = async (currentComment) => {
@@ -389,7 +390,7 @@ export default function ExpandedPost () {
         let sortedComments;
         if (user) {
             const userComments = comments.filter((comment) => comment.userId == user?.uid)
-            sortedComments = [...userComments, comments.filter((comment) => comment.userId !== user?.uid)]
+            sortedComments = [...userComments ,...comments.filter((comment) => comment.userId !== user?.uid)]
         } else {
             sortedComments = comments
         }
@@ -404,7 +405,7 @@ export default function ExpandedPost () {
                     <button className={`EP-comment-post ${commentCD && 'disabled'}`} onClick={() => currentComment.length > 0 ? saveComment(currentComment) : console.error('Comment invalid')}>Post</button>
                 </div>}
                 <div className='EP-comments'>
-                    {comments?.length > 0 && comments.slice(0, commentLimit).map((x) => {
+                    {comments?.length > 0 && sortedComments.slice(0, commentLimit).map((x) => {
                         return <IndividualComment data = {x}/>
                     })}
                     {comments?.length == 0 && <p>No comments yet!</p>}
