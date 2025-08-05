@@ -1,7 +1,6 @@
 .register-body {
     width: 700px;
     height: 90%;
-    background-color: rgba(247,238,226,255);
     border-radius: 10px;
     display: flex;
     flex-direction: column;

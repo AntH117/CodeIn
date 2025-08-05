@@ -126,7 +126,7 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
                 {user ? 
                 <UserDisplay />
                 : 
-                <Link to={'/login'} style={{color: 'black', textDecoration: 'none'}}>Login</Link>  
+                <Link to={'/login'} style={isDarkMode ? {color: 'black', textDecoration: 'none'}: {color: 'black', textDecoration: 'none'}}>Login</Link>  
                 }
                 <DarkModeToggle />
             </div>

@@ -385,7 +385,14 @@ export default function ExpandedPost () {
     function Comments() {
         const [commentLimit, setCommentLimit] = React.useState(5)
         const [currentComment, setCurrentComment] = React.useState('')
-        
+
+        let sortedComments;
+        if (user) {
+            const userComments = comments.filter((comment) => comment.userId == user?.uid)
+            sortedComments = [...userComments, comments.filter((comment) => comment.userId !== user?.uid)]
+        } else {
+            sortedComments = comments
+        }
         //must be signed in to comment
         return (
             <div className='EP-comments-body'>
@@ -397,7 +404,7 @@ export default function ExpandedPost () {
                     <button className={`EP-comment-post ${commentCD && 'disabled'}`} onClick={() => currentComment.length > 0 ? saveComment(currentComment) : console.error('Comment invalid')}>Post</button>
                 </div>}
                 <div className='EP-comments'>
-                    {comments?.length > 0 && comments.map((x) => {
+                    {comments?.length > 0 && comments.slice(0, commentLimit).map((x) => {
                         return <IndividualComment data = {x}/>
                     })}
                     {comments?.length == 0 && <p>No comments yet!</p>}
@@ -462,12 +469,7 @@ export default function ExpandedPost () {
               setIsLiked(false)
         }
         async function handleUserLikes(postId) {
-            const containsPostId = loggedUserData?.likes?.includes(postId)
-            if (containsPostId) {
-                unlikePost(postId)
-            } else if (!containsPostId) {
-                likePost(postId)
-            }
+            likePost(postId)
         }
         const likePost = async(postId) => {
             const likesAPILINK = `${backendURL}/api/v1/codeIn/socials/like/${postId}`
@@ -477,12 +479,19 @@ export default function ExpandedPost () {
                     headers: {
                         'Content-Type': 'application/json',
                     },
+                    body: JSON.stringify({userId: user.uid})
                 });
                 if (response.ok) {
                     const result = await response.json();
+                    console.log(result)
                     if (result.status === 'success') {
-                        setTempLikeCount((preVal) => preVal + 1);
-                        addUserLikes(postId);
+                        if (result.operation === 'liked') {
+                            setTempLikeCount((preVal) => preVal + 1);
+                            addUserLikes(postId);
+                        } else if (result.operation === 'unliked') {
+                            setTempLikeCount((preVal) => preVal - 1)
+                            removeUserLikes(postId)
+                        }
                     }
                 } else {
                     console.error('Unable to like post:', response.statusText);
@@ -494,31 +503,6 @@ export default function ExpandedPost () {
             }
         }
     
-        const unlikePost = async(postId) => {
-            const likesAPILINK = `${backendURL}/api/v1/codeIn/socials/unlike/${postId}`
-            try {
-                const response = await fetch(likesAPILINK, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.status === 'success') {
-                        removeUserLikes(postId)
-                        setTempLikeCount((preVal) => preVal - 1)
-                    }
-                } else {
-                    console.error('Unable to unlike post:', response.statusText);
-                }
-            } catch (e) {
-                console.error('Unable to like post:', e)
-            } finally {
-                awaitUserData()
-            }
-        }
-
         //Prevent spamming
         async function handleLike(postId) {
             if (likeCooldown) return;

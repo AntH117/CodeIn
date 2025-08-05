@@ -5,9 +5,12 @@ import { auth, db } from "./firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useAuth } from "./AuthContext";
 import { doc, setDoc } from "firebase/firestore";
+import { useTheme } from "./ThemeContext";
+
 
 
 export default function Register () {
+    const { isDarkMode } = useTheme();
     const backendURL = process.env.REACT_APP_BACKEND_URL
     const { user } = useAuth();
     async function saveUserInfo(user) {
@@ -93,14 +96,19 @@ function handleSignUp({email, password}) {
         })
     }
     
-    return <div className='register-body'>
+    return <div className='register-body' style={isDarkMode ? {backgroundColor: '#121212', color: '#EDEDED'} : {backgroundColor: 'rgba(247,238,226,255)'}}>
                 <div className='form-data'>
                     <h2>Register</h2>
                     <form className='credentials-form' onSubmit={handleSubmit}>
-                        <input className='credentials-input' placeholder='Email' name={'email'} onChange={handleChange} value={userDetail.email}></input>
-                        <input className='credentials-input' placeholder='Confirm Email' name={'confirmEmail'} onChange={handleChange} value={userDetail.confirmEmail}></input>
+                        <input className='credentials-input' placeholder='Email' name={'email'} onChange={handleChange} value={userDetail.email}
+                            style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#F5F5F5', border: '1px solid #333333'} : {}}
+                        ></input>
+                        <input className='credentials-input' placeholder='Confirm Email' name={'confirmEmail'} onChange={handleChange} value={userDetail.confirmEmail}
+                             style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#F5F5F5', border: '1px solid #333333'} : {}}
+                        ></input>
                         <input className='credentials-input' placeholder='Password' name={'password'} onChange={handleChange} value={userDetail.password} autoComplete="off"
                          type={hiddenPassword ? "password" : "text"}
+                         style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#F5F5F5', border: '1px solid #333333'} : {}}
                         ></input>
                         <div className='credentials-hide-password'>
                             <input type="checkbox" id='hidePassword' onChange={(e) => setHiddenPassword(!e.target.checked)}></input>
@@ -111,9 +119,13 @@ function handleSignUp({email, password}) {
                                     return !submitConditions[x] ? <div className='error-message'>{errors[x]}</div> : ''
                                 })}
                         </div>}
-                        <button className='credentials-button'>Register</button>
+                        <button className='credentials-button'
+                            style={isDarkMode ? {backgroundColor: '#1E40AF', color: '#FFFFFF', border: '1px solid #333333'} : {}}
+                        >Register</button>
                         <div className='register-link'>
-                            <Link to={'/login'}>
+                            <Link to={'/login'}
+                                style={{color: '#8AB4F8'}}
+                            >
                                 Already a member?
                             </Link>
                         </div>

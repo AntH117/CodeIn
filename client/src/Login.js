@@ -5,12 +5,13 @@ import { auth, db } from "./firebase";
 import { signInWithEmailAndPassword  } from "firebase/auth";
 import { useAuth } from "./AuthContext";
 import { doc, setDoc } from "firebase/firestore";
+import { useTheme } from "./ThemeContext";
 
 
 export default function Login() {
     const { user } = useAuth();
     const navigate = useNavigate()
-
+    const { isDarkMode } = useTheme();
     //navigate out if user is logged in
     React.useEffect(() => {
         if (user) {
@@ -69,13 +70,16 @@ export default function Login() {
     }
 
     return (
-        <div className='login-form'> 
+        <div className='login-form' style={isDarkMode ? {backgroundColor: '#121212', color: '#EDEDED'} : {backgroundColor: 'rgba(247,238,226,255)'}}> 
             <div className='form-data'>
                 <h2>Login</h2>
                 <form className='credentials-form' onSubmit={handleSubmit}>
-                    <input className='credentials-input' placeholder='Email' name='email' onChange={handleChange}></input>
+                    <input className='credentials-input' placeholder='Email' name='email' onChange={handleChange}
+                        style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#F5F5F5', border: '1px solid #333333'} : {}}
+                    ></input>
                     <input className='credentials-input' placeholder='Password' name='password' onChange={handleChange}
-                    type={hiddenPassword ? "password" : "text"} autoComplete="off"
+                        type={hiddenPassword ? "password" : "text"} autoComplete="off"
+                        style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#F5F5F5', border: '1px solid #333333'} : {}}
                     ></input>
                     <div className='credentials-hide-password'>
                         <input type="checkbox" id='hidePassword' onChange={(e) => setHiddenPassword(!e.target.checked)}></input>
@@ -86,9 +90,13 @@ export default function Login() {
                                     return !submitConditions[x] ? <div className='error-message'>{errors[x]}</div> : ''
                                 })}
                         </div>}
-                    <button className='credentials-button'>Login</button>
+                    <button className='credentials-button'
+                        style={isDarkMode ? {backgroundColor: '#1E40AF', color: '#FFFFFF', border: '1px solid #333333'} : {}}
+                    >Login</button>
                     <div className='register-link'>
-                        <Link to={'/register'}>
+                        <Link to={'/register'}
+                            style={{color: '#8AB4F8'}}
+                        >
                             Not yet a member?
                         </Link>
                 </div>
