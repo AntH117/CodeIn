@@ -90,6 +90,10 @@ export default class CodeInDAO {
             const post = await posts.findOne({ _id: new ObjectId(postId) });
             if (!post) return { error: "Post not found" };
 
+            if (!post.likedBy) {
+                post.likedBy = [];
+            }
+            
             const alreadyLiked = post.likedBy.includes(userId);
 
             let update;
