@@ -276,6 +276,7 @@ export default class CodeInController {
             const postId = req.params.postId
             const userId = req.body.userId
             const postResponse = await CodeInDAO.likePost({postId, userId})
+            console.log(postResponse)
             res.json({ status: 'success', operation: postResponse.operation})
         } catch (e) {
             console.log(`api, ${e}`)
