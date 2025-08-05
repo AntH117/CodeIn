@@ -27,7 +27,7 @@ export default class CommentsDao {
         const updatedCommentCount = await comments.countDocuments({ postId });
         await posts.updateOne(
             { _id: new ObjectId(postId) },
-            { $inc: { commentCount: updatedCommentCount } }
+            { $set: { commentCount: updatedCommentCount } }
         );
 
         return insertResult
