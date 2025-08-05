@@ -91,7 +91,6 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
     const likePost = async(postId) => {
         const likesAPILINK = `${backendURL}/api/v1/codeIn/socials/like/${postId}`
         try {
-            const containsPostId = loggedUserData?.likes?.includes(postId)
             const response = await fetch(likesAPILINK, {
                 method: 'PUT',
                 headers: {
