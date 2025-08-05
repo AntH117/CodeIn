@@ -85,29 +85,31 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
           });
     }
     async function handleUserLikes(postId) {
-        const containsPostId = loggedUserData?.likes?.includes(postId)
-        if (containsPostId) {
-            unlikePost(postId)
-        } else if (!containsPostId) {
-            likePost(postId)
-        }
+        likePost(postId)
     }
 
     const likePost = async(postId) => {
         const likesAPILINK = `${backendURL}/api/v1/codeIn/socials/like/${postId}`
         try {
+            const containsPostId = loggedUserData?.likes?.includes(postId)
             const response = await fetch(likesAPILINK, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({userId: user.uid})
             });
             if (response.ok) {
                 const result = await response.json();
                 console.log(result)
                 if (result.status === 'success') {
-                    setTempLikeCount((preVal) => preVal + 1);
-                    addUserLikes(postId);
+                    if (result.operation === 'liked') {
+                        setTempLikeCount((preVal) => preVal + 1);
+                        addUserLikes(postId);
+                    } else if (result.operation === 'unliked') {
+                        setTempLikeCount((preVal) => preVal - 1)
+                        removeUserLikes(postId)
+                    }
                 }
             } else {
                 console.error('Unable to like post:', response.statusText);
@@ -119,30 +121,30 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
         }
     }
 
-    const unlikePost = async(postId) => {
-        const likesAPILINK = `${backendURL}/api/v1/codeIn/socials/unlike/${postId}`
-        try {
-            const response = await fetch(likesAPILINK, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (response.ok) {
-                const result = await response.json();
-                if (result.status === 'success') {
-                    removeUserLikes(postId)
-                    setTempLikeCount((preVal) => preVal - 1)
-                }
-            } else {
-                console.error('Unable to unlike post:', response.statusText);
-            }
-        } catch (e) {
-            console.error('Unable to like post:', e)
-        } finally {
-            awaitUserData()
-        }
-    }
+    // const unlikePost = async(postId) => {
+    //     const likesAPILINK = `${backendURL}/api/v1/codeIn/socials/unlike/${postId}`
+    //     try {
+    //         const response = await fetch(likesAPILINK, {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //         });
+    //         if (response.ok) {
+    //             const result = await response.json();
+    //             if (result.status === 'success') {
+    //                 removeUserLikes(postId)
+    //                 setTempLikeCount((preVal) => preVal - 1)
+    //             }
+    //         } else {
+    //             console.error('Unable to unlike post:', response.statusText);
+    //         }
+    //     } catch (e) {
+    //         console.error('Unable to like post:', e)
+    //     } finally {
+    //         awaitUserData()
+    //     }
+    // }
 
     //Prevent spamming
     async function handleLike(postId) {

@@ -85,31 +85,55 @@ export default class CodeInDAO {
         }
     }
 
-    static async likePost(postId) {
+    static async likePost({postId, userId}) {
         try {
-            const postResponse = await posts.updateOne(
-                { _id: new ObjectId(postId) },
-                { $inc: { likeCount: 1 } }
-            );
+            const post = await posts.findOne({ _id: new ObjectId(postId) });
+            if (!post) return { error: "Post not found" };
 
-            return postResponse
+            const alreadyLiked = post.likedBy.includes(userId);
+
+            let update;
+            let operation;
+
+            if (alreadyLiked) {
+                update  = await posts.updateOne(
+                    { _id: new ObjectId(postId) },
+                    { 
+                    $inc: { likeCount: -1 },
+                    $PULL: { likedBy: userId }
+                    }
+                );
+                operation = 'unliked'
+            } else {
+                update  = await posts.updateOne(
+                    { _id: new ObjectId(postId) },
+                    { 
+                    $inc: { likeCount: 1 },
+                    $addToSet: { likedBy: userId }
+                    }
+                );
+                operation = 'liked'
+            }
+
+            return {update, operation}
         } catch (e) {
             console.error(`Unable to like post: ${e}`)
             return {error: e}
         }
     }
-    static async unlikePost(postId) {
-        try {
-            const postResponse = await posts.updateOne(
-                { _id: new ObjectId(postId) },
-                { $inc: { likeCount: -1 } }
-            );          
-            return postResponse
-        } catch (e) {
-            console.error(`Unable to like post: ${e}`)
-            return {error: e}
-        }
-    }
+    // static async unlikePost(postId) {
+    //     try {
+    //         const postResponse = await posts.updateOne(
+    //             { _id: new ObjectId(postId) },
+    //             { $inc: { likeCount: -1 } }
+    //         );          
+    //         return postResponse
+    //     } catch (e) {
+    //         console.error(`Unable to like post: ${e}`)
+    //         return {error: e}
+    //     }
+    // }
+
     static async getMultiplePosts(postIds) {
             const objectIds = postIds.map(id => new ObjectId(id));
             const postResponse = await posts.find({ _id: { $in: objectIds } }).toArray();

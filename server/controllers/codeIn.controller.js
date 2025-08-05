@@ -274,23 +274,24 @@ export default class CodeInController {
     static async apiLikePost (req, res) {
         try {
             const postId = req.params.postId
-            const postResponse = await CodeInDAO.likePost(postId)
-            res.json({ status: 'success'})
+            const userId = req.body.userId
+            const postResponse = await CodeInDAO.likePost({postId, userId})
+            res.json({ status: 'success', operation: postResponse.operation})
         } catch (e) {
             console.log(`api, ${e}`)
             res.status(500).json({error: e})
         }
     }
-    static async apiUnlikePost (req, res) {
-        try {
-            const postId = req.params.postId
-            const postResponse = await CodeInDAO.unlikePost(postId)
-            res.json({ status: 'success'})
-        } catch (e) {
-            console.log(`api, ${e}`)
-            res.status(500).json({error: e})
-        }
-    }
+    // static async apiUnlikePost (req, res) {
+    //     try {
+    //         const postId = req.params.postId
+    //         const postResponse = await CodeInDAO.unlikePost(postId)
+    //         res.json({ status: 'success'})
+    //     } catch (e) {
+    //         console.log(`api, ${e}`)
+    //         res.status(500).json({error: e})
+    //     }
+    // }
 
     static async apiGetMultiplePosts (req, res) {
         try {
