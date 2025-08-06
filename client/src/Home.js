@@ -375,6 +375,7 @@ export default function Home() {
           scroll.addEventListener('scroll', handleScroll);
         }
     
+        // clean up
         return () => {
           if (scroll) {
             scroll.removeEventListener('scroll', handleScroll);
@@ -581,7 +582,7 @@ export default function Home() {
             location.pathname !== '/' && 
             <div className='outlet'>
                 <Outlet />
-            </div>
+            </div> 
             }
         </div>
     </div>

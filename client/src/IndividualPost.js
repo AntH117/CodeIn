@@ -38,6 +38,7 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
     const location = useLocation();
     const backendURL = process.env.REACT_APP_BACKEND_URL
     const [likeCooldown, setLikeCooldown] = React.useState(false);
+    const [loaded, setLoaded] = React.useState(false)
 
     //get liked posts
     async function awaitUserData() {
@@ -100,7 +101,6 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
             });
             if (response.ok) {
                 const result = await response.json();
-                console.log(result)
                 if (result.status === 'success') {
                     if (result.operation === 'liked') {
                         setTempLikeCount((preVal) => preVal + 1);
@@ -176,7 +176,10 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
         } catch (e) {
             console.error('Unable to get author info')
         } finally {
-            setPostLoad(true)
+            setTimeout(() => {
+                setPostLoad(true)
+                setLoaded(true)
+            }, 1000)
         }
     }
 
@@ -302,7 +305,7 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
     }
 
     return (
-    <div className={`IP-body ${isDarkMode && 'dark'}`}
+        loaded && <div className={`IP-body ${isDarkMode && 'dark'}`}
         style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#EDEDED'} : {backgroundColor: 'rgba(253,245,234,255)'}}
     >
         <div className='IP-title'>
@@ -367,5 +370,6 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
             <h5 onClick={() => navigate(`/posts/${data._id}`)}>Comment</h5>
             <h5>Share</h5>
         </div>
-    </div>)
+    </div>
+   )
 }
