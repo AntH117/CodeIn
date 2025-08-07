@@ -94,7 +94,7 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
             className={`toggle-container ${isDarkMode && 'dark'}`} 
             onClick={toggleSwitch}
             style={{
-                justifyContent: "flex-" + (!isDarkMode ? "start" : "end"),
+                justifyContent: (!isDarkMode ? "start" : "end"),
             }}
         >
             <motion.div
@@ -278,6 +278,16 @@ export default function Home() {
 
     //dark mode
     const { isDarkMode } = useTheme();
+
+    //Check for desktop
+    const [isDesktop, setIsDesktop] = React.useState(window.innerWidth > 1024);
+
+    React.useEffect(() => {
+        const handleResize = () => setIsDesktop(window.innerWidth > 1024);
+        window.addEventListener('resize', handleResize);
+    
+        return () => window.removeEventListener('resize', handleResize);
+      }, []);
 
     //Get logged in user into
     async function getUserInfo(uid) {
@@ -541,6 +551,55 @@ export default function Home() {
         )
     }
 
+    function SideBar() {
+        const [selected, setSelected] = React.useState('Home')
+
+        function SideOption({icon, selectedIcon, name, callback}) {
+            return <motion.div className='home-side-option'
+            onClick={() => setSelected(name)}
+            style={(isDarkMode) ? 
+                (selected == name ? {backgroundColor: '#1E1E1E'} : {backgroundColor: 'transparent'}) : 
+                (selected == name ? {backgroundColor: '#f0e8dd'} : {backgroundColor: 'transparent'})}
+            >
+                    <div className='side-logo'>
+                        {selected == name ? selectedIcon : icon}
+                    </div>
+                    <div className='side-name'
+                        style={selected == name ? {color: '#EDEDED'} : {color: 'rgb(158, 156, 156)'}}
+                    >
+                        {name}
+                    </div>
+            </motion.div>
+        }
+
+        return (
+            <div className='home-sidebar' 
+                    style={isDarkMode ? {backgroundColor: 'rgb(22, 22, 22)', color: '#EDEDED'} : {backgroundColor: 'rgba(253,245,234,255)'}}
+                >
+                <SideOption 
+                    icon={<Icons.Home width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
+                    selectedIcon={<Icons.HomeFilled width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
+                    name={'Home'}
+                />
+                <SideOption 
+                    icon={<Icons.PlusLarge color={isDarkMode ? 'white' : 'black'}/>} 
+                    selectedIcon={<Icons.PlusLarge color={isDarkMode ? 'white' : 'black'}/>} 
+                    name={'Create Post'}
+                />
+                <SideOption 
+                    icon={<Icons.Heart width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
+                    selectedIcon={<Icons.HeartFilled width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
+                    name={'Liked'}
+                />
+                <SideOption 
+                    icon={<Icons.Gear width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
+                    selectedIcon={<Icons.GearFilled width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
+                    name={'Settings'}
+                />
+            </div>
+        )
+    }
+
     return <div className={`home ${isDarkMode && 'dark'}`}>
         <Toaster />
         {<NavBar scrollRef={scrollRef} loggedUserData={loggedUserData} setFilters={setFilters} setConfirmSignOut ={setConfirmSignOut} setToTop={setToTop}/>}
@@ -556,6 +615,8 @@ export default function Home() {
                         </motion.button>}
                     </div>
                 </div>
+
+                {isDesktop && <SideBar />}
                 <div className='news-feed' ref={scrollRef}
                     style={isDarkMode ? {backgroundColor: '#121212'} : {backgroundColor: 'rgba(247,238,226,255)'}}
                 >
