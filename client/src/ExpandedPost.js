@@ -224,7 +224,6 @@ export default function ExpandedPost () {
         </>
     }
     //create comment
-    console.log(post)
     const [commentCD, setCommentCD] = React.useState(false)
     const CommentAPILINK = `${backendURL}/api/v1/comments`
     const saveComment = async (currentComment) => {
@@ -484,7 +483,6 @@ export default function ExpandedPost () {
                 });
                 if (response.ok) {
                     const result = await response.json();
-                    console.log(result)
                     if (result.status === 'success') {
                         if (result.operation === 'liked') {
                             setTempLikeCount((preVal) => preVal + 1);

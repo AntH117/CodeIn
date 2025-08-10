@@ -18,7 +18,7 @@ import Skeleton from './skeleton/Skeleton';
 import { AnimatePresence, motion } from "motion/react"
 import { useTheme } from "./ThemeContext";
 
-function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setToTop}) {
+function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setToTop, isDesktop}) {
     const { isDarkMode } = useTheme();
     const [navHidden, setNavHidden] = React.useState(false)
     const lastScrollTop = React.useRef(0);
@@ -30,7 +30,8 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
     // Handle scroll event listener
     React.useEffect(() => {
         if (!scrollRef.current) return;
-
+        if (isDesktop) return;
+        
         const scroll = scrollRef.current
         const handleScroll = () => {
           const { scrollTop, scrollHeight, clientHeight } = scroll;
@@ -519,7 +520,9 @@ export default function Home() {
             >
             </input>
             <button className='filter-by-tag-add' onClick={handleAddTag}>
-                <Icons.PlusLarge />
+                <Icons.PlusLarge 
+                    color={isDarkMode ? '#EDEDED' : ""}
+                />
             </button>
         </div>)
     }
@@ -553,6 +556,16 @@ export default function Home() {
 
     function SideBar() {
         const [selected, setSelected] = React.useState('Home')
+        const colors = {
+            darkMode: {
+                normal: 'rgb(158, 156, 156)',
+                selected: '#EDEDED'
+            },
+            lightMode: {
+                normal: 'rgb(158, 156, 156)',
+                selected: 'black'
+            }
+        }
 
         function SideOption({icon, selectedIcon, name, callback}) {
             return <motion.div className='home-side-option'
@@ -565,7 +578,7 @@ export default function Home() {
                         {selected == name ? selectedIcon : icon}
                     </div>
                     <div className='side-name'
-                        style={selected == name ? {color: '#EDEDED'} : {color: 'rgb(158, 156, 156)'}}
+                        style={selected == name ? isDarkMode ? {color: colors.darkMode.selected} : {color: colors.lightMode.selected} : {color: colors.darkMode.normal}}
                     >
                         {name}
                     </div>
@@ -602,7 +615,7 @@ export default function Home() {
 
     return <div className={`home ${isDarkMode && 'dark'}`}>
         <Toaster />
-        {<NavBar scrollRef={scrollRef} loggedUserData={loggedUserData} setFilters={setFilters} setConfirmSignOut ={setConfirmSignOut} setToTop={setToTop}/>}
+        {<NavBar scrollRef={scrollRef} loggedUserData={loggedUserData} setFilters={setFilters} setConfirmSignOut ={setConfirmSignOut} setToTop={setToTop} isDesktop={isDesktop}/>}
         {confirmSignOut == false && <ShowAlert confirm={true} message={'Are you sure you want to sign out?'} setConfirmation={setConfirmSignOut} callback={() => handleSignOut()}/>}
         <div className='news-feed-body'>
                 <div className='news-feed-absolute-container'>  
@@ -617,7 +630,7 @@ export default function Home() {
                 </div>
 
                 {isDesktop && <SideBar />}
-                <div className='news-feed' ref={scrollRef}
+                {(location.pathname == '/' || location.pathname == '/post') && <div className='news-feed' ref={scrollRef}
                     style={isDarkMode ? {backgroundColor: '#121212'} : {backgroundColor: 'rgba(247,238,226,255)'}}
                 >
                     {(location.pathname == '/' && !loading) && <div className='home-interaction'>
@@ -632,19 +645,21 @@ export default function Home() {
                         <Skeleton.Home darkMode={isDarkMode}/>
                     }
                     {loadingError && <div>Error loading posts</div>}
-                    {(location.pathname == '/' || '/post') && <div className={`individual-post-bodies ${loading ? 'hidden' : ''}`}>
+                    <div className={`individual-post-bodies ${loading ? 'hidden' : ''}`}>
                         {(location.pathname == '/' || location.pathname == '/post') && visiblePosts.map((data) => {
                             return <IndividualPost data={data} key={data._id} handleSearchParams={handleSearchParams} setPostLoad={setPostLoad} />
                         })}
                         {filteredPosts.length == 0 && <div>No posts found</div>}
-                    </div>}
-                </div>
-            {
-            location.pathname !== '/' && 
-            <div className='outlet'>
-                <Outlet />
-            </div> 
-            }
+                    </div>
+                </div>}
+                {
+                    location.pathname !== '/' && 
+                    <div className='outlet'
+                        style={isDarkMode ? {backgroundColor: '#121212'} : {backgroundColor: 'rgba(247,238,226,255)'}}
+                    >
+                        <Outlet />
+                    </div> 
+                }
         </div>
     </div>
 }
