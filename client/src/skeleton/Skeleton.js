@@ -170,6 +170,15 @@ const SkeletonHome = ({darkMode}) => {
     )
 }
 
+const SkeletonLiked = ({darkMode}) => {
+    return (
+        <div className='skeleton-home-body'>
+            <SkeletonIP darkMode={darkMode}/>
+            <SkeletonIP darkMode={darkMode} />
+        </div>
+    )
+}
+
 const SkeletonProfile = ({darkMode}) => {
     return (
     <div className={`skeleton-profile-body ${darkMode && 'dark'}`}>
@@ -320,6 +329,7 @@ const Skeleton = {
     ExpandedPost: SkeletonExpandedPost,
     Circle: SkeletonCircle,
     Comments: SkeletonComments,
-    EditPost: SkeletonEditPost
+    EditPost: SkeletonEditPost,
+    Liked: SkeletonLiked,
 }
 export default Skeleton;

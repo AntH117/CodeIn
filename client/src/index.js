@@ -14,6 +14,8 @@ import Profile from './Profile';
 import EditProfile from './EditProfile';
 import { AuthProvider } from './AuthContext';
 import NotFound from './NotFound';
+import LikedPosts from './LikedPosts';
+
 import {
   createBrowserRouter,
   RouterProvider,
@@ -34,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register />,
+      },
+      {
+        path: '/liked',
+        element: <LikedPosts />
       },
       {
         path: '/users/:id/edit',

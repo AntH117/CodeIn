@@ -551,8 +551,9 @@ export default function Home() {
     function ForceRefreshButton() {
 
         return (
-            <motion.div className='forced-refresh'   initial={{ rotate: 0 }} whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }}>
-            <Icons.Refresh />
+            <motion.div className='forced-refresh' initial={{ rotate: 0 }} whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }} 
+                onClick={() => setForcedRefresh((preVal) => preVal += 1)}>
+                <Icons.Refresh />
              </motion.div>
         )
     }
@@ -568,7 +569,9 @@ export default function Home() {
                 case ('/post'):
                     setSelected('Create Post')
                     break;
-                
+                case ('/liked'):
+                    setSelected('Liked')
+                    break;
             }
         }, [])
 
@@ -670,6 +673,7 @@ export default function Home() {
                     icon={<Icons.Heart width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
                     selectedIcon={<Icons.HeartFilled width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
                     name={'Liked'}
+                    callback={() => navigate('/liked')}
                     disabled={!user}
                 />
                 <SideOption 
