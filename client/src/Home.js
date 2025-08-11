@@ -619,7 +619,7 @@ export default function Home() {
             }
         }
 
-        function SideOption({icon, selectedIcon, name, callback}) {
+        function SideOption({icon, selectedIcon, name, callback, disabled}) {
             function setSelect() {
                 if (selected !== name) {
                     setSelected(name); 
@@ -629,12 +629,14 @@ export default function Home() {
                 }
             }
 
-            return <motion.div className='home-side-option'
+            return <motion.button className={`home-side-option ${disabled && 'disabled'}`}
                 onClick={() => setSelect()}
                 style={(isDarkMode) ? 
                     (selected == name ? {backgroundColor: '#1E1E1E'} : {backgroundColor: 'transparent'}) : 
                     (selected == name ? {backgroundColor: '#f0e8dd'} : {backgroundColor: 'transparent'})
                 }
+                whileHover={!disabled && { scale: 1.1 }} whileTap={{ scale: 0.95 }}
+                disabled={disabled}
             >
                     <div className='side-logo'>
                         {selected == name ? selectedIcon : icon}
@@ -644,7 +646,7 @@ export default function Home() {
                     >
                         {name}
                     </div>
-            </motion.div>
+            </motion.button>
         }
 
         return (
@@ -662,16 +664,19 @@ export default function Home() {
                     selectedIcon={<Icons.PlusLarge color={isDarkMode ? 'white' : 'black'}/>} 
                     name={'Create Post'}
                     callback={() => navigate('/post')}
+                    disabled={!user}
                 />
                 <SideOption 
                     icon={<Icons.Heart width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
                     selectedIcon={<Icons.HeartFilled width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
                     name={'Liked'}
+                    disabled={!user}
                 />
                 <SideOption 
                     icon={<Icons.Gear width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
                     selectedIcon={<Icons.GearFilled width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
                     name={'Settings'}
+                    disabled={!user}
                 />
                 {user && <UserDisplay />}
             </div>
