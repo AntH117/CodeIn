@@ -100,8 +100,42 @@
   align-items: center;
 }
 
-.side-name {
+.sideBar-user-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
 
+.sideBar-user-display {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  position: absolute;
+  bottom: 3rem;
+}
+
+.sideBar-option-container {
+  position: relative;
+  width: 100%;
+  height: 1rem;
+}
+
+.sideBar-user-options {
+  width: 100%;
+  position: absolute;
+  top: -350%;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: 0.3s ease-in-out;
+  height: 0%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 998;
+}
+
+
+.sideBar-user-options.open {
+  height: fit-content;
 }
 
 .news-feed-absolute-container {

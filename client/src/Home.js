@@ -124,8 +124,11 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
                 </img>    
             </div>
             <div className='nav-bar-right'>
-                {user ? 
+                {user && !isDesktop ? 
                 <UserDisplay />
+                :
+                user && isDesktop ?
+                null
                 : 
                 <Link to={'/login'} style={isDarkMode ? {color: 'rgb(237, 237, 237)', textDecoration: 'none'}: {color: 'black', textDecoration: 'none'}}>Login</Link>  
                 }
@@ -569,6 +572,42 @@ export default function Home() {
             }
         }, [])
 
+        function UserDisplay() {
+            const [open, setOpen] = React.useState(false)
+            const [profileImageLoaded, setProfileImageLoaded] = React.useState(false)
+            
+            return <>
+            <div className={`sideBar-user-display`}>
+                <div className='sideBar-option-container'>
+                    <div className={`sideBar-user-options ${open ? 'open' : ''}`}>
+                        <div className={`user-dropdown-option ${isDarkMode && 'dark'}`} onClick={() => navigate(`/users/${user?.uid}`)}>Profile</div>
+                        <div className={`user-dropdown-option ${isDarkMode && 'dark'}`}  onClick={() => setConfirmSignOut(false)}>Sign Out</div>
+                    </div>
+                </div>
+                <div className='sideBar-user-container'>
+                    <div className='nav-user-image' onClick={() => navigate(`/users/${user.uid}`)}>
+                        {!profileImageLoaded && <Skeleton.Circle width={'3rem'} height={'3rem'}/>}
+                        <img src={loggedUserData?.photoURL || `${backendURL}/uploads/final/Temp-profile-pic.png`} style={!profileImageLoaded ? {display: 'hidden'} : {}}
+                            onLoad={() => setProfileImageLoaded(true)}
+                        >
+                        </img>
+                    </div>
+                    <div className='nav-user-name'>
+                        <div className='nav-user-display-name'>
+                                {loggedUserData?.displayName}
+                            </div>
+                        <div className='nav-user-display-tag'>
+                            @{loggedUserData?.displayTag}
+                        </div>
+                    </div>
+                    <div className='nav-user-dropdown' onClick={() => setOpen((preVal) => !preVal)}>
+                        <Icons.ArrowUpIcon />
+                    </div>
+                </div>
+            </div>
+            </>
+        }
+
         const colors = {
             darkMode: {
                 normal: 'rgb(158, 156, 156)',
@@ -634,6 +673,7 @@ export default function Home() {
                     selectedIcon={<Icons.GearFilled width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
                     name={'Settings'}
                 />
+                {user && <UserDisplay />}
             </div>
         )
     }
