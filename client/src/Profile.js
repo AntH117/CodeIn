@@ -105,7 +105,7 @@ export default function Profile () {
     //display user only posts
     function UserPosts({onLoaded}) {
     const [postLoad, setPostLoad] = React.useState(false)
-
+    
     //get user only posts
     const [userPosts, setUserPosts] = React.useState()  
         const APILINK = `${backendURL}/api/v1/codeIn`
@@ -114,7 +114,7 @@ export default function Profile () {
             if (postLoad || userPosts?.length == 0) {
                 onLoaded()
             }
-        }, [userPosts])
+        }, [userPosts, postLoad])
 
 
         const getPosts = async () => {

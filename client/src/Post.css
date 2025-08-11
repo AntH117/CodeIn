@@ -9,7 +9,7 @@
     color: white;
     display: flex;
     justify-content: center;
-    z-index: 11;
+    z-index: 998;
 }
 
 .post-body {
@@ -24,7 +24,7 @@
     align-items: center;
     color: #333;
     z-index: 11;
-    margin-top: 2rem;
+    margin-top: 5rem;
 }
 
 .cancel-button {

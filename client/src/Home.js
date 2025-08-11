@@ -555,7 +555,20 @@ export default function Home() {
     }
 
     function SideBar() {
-        const [selected, setSelected] = React.useState('Home')
+        const [selected, setSelected] = React.useState('')
+        const location = useLocation()
+        React.useEffect(() => {
+            switch (location.pathname) {
+                case ('/'): 
+                    setSelected('Home')
+                    break;
+                case ('/post'):
+                    setSelected('Create Post')
+                    break;
+                
+            }
+        }, [])
+
         const colors = {
             darkMode: {
                 normal: 'rgb(158, 156, 156)',
@@ -568,11 +581,21 @@ export default function Home() {
         }
 
         function SideOption({icon, selectedIcon, name, callback}) {
+            function setSelect() {
+                if (selected !== name) {
+                    setSelected(name); 
+                    if (callback) {
+                        callback()
+                    }
+                }
+            }
+
             return <motion.div className='home-side-option'
-            onClick={() => setSelected(name)}
-            style={(isDarkMode) ? 
-                (selected == name ? {backgroundColor: '#1E1E1E'} : {backgroundColor: 'transparent'}) : 
-                (selected == name ? {backgroundColor: '#f0e8dd'} : {backgroundColor: 'transparent'})}
+                onClick={() => setSelect()}
+                style={(isDarkMode) ? 
+                    (selected == name ? {backgroundColor: '#1E1E1E'} : {backgroundColor: 'transparent'}) : 
+                    (selected == name ? {backgroundColor: '#f0e8dd'} : {backgroundColor: 'transparent'})
+                }
             >
                     <div className='side-logo'>
                         {selected == name ? selectedIcon : icon}
@@ -593,11 +616,13 @@ export default function Home() {
                     icon={<Icons.Home width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
                     selectedIcon={<Icons.HomeFilled width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
                     name={'Home'}
+                    callback={() => navigate('/')}
                 />
                 <SideOption 
                     icon={<Icons.PlusLarge color={isDarkMode ? 'white' : 'black'}/>} 
                     selectedIcon={<Icons.PlusLarge color={isDarkMode ? 'white' : 'black'}/>} 
                     name={'Create Post'}
+                    callback={() => navigate('/post')}
                 />
                 <SideOption 
                     icon={<Icons.Heart width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
@@ -630,7 +655,7 @@ export default function Home() {
                 </div>
 
                 {isDesktop && <SideBar />}
-                {(location.pathname == '/' || location.pathname == '/post') && <div className='news-feed' ref={scrollRef}
+                {(location.pathname == '/') && <div className='news-feed' ref={scrollRef}
                     style={isDarkMode ? {backgroundColor: '#121212'} : {backgroundColor: 'rgba(247,238,226,255)'}}
                 >
                     {(location.pathname == '/' && !loading) && <div className='home-interaction'>
@@ -653,8 +678,8 @@ export default function Home() {
                     </div>
                 </div>}
                 {
-                    location.pathname !== '/' && 
-                    <div className='outlet'
+                    (location.pathname !== '/') && 
+                    <div className={`outlet`}
                         style={isDarkMode ? {backgroundColor: '#121212'} : {backgroundColor: 'rgba(247,238,226,255)'}}
                     >
                         <Outlet />

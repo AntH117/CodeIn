@@ -18,6 +18,14 @@ import { useTheme } from "./ThemeContext";
 export default function Post() {
     const { isDarkMode } = useTheme()
     const { user } = useAuth();
+
+    //Kick out if not logged in
+    React.useEffect(() => {
+        if (!user) {
+            navigate('/')
+        }
+    }, [])
+
     const backendURL = process.env.REACT_APP_BACKEND_URL
     const APILINK = `${backendURL}/api/v1/codeIn`
     const navigate = useNavigate();
@@ -273,7 +281,7 @@ export default function Post() {
     }
     
     const [toggle, setToggle] = React.useState({
-        description: null,
+        description: true,
         codeSnippet: null
     })
     const handleToggle = (e) => {

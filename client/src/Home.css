@@ -378,6 +378,16 @@
     width: 100%;
     height: 100%;
     margin-top: 7rem;
+    display: flex;
+    justify-content: center;
+}
+
+.post-outlet {
+  position: absolute;
+  min-width: 500px;
+  max-width: 800px;
+  width: 100%;
+  height: 100%;
 }
 
 
