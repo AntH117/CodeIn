@@ -124,6 +124,19 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
             }}>
                 </img>    
             </div>
+            {isDesktop && 
+                <div className='nav-bar-search'>
+                    <input className='search-bar'
+                        placeholder='Search'
+                        style={isDarkMode ? {backgroundColor: 'rgb(30, 30, 30)', color: 'rgb(237, 237, 237)'} : {backgroundColor: 'rgb(255, 250, 242)', color: 'black'}}
+                    />    
+                    <div className='search-bar-icon'>
+                     <Icons.LookingGlass 
+                        color={isDarkMode ? 'rgb(237, 237, 237)' : 'gray'}
+                     />    
+                    </div>         
+                </div>
+            }
             <div className='nav-bar-right'>
                 {user && !isDesktop ? 
                 <UserDisplay />
@@ -573,6 +586,9 @@ export default function Home() {
                 case ('/liked'):
                     setSelected('Liked')
                     break;
+                case ('/settings'):
+                    setSelected('Settings')
+                    break;
             }
         }, [])
 
@@ -681,6 +697,7 @@ export default function Home() {
                     icon={<Icons.Gear width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
                     selectedIcon={<Icons.GearFilled width={'16'} height={'16'} color={isDarkMode ? 'white' : 'black'}/>} 
                     name={'Settings'}
+                    callback={() => navigate('/settings')}
                     disabled={!user}
                 />
                 {user && <UserDisplay />}

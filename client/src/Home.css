@@ -611,18 +611,49 @@ body.dark ::-webkit-scrollbar-thumb:hover {
   .nav-bar-home {
     height: 100%;
     display: flex;
-    width: 50%;
+    width: fit-content;
     align-items: center;
   }
 
   .codeIn-logo {
-    width: 70%;
-    min-width: 200px;
-    max-width: 300px;
-    height: 70%;
+    width: 100%;
+    min-width: 150px;
+    max-width: 250px;
+    height: fit-content;
     object-fit: cover;
     margin-top: 5px;
     cursor: pointer;
+  }
+
+  .nav-bar-search {
+    width: 60%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .search-bar {
+    width: 100%;
+    height: 70%;
+    border-radius: 30px;
+    border: 0px;
+    box-sizing: border-box;
+    padding-left: 2.5rem;
+  }
+
+  .search-bar::placeholder {
+    color: gray;
+  }
+    
+  .search-bar:focus {
+    outline: none;
+  }
+
+  .search-bar-icon {
+    position: absolute;
+    left: 2%;
   }
 
   .forced-refresh {

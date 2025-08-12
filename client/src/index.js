@@ -15,6 +15,7 @@ import EditProfile from './EditProfile';
 import { AuthProvider } from './AuthContext';
 import NotFound from './NotFound';
 import LikedPosts from './LikedPosts';
+import Settings from './Settings';
 
 import {
   createBrowserRouter,
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: '/posts/:id/edit',
         element: <EditPost />
+      },
+      {
+        path: '/settings',
+        element: <Settings />
       },
       {
         path: '/posts/:postId',
