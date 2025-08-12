@@ -70,7 +70,7 @@ export default function LikedPosts() {
     <div className='liked-posts-body' style={loading ? {opacity: 0} : {}}>
             <div className='liked-posts-container' style={isDarkMode ? {backgroundColor: '#121212'} : {backgroundColor: 'rgba(247,238,226,255)'}}>
                 {likedPosts?.length > 0 && likedPosts.map((post) => {
-                return <IndividualPost data={post} setPostLoad={setPostLoad}  key={post.id}/>
+                return <IndividualPost data={post} setPostLoad={setPostLoad}  key={post.id} tag={'navigate'}/>
             })}
             {likedPosts?.length < 1 && <p>Nothing liked yet!</p>}
             </div>

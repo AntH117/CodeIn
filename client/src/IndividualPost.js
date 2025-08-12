@@ -31,7 +31,7 @@ function LikeWrapper({loggedUserData, data, user }) {
 }
 
 
-export default function IndividualPost({data, handleSearchParams, setPostLoad}) {
+export default function IndividualPost({data, handleSearchParams, setPostLoad, tag}) {
     const { isDarkMode } = useTheme()
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -278,7 +278,7 @@ export default function IndividualPost({data, handleSearchParams, setPostLoad}) 
 
     function IndividualTag({tagName}) {
 
-        return <motion.div className='IP-individual-tag' onClick={() => handleSearchParams(tagName)}
+        return <motion.div className='IP-individual-tag' onClick={() => tag ? navigate(`/?tag=${tagName}`) : handleSearchParams(tagName)}
          whileHover={{ scale: 1.1, backgroundColor: 'rgb(87, 87, 255)', color: 'rgb(255,255,255)', border: '1px solid transparent'
           }}
           transition={{ duration: 0.2 }}
