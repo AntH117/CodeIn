@@ -671,15 +671,13 @@ body.dark ::-webkit-scrollbar-thumb:hover {
  }
 
  .toggle-container {
-     display: flex;  
-    align-items: center;
     padding: 5px;
     border: none;
     border-radius: 2rem;
     background-color: #82d7f8;
     cursor: pointer;
     width: 3.2rem;
-    transition: all 0.3s ease-in-out
+    position: relative;
 }
 
 .toggle-container.dark {

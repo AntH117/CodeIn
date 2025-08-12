@@ -18,6 +18,33 @@ import Skeleton from './skeleton/Skeleton';
 import { AnimatePresence, motion } from "motion/react"
 import { useTheme } from "./ThemeContext";
 
+
+function DarkModeToggle() {
+    const { isDarkMode, setIsDarkMode } = useTheme();
+    const toggleSwitch = () => setIsDarkMode(!isDarkMode)
+
+    return (
+    <button 
+        className={`toggle-container ${isDarkMode && 'dark'}`} 
+        onClick={toggleSwitch}
+    >
+        <motion.div
+            className={`toggle-handle ${isDarkMode && 'dark'}`}
+            initial={false}
+            animate={{ 
+                x: isDarkMode ? 22 : 0,
+                backgroundColor: isDarkMode ? "#B0C4DE" : "#f1d884",
+            }}
+            transition={{
+                type: "spring",
+                duration: 0.5,
+                bounce: 0.2,
+            }}
+        />
+    </button>
+    )
+}
+
 function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setToTop, isDesktop}) {
     const { isDarkMode } = useTheme();
     const [navHidden, setNavHidden] = React.useState(false)
@@ -84,32 +111,6 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
             </div>}
         </div>
         </>
-    }
-
-    function DarkModeToggle() {
-        const { isDarkMode, setIsDarkMode } = useTheme();
-        const toggleSwitch = () => setIsDarkMode(!isDarkMode)
-
-        return (
-        <button 
-            className={`toggle-container ${isDarkMode && 'dark'}`} 
-            onClick={toggleSwitch}
-            style={{
-                justifyContent: (!isDarkMode ? "start" : "end"),
-            }}
-        >
-            <motion.div
-                    className={`toggle-handle ${isDarkMode && 'dark'}`}
-                    layout
-                    transition={{
-                        type: "spring",
-                        visualDuration: 0.2,
-                        bounce: 0.2,
-                    }}
-            >
-            </motion.div>
-        </button>
-        )
     }
 
     return (
