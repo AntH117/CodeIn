@@ -44,7 +44,7 @@ export default function EditProfile() {
         } else {
             return null;
         }
-        }
+    }
 
     async function getAuthorInfo() {
         const profileInfo = await getUserInfo(userId)
