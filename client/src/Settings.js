@@ -43,6 +43,7 @@ function SettingsInput({displayName, value, name, setEditedInfo}) {
                     id={name}
                     onChange={handleChange}
                 />
+                {name == 'displayTag' && <div className='displayTag'>@</div>}
             </div>
         </div>
     </div>
@@ -55,7 +56,7 @@ export default function Settings() {
     const [userInfo, setUserInfo] = React.useState(null)
     const [editedInfo, setEditedInfo] = React.useState(null)
     const edited = editedInfo?.email !== userInfo?.email || editedInfo?.displayName !== userInfo?.displayName || editedInfo?.displayTag !== userInfo?.displayTag
-    
+
     //get user info
     const userId = user.uid
     async function getUserInfo(uid) {
