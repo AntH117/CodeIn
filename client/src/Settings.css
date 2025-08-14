@@ -123,3 +123,52 @@
     height: 1rem;
     left: 5px;
 }
+
+/* Error Messages */
+.settings-error-body {
+    width: 40%;
+    height: fit-content;
+    color: rgb(252, 146, 146);
+}
+
+.settings-notifications {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-toggle-body {
+    width: 60%;
+    height: 3rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.settings-toggle-container {
+    padding: 5px;
+    border: none;
+    border-radius: 2rem;
+    background-color: #82d7f8;
+    cursor: pointer;
+    width: 3.2rem;
+    position: relative;
+}
+
+.settings-toggle-container.dark {
+    background-color: #1E1E2F
+}
+
+.settings-toggle-handle {
+    width: 1.2rem;
+    height: 1.2rem;
+    background-color: #e0dbca;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.settings-toggle-handle.dark {
+    background-color: #B0C4DE;
+ }
