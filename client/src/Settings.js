@@ -18,7 +18,7 @@ import Skeleton from './skeleton/Skeleton';
 import { AnimatePresence, motion } from "motion/react"
 import { useTheme } from "./ThemeContext";
 
-function SettingsInput({displayName, value, name, setEditedInfo, errorMessages, saveConditions}) {
+function SettingsInput({displayName, value, name, setEditedInfo, errorMessages, saveConditions, isDesktop}) {
     const { isDarkMode } = useTheme()
 
     const errorMessage = {
@@ -45,7 +45,7 @@ function SettingsInput({displayName, value, name, setEditedInfo, errorMessages, 
     return <div className='settings-input-outer-body'>
         <h4 style={{marginBottom: '0.5rem'}}>{displayName}</h4>
         <div className='settings-input-body'>
-            <div className='settings-input-outline' 
+            <div className={`settings-input-outline ${!isDesktop && 'mobile'}`} 
                 style={isDarkMode ? {border: '1px solid rgb(48, 47, 47)', backgroundColor:' rgb(48, 47, 47)'} 
                 : 
                 {border: '1px solid  rgb(240, 232, 221)', backgroundColor:' rgb(240, 232, 221)'} }
@@ -121,6 +121,18 @@ export default function Settings() {
     const [editedInfo, setEditedInfo] = React.useState(null)
     const edited = editedInfo?.email !== userInfo?.email || editedInfo?.displayName !== userInfo?.displayName || editedInfo?.displayTag !== userInfo?.displayTag
     const [forceRerender, setForceRerender] = React.useState(true)
+
+    
+    //Check for desktop
+    const [isDesktop, setIsDesktop] = React.useState(window.innerWidth > 1024);
+
+    React.useEffect(() => {
+        const handleResize = () => setIsDesktop(window.innerWidth > 1024);
+        window.addEventListener('resize', handleResize);
+    
+        return () => window.removeEventListener('resize', handleResize);
+        }, []);
+
 
     //get user info
     const userId = user.uid
@@ -222,9 +234,31 @@ export default function Settings() {
                 <h3 style={{marginBottom: '0px'}}>
                     Account
                 </h3>
-                <SettingsInput displayName={'Email'} value={editedInfo.email} name={'email'} setEditedInfo={setEditedInfo} errorMessages={['validEmail']} saveConditions={saveConditions.current}/>
-                <SettingsInput displayName={'Display Name'} value={editedInfo.displayName} name={'displayName'} setEditedInfo={setEditedInfo} errorMessages={['displayNameMin', 'displayNameMax']} saveConditions={saveConditions.current}/>
-                <SettingsInput displayName={'Display Tag'} value={editedInfo.displayTag} name={'displayTag'} setEditedInfo={setEditedInfo} errorMessages={['displayTagMin', 'displayTagMax']} saveConditions={saveConditions.current}/>
+                <SettingsInput 
+                    displayName={'Email'}
+                    value={editedInfo.email} 
+                    name={'email'} setEditedInfo={setEditedInfo} 
+                    errorMessages={['validEmail']} 
+                    saveConditions={saveConditions.current}
+                    isDesktop={isDesktop}
+                />
+                <SettingsInput 
+                    displayName={'Display Name'} 
+                    value={editedInfo.displayName} name={'displayName'} 
+                    setEditedInfo={setEditedInfo} 
+                    errorMessages={['displayNameMin', 'displayNameMax']} 
+                    saveConditions={saveConditions.current}
+                    isDesktop={isDesktop}
+                />
+                <SettingsInput 
+                    displayName={'Display Tag'} 
+                    value={editedInfo.displayTag} 
+                    name={'displayTag'} 
+                    setEditedInfo={setEditedInfo} 
+                    errorMessages={['displayTagMin', 'displayTagMax']} 
+                    saveConditions={saveConditions.current}
+                    isDesktop={isDesktop}
+                />
             </div>
             <div className='settings-notifications'>
                 <h3 style={{marginBottom: '1rem', marginTop: '2rem'}}>

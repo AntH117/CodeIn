@@ -61,6 +61,10 @@
     position: relative;
 }
 
+.settings-input-outline.mobile {
+    width: 100%;
+}
+
 
 .settings-edit-button {
     width: 2rem;

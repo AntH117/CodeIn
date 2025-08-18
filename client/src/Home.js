@@ -107,6 +107,7 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
             </div>
             {<div className={`nav-user-options ${open ? 'open' : ''}`}>
                 <div className={`user-dropdown-option ${isDarkMode && 'dark'}`} onClick={() => navigate(`/users/${user?.uid}`)}>Profile</div>
+                {!isDesktop && <div className={`user-dropdown-option ${isDarkMode && 'dark'}`} onClick={() => navigate(`/settings`)}>Settings</div>}
                 <div className={`user-dropdown-option ${isDarkMode && 'dark'}`}  onClick={() => setConfirmSignOut(false)}>Sign Out</div>
             </div>}
         </div>
