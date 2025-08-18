@@ -323,6 +323,41 @@ const SkeletonEditPost = ({darkMode}) => {
     )
 }
 
+const SkeletonSettings = ({darkMode, isDesktop}) => {
+
+    function SkeletonSettingsInput() {
+        return (
+            <div className='skeleton-settings-input'>
+            <SkeletonBox width={'4rem'} height={'1rem'}/>
+            <SkeletonBox width={isDesktop ? '50%' : '100%'} height={'2rem'}/>
+        </div>
+        )
+    }
+
+    function SkeletonSettingsToggle() {
+        return (
+            <div className='skeleton-settings-toggle'
+            style={isDesktop ? {width: '50%'} : {width: '100%'}}
+        >
+            <SkeletonBox width={'8rem'} height={'1.5rem'}/>
+            <SkeletonPill width={'4rem'} height={'2rem'}/>
+        </div>
+        )
+    }
+
+    return <div className={`skeleton-settings-body ${darkMode && 'dark'}`}>
+        <SkeletonBox width={'9rem'} height={'2rem'}/>
+        <SkeletonBox width={'7rem'} height={'1.5rem'}/>
+        <SkeletonSettingsInput />
+        <SkeletonSettingsInput />
+        <SkeletonSettingsInput />
+        <div style={{width: '0px', height: '1rem'}}></div>
+        <SkeletonBox width={'7rem'} height={'1.5rem'}/>
+        <SkeletonSettingsToggle />
+        <SkeletonSettingsToggle />
+    </div>
+}
+
 const Skeleton = {
     Profile: SkeletonProfile,
     Home: SkeletonHome,
@@ -331,5 +366,6 @@ const Skeleton = {
     Comments: SkeletonComments,
     EditPost: SkeletonEditPost,
     Liked: SkeletonLiked,
+    Settings: SkeletonSettings,
 }
 export default Skeleton;

@@ -66,7 +66,7 @@ function SettingsInput({displayName, value, name, setEditedInfo, errorMessages, 
     </div>
 }
 
-function SettingsToggle({name}) {
+function SettingsToggle({name, isDesktop}) {
     const { isDarkMode } = useTheme()
     const [toggle, setToggle] = React.useState(false)
     const styles = {
@@ -89,7 +89,9 @@ function SettingsToggle({name}) {
         }
     }
 
-    return <div className='settings-toggle-body'>
+    return <div className='settings-toggle-body'
+                style={isDesktop ? {width: '50%'} : {width: '100%'}}
+            >
             {name}
             <button 
                 className={`settings-toggle-container ${isDarkMode && 'dark'}`} 
@@ -121,6 +123,7 @@ export default function Settings() {
     const [editedInfo, setEditedInfo] = React.useState(null)
     const edited = editedInfo?.email !== userInfo?.email || editedInfo?.displayName !== userInfo?.displayName || editedInfo?.displayTag !== userInfo?.displayTag
     const [forceRerender, setForceRerender] = React.useState(true)
+    const [loading, setLoading] = React.useState(true)
 
     
     //Check for desktop
@@ -154,7 +157,9 @@ export default function Settings() {
         } catch (e) {
             console.error('Could not get user info')
         } finally {
-        
+            setTimeout(() => {
+                setLoading(false)
+            }, 2000)
         }
     }
     React.useEffect(() => {
@@ -202,8 +207,9 @@ export default function Settings() {
         }, { merge: true }); // merge keeps existing data
     }
 
-    return (
-        userInfo && <div className='settings-outer-body'>
+    return <>
+    {
+        (userInfo && !loading) && <div className='settings-outer-body'>
         <div className='settings-inner-body'
              style={isDarkMode ? {backgroundColor: '#1E1E1E', color: '#EDEDED'} : {backgroundColor: 'rgba(253,245,234,255)'}}
         >   
@@ -264,9 +270,11 @@ export default function Settings() {
                 <h3 style={{marginBottom: '1rem', marginTop: '2rem'}}>
                     Notifications
                 </h3>
-                <SettingsToggle name={'Push notifications'}/>
+                <SettingsToggle name={'Push notifications'} isDesktop={isDesktop}/>
             </div>
         </div>
     </div>
-    )
+    }
+    {loading && <Skeleton.Settings darkMode={isDarkMode} isDesktop={isDesktop}/>}
+    </>
 }
