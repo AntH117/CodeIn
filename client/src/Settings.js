@@ -180,6 +180,15 @@ export default function Settings() {
         displayTagMax: null,
     })
 
+    async function saveUserInfo(user) {
+        const userRef = doc(db, "users", user.uid);
+        await setDoc(userRef, {
+            displayName: editedInfo.displayName,
+            displayTag: editedInfo.displayTag,
+            email: editedInfo.email,
+        }, { merge: true }); // merge keeps existing data
+    }
+
     function handleSave() {
         saveConditions.current = {
             validEmail: editedInfo.email.includes('@'),
@@ -191,21 +200,13 @@ export default function Settings() {
         setForceRerender(!forceRerender)
         const allTrue = Object.values(saveConditions.current).every(value => value === true);
         if (allTrue) {
-            // saveUserInfo(user)
+            saveUserInfo(user)
             console.log('all conditions true!')
         } else {
             return
         }
     }
 
-    async function saveUserInfo(user) {
-        const userRef = doc(db, "users", user.uid);
-        await setDoc(userRef, {
-            displayName: editedInfo.displayName,
-            displayTag: editedInfo.displayTag,
-            email: editedInfo.email,
-        }, { merge: true }); // merge keeps existing data
-    }
 
     return <>
     {
