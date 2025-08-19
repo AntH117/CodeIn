@@ -15,7 +15,7 @@ This is my first full-stack project, designed to showcase the front-end projects
 ### **Frontend**
 - React.js
 - Javascript
-- HTML5 & CSS3
+- Framer Motion
 
 ### **Backend**
 - Node.js
