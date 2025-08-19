@@ -355,6 +355,12 @@ const SkeletonSettings = ({darkMode, isDesktop}) => {
         <SkeletonBox width={'7rem'} height={'1.5rem'}/>
         <SkeletonSettingsToggle />
         <SkeletonSettingsToggle />
+        <div style={{position: 'absolute', top: '1rem', right: '1rem'}}>
+            <SkeletonCircle width={'2rem'} height={'2rem'}/>
+        </div>
+        <div style={{position: 'absolute', bottom: '1rem', right: '1rem'}}>
+            <SkeletonPill width={'3.5rem'} height={'2rem'}/>
+        </div>
     </div>
 }
 
