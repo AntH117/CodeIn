@@ -613,7 +613,7 @@ body.dark ::-webkit-scrollbar-thumb:hover {
     display: flex;
     width: fit-content;
     align-items: center;
-    overflowz: hidden;
+    overflow: hidden;
   }
 
   .codeIn-logo {

@@ -567,7 +567,7 @@ export default function Profile () {
                 {isUser && <EditUser />}
                 <div className='user-follow'>
                     Followers: {tempFollowCount}
-                    {!isUser && <motion.button className={`follow-button ${followed ? 'active' : ''}`}
+                    {(!isUser && user) && <motion.button className={`follow-button ${followed ? 'active' : ''}`}
                         style={isDarkMode ? {border: '1px solid white', color: 'white'} : {border: '1px solid black'}} 
                         onClick={handleFollow}  whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
                     >
