@@ -26,7 +26,3 @@ This is my first full-stack project, designed to showcase the front-end projects
 ### **Version Control & Deployment**
 - Github
 - Github Pages
-
-## Future Improvements
-- Add a dark mode toggle
-- Add more animations
