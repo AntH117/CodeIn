@@ -168,7 +168,7 @@ export default class CodeInDAO {
             { $match: { "postContent.tags": { $regex: tagName, $options: "i" } } },
             {
               $group: {
-                _id: "$postContent.tags", // group by tag
+                _id: { $toLower: "$postContent.tags"}, // group by tag
                 count: { $sum: 1 }  
               }
             },

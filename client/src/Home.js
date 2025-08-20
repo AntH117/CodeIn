@@ -52,8 +52,29 @@ function SearchBar() {
     const [searchResults, setSearchResults] = React.useState([])
 
     function TagResults() {
+        const backendURL = process.env.REACT_APP_BACKEND_URL
+        const tagsAPI = `${backendURL}/api/v1/codeIn/tags/${searchCriteria}`
+        const [tagResults, setTagResults] = React.useState()
 
-        function SearchTags({value}) {
+        const getTags = async () => {
+            try {
+                const response = await fetch(tagsAPI, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+                setTagResults(data)
+            } catch (e) {
+                console.error('Unable to fetch tags:', e)
+            } 
+          };
+        React.useEffect(() => {
+            getTags()
+        }, [])
+
+        function SearchTags({value, amount}) {
 
             return (
             <motion.div className='individual-search-tag'
@@ -63,12 +84,18 @@ function SearchBar() {
                   }}
             >
                 <Icons.LookingGlass color={isDarkMode ? 'rgb(237, 237, 237)' : 'gray'}/>
-                {value}
+                {`#${value}`}
+                <span className='individual-tag-amount'>
+                    {amount && amount}
+                </span>
             </motion.div>)
         }
 
         return <div className='search-bar-tag-container'>
-           <SearchTags value={`#${searchCriteria}`}/>
+           <SearchTags value={`${searchCriteria}`}/>
+           {tagResults?.map((tag) => (
+            <SearchTags value={tag.tag} amount={tag.count}/>
+           ))}
         </div>
     }
 
@@ -420,7 +447,6 @@ export default function Home() {
     };
 
     const [posts, setPosts] = React.useState([])
-    console.log(posts)
     const [filteredPosts, setFilteredPosts] = React.useState(posts)
     const [visibleCount, setVisibleCount] = React.useState(3)
     const visiblePosts = filteredPosts.slice(0, visibleCount);
