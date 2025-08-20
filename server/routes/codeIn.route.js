@@ -54,5 +54,7 @@ router.route('/posts')
 //Handle liking a post
 router.route('/socials/like/:postId')
     .put(CodeInCtrl.apiLikePost)
-
+//Get Tags
+router.route('/tags/:tag')
+    .get(CodeInCtrl.apiGetTags)
 export default router

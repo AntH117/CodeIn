@@ -420,6 +420,7 @@ export default function Home() {
     };
 
     const [posts, setPosts] = React.useState([])
+    console.log(posts)
     const [filteredPosts, setFilteredPosts] = React.useState(posts)
     const [visibleCount, setVisibleCount] = React.useState(3)
     const visiblePosts = filteredPosts.slice(0, visibleCount);

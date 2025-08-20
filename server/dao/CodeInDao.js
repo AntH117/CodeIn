@@ -160,5 +160,29 @@ export default class CodeInDAO {
         const combinedPosts = [...followedPosts, ...publicPosts];
     
         return combinedPosts;
-}
+    }   
+    static async getTags(tagName) {
+        try {
+          const pipeline = [
+            { $unwind: "$postContent.tags" }, // flatten tags arrays
+            { $match: { "postContent.tags": { $regex: tagName, $options: "i" } } },
+            {
+              $group: {
+                _id: "$postContent.tags", // group by tag
+                count: { $sum: 1 }  
+              }
+            },
+            { $sort: { count: -1 } }, // sort by count (desc)
+            { $limit: 2 }             // top 2 results
+          ];
+      
+          const results = await posts.aggregate(pipeline).toArray();
+      
+          // format nicely
+          return results.map(r => ({ tag: r._id, count: r.count }));
+        } catch (error) {
+          console.error(`Unable to get tags: ${error}`);
+          return { error: error.message };
+        }
+      }
 }

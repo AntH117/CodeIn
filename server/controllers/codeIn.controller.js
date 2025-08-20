@@ -321,4 +321,19 @@ export default class CodeInController {
             res.status(500).json({ error: 'Failed to fetch posts' });
         }
     }
+
+    static async apiGetTags (req, res) {
+        try {
+            const tagName = req.params.tag;
+            let tags = await CodeInDAO.getTags(tagName)
+
+            if (!tags) {
+                res.status(404).json({error: "Not Found"})
+                return
+            }
+            res.json(tags)
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to fetch tags' });
+        }
+    }
 }
