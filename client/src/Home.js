@@ -45,6 +45,59 @@ function DarkModeToggle() {
     )
 }
 
+function SearchBar() {
+    const { isDarkMode } = useTheme();
+    const [focus, setFocus] = React.useState()
+    const [searchCriteria, setSearchCriteria] = React.useState('')
+    const [searchResults, setSearchResults] = React.useState([])
+
+    function TagResults() {
+
+        function SearchTags({value}) {
+
+            return (
+            <motion.div className='individual-search-tag'
+                style={isDarkMode ? {backgroundColor: 'rgb(30, 30, 30)', color: 'rgb(237, 237, 237)'} : {backgroundColor: 'rgb(255, 250, 242)', color: 'black'}}
+                whileHover={{
+                    backgroundColor: isDarkMode ? "#3C3F51" : "#f0f0ff"
+                  }}
+            >
+                <Icons.LookingGlass color={isDarkMode ? 'rgb(237, 237, 237)' : 'gray'}/>
+                {value}
+            </motion.div>)
+        }
+
+        return <div className='search-bar-tag-container'>
+           <SearchTags value={`#${searchCriteria}`}/>
+        </div>
+    }
+
+    return (
+        <div className='nav-bar-search'>
+        <input className='search-bar'
+            placeholder='Search'
+            style={isDarkMode ? {backgroundColor: 'rgb(30, 30, 30)', color: 'rgb(237, 237, 237)'} : {backgroundColor: 'rgb(255, 250, 242)', color: 'black'}}
+            onClick={() => setFocus(true)}
+            onChange={(e) => setSearchCriteria(e.target.value)}
+            value={searchCriteria}
+        />    
+        <div className='search-bar-icon'>
+         <Icons.LookingGlass 
+            color={isDarkMode ? 'rgb(237, 237, 237)' : 'gray'}
+         />    
+        </div>
+        {focus && 
+        <div className={`search-dropdown ${isDarkMode && 'dark'}`}>
+            {searchCriteria.length == 0 && <p style={{marginTop: '2rem'}}>Try searching for people or tags</p>}
+            {searchCriteria.length > 0 && <div className='search-result-body'>
+                <TagResults />
+            </div>}
+        </div>
+        }         
+    </div>
+    )
+}
+
 function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setToTop, isDesktop}) {
     const { isDarkMode } = useTheme();
     const [navHidden, setNavHidden] = React.useState(false)
@@ -125,19 +178,7 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
             }}>
                 </img>    
             </div>
-            {isDesktop && 
-                <div className='nav-bar-search'>
-                    <input className='search-bar'
-                        placeholder='Search'
-                        style={isDarkMode ? {backgroundColor: 'rgb(30, 30, 30)', color: 'rgb(237, 237, 237)'} : {backgroundColor: 'rgb(255, 250, 242)', color: 'black'}}
-                    />    
-                    <div className='search-bar-icon'>
-                     <Icons.LookingGlass 
-                        color={isDarkMode ? 'rgb(237, 237, 237)' : 'gray'}
-                     />    
-                    </div>         
-                </div>
-            }
+            {isDesktop && <SearchBar />}
             <div className='nav-bar-right'>
                 {user && !isDesktop ? 
                 <UserDisplay />
