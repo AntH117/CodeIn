@@ -45,7 +45,7 @@ function DarkModeToggle() {
     )
 }
 
-function SearchBar() {
+function SearchBar({filters, setFilters}) {
     const { isDarkMode } = useTheme();
     const [focus, setFocus] = React.useState()
     const [searchCriteria, setSearchCriteria] = React.useState('')
@@ -75,13 +75,14 @@ function SearchBar() {
         }, [])
 
         function SearchTags({value, amount}) {
-
+            const navigate = useNavigate()
             return (
             <motion.div className='individual-search-tag'
                 style={isDarkMode ? {backgroundColor: 'rgb(30, 30, 30)', color: 'rgb(237, 237, 237)'} : {backgroundColor: 'rgb(255, 250, 242)', color: 'black'}}
                 whileHover={{
                     backgroundColor: isDarkMode ? "#3C3F51" : "#f0f0ff"
                   }}
+                  onClick={() => {setFilters({ ...filters, tag: [value] }); setFocus(false)}}
             >
                 <Icons.LookingGlass color={isDarkMode ? 'rgb(237, 237, 237)' : 'gray'}/>
                 {`#${value}`}
@@ -125,7 +126,7 @@ function SearchBar() {
     )
 }
 
-function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setToTop, isDesktop}) {
+function NavBar ({scrollRef, loggedUserData, filters, setFilters, setConfirmSignOut, setToTop, isDesktop}) {
     const { isDarkMode } = useTheme();
     const [navHidden, setNavHidden] = React.useState(false)
     const lastScrollTop = React.useRef(0);
@@ -205,10 +206,10 @@ function NavBar ({scrollRef, loggedUserData, setFilters, setConfirmSignOut, setT
             }}>
                 </img>    
             </div>
-            {isDesktop && <SearchBar />}
+            {isDesktop && <SearchBar setFilters={setFilters} filters={filters}/>}
             <div className='nav-bar-right'>
                 {user && !isDesktop ? 
-                <UserDisplay />
+                <UserDisplay filters={filters} setFilters={setFilters}/>
                 :
                 user && isDesktop ?
                 null
@@ -776,7 +777,7 @@ export default function Home() {
 
     return <div className={`home ${isDarkMode && 'dark'}`}>
         <Toaster />
-        {<NavBar scrollRef={scrollRef} loggedUserData={loggedUserData} setFilters={setFilters} setConfirmSignOut ={setConfirmSignOut} setToTop={setToTop} isDesktop={isDesktop}/>}
+        {<NavBar scrollRef={scrollRef} loggedUserData={loggedUserData} filters={filters} setFilters={setFilters} setConfirmSignOut ={setConfirmSignOut} setToTop={setToTop} isDesktop={isDesktop}/>}
         {confirmSignOut == false && <ShowAlert confirm={true} message={'Are you sure you want to sign out?'} setConfirmation={setConfirmSignOut} callback={() => handleSignOut()}/>}
         <div className='news-feed-body'>
                 <div className='news-feed-absolute-container'>  
