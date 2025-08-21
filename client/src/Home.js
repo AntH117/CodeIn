@@ -50,6 +50,7 @@ function SearchBar({filters, setFilters}) {
     const [focus, setFocus] = React.useState()
     const [searchCriteria, setSearchCriteria] = React.useState('')
     const [searchResults, setSearchResults] = React.useState([])
+    const backendURL = process.env.REACT_APP_BACKEND_URL
     const searchRef = React.useRef()
 
     //Check if user clicked outside the searchRef
@@ -67,9 +68,9 @@ function SearchBar({filters, setFilters}) {
       }, [focus]);
 
     function TagResults() {
-        const backendURL = process.env.REACT_APP_BACKEND_URL
         const tagsAPI = `${backendURL}/api/v1/codeIn/tags/${searchCriteria}`
         const [tagResults, setTagResults] = React.useState()
+        const [loaded, setLoaded] = React.useState(false)
 
         const getTags = async () => {
             try {
@@ -83,8 +84,11 @@ function SearchBar({filters, setFilters}) {
                 setTagResults(data)
             } catch (e) {
                 console.error('Unable to fetch tags:', e)
-            } 
+            } finally {
+                setLoaded(true)
+            }
           };
+
         React.useEffect(() => {
             getTags()
         }, [])
@@ -96,7 +100,7 @@ function SearchBar({filters, setFilters}) {
                 whileHover={{
                     backgroundColor: isDarkMode ? "#3C3F51" : "#f0f0ff"
                   }}
-                  onClick={() => {setFilters({ ...filters, tag: [value] }); setFocus(false)}}
+                  onClick={() => {setFilters({ ...filters, tag: [value] }); setFocus(false); setSearchCriteria(value)}}
             >
                 <Icons.LookingGlass color={isDarkMode ? 'rgb(237, 237, 237)' : 'gray'}/>
                 {`#${value}`}
@@ -108,10 +112,17 @@ function SearchBar({filters, setFilters}) {
 
         return <div className='search-bar-tag-container'>
            <SearchTags value={`${searchCriteria}`}/>
-           {tagResults?.map((tag) => (
+           {loaded && tagResults?.map((tag) => (
             <SearchTags value={tag.tag} amount={tag.count}/>
            ))}
+           {!loaded && <div className='search-loader'>
+                    <span class="loader" style={isDarkMode ? {color: 'white'} : {color: 'black'}}></span>
+            </div>}
         </div>
+    }
+
+    function UserResults() {
+
     }
 
     return (
@@ -119,9 +130,9 @@ function SearchBar({filters, setFilters}) {
         <input className='search-bar'
             placeholder='Search'
             style={isDarkMode ? {backgroundColor: 'rgb(30, 30, 30)', color: 'rgb(237, 237, 237)'} : {backgroundColor: 'rgb(255, 250, 242)', color: 'black'}}
-            onClick={() => setFocus(true)}
             onChange={(e) => setSearchCriteria(e.target.value)}
             value={searchCriteria}
+            onFocus={() => setFocus(true)}
         />    
         <div className='search-bar-icon'>
          <Icons.LookingGlass 
