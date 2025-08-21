@@ -50,6 +50,21 @@ function SearchBar({filters, setFilters}) {
     const [focus, setFocus] = React.useState()
     const [searchCriteria, setSearchCriteria] = React.useState('')
     const [searchResults, setSearchResults] = React.useState([])
+    const searchRef = React.useRef()
+
+    //Check if user clicked outside the searchRef
+    React.useEffect(() => {
+        function handleClickOutside(event) {
+          if ((focus && searchRef.current) && !searchRef.current.contains(event.target)) {
+            setFocus(false)
+          }
+        }
+    
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, [focus]);
 
     function TagResults() {
         const backendURL = process.env.REACT_APP_BACKEND_URL
@@ -75,7 +90,6 @@ function SearchBar({filters, setFilters}) {
         }, [])
 
         function SearchTags({value, amount}) {
-            const navigate = useNavigate()
             return (
             <motion.div className='individual-search-tag'
                 style={isDarkMode ? {backgroundColor: 'rgb(30, 30, 30)', color: 'rgb(237, 237, 237)'} : {backgroundColor: 'rgb(255, 250, 242)', color: 'black'}}
@@ -115,7 +129,7 @@ function SearchBar({filters, setFilters}) {
          />    
         </div>
         {focus && 
-        <div className={`search-dropdown ${isDarkMode && 'dark'}`}>
+        <div className={`search-dropdown ${isDarkMode && 'dark'}`} ref={searchRef}>
             {searchCriteria.length == 0 && <p style={{marginTop: '2rem'}}>Try searching for people or tags</p>}
             {searchCriteria.length > 0 && <div className='search-result-body'>
                 <TagResults />
