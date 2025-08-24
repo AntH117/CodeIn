@@ -661,7 +661,7 @@ body.dark ::-webkit-scrollbar-thumb:hover {
     position: absolute;
     width: 100%;
     height: fit-content;
-    min-height: 100px;
+    min-height: 80px;
     top: 100%;
     border-radius: 10px;
     background-color: rgb(253, 245, 234);

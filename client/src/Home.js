@@ -82,6 +82,7 @@ function SearchBar({filters, setFilters}) {
                     },
                 });
                 const data = await response.json();
+                console.log(data)
                 setTagResults(data)
             } catch (e) {
                 console.error('Unable to fetch tags:', e)
