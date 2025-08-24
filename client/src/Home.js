@@ -8,6 +8,7 @@ import { signOut } from "firebase/auth";
 import { auth } from './firebase';
 import { db } from "./firebase";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, limit, orderBy } from "firebase/firestore";
 import { arrayUnion, arrayRemove  } from "firebase/firestore";
 import IndividualPost from './IndividualPost';
 import ShowAlert from './ShowAlert';
@@ -122,7 +123,48 @@ function SearchBar({filters, setFilters}) {
     }
 
     function UserResults() {
+        const [userResults, setUserResults] = React.useState([])
+        async function searchUsers(search) {
+            if (!search) return [];
 
+            const usersRef = collection(db, "users");
+            const q = query(usersRef, orderBy("displayName"), limit(20));
+            const snapshot = await getDocs(q);
+        
+            setUserResults(snapshot.docs
+                .map(doc => ({ id: doc.id, ...doc.data() }))
+                .filter(user => user.displayName?.toLowerCase().includes(search.toLowerCase()))
+                .slice(0, 3))
+        }
+
+        React.useEffect(() => {
+            searchUsers(searchCriteria)
+        }, [searchCriteria])
+        console.log(userResults)
+
+        function IndividualUserResult({user}) {
+            const navigate = useNavigate()  
+            return <motion.div className='user-result-body'
+                style={isDarkMode ? {backgroundColor: 'rgb(30, 30, 30)', color: 'rgb(237, 237, 237)'} : {backgroundColor: 'rgb(255, 250, 242)', color: 'black'}}
+                whileHover={{
+                    backgroundColor: isDarkMode ? "#3C3F51" : "#f0f0ff"
+                }}
+                onClick={() => {navigate(`/users/${user.uid}`); setFocus(false)}}
+            >
+                <div className='user-result-image'>
+                   <img src={user.photoURL}></img>
+                </div>
+                <p>{user.displayName}</p>
+                <p><span style={{color: 'gray'}}>@{user.displayTag}</span></p>
+            </motion.div>
+        }
+
+        return <div className='search-bar-user-container'>
+            {userResults.map((x) => {
+                return <IndividualUserResult user={x}/>
+            })}
+        </div>
+        
     }
 
     return (
@@ -132,6 +174,7 @@ function SearchBar({filters, setFilters}) {
             style={isDarkMode ? {backgroundColor: 'rgb(30, 30, 30)', color: 'rgb(237, 237, 237)'} : {backgroundColor: 'rgb(255, 250, 242)', color: 'black'}}
             onChange={(e) => setSearchCriteria(e.target.value)}
             value={searchCriteria}
+            onClick={() => setFocus(true)}
             onFocus={() => setFocus(true)}
         />    
         <div className='search-bar-icon'>
@@ -144,6 +187,7 @@ function SearchBar({filters, setFilters}) {
             {searchCriteria.length == 0 && <p style={{marginTop: '2rem'}}>Try searching for people or tags</p>}
             {searchCriteria.length > 0 && <div className='search-result-body'>
                 <TagResults />
+                <UserResults />
             </div>}
         </div>
         }         
