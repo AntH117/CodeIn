@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "/CodeIn/static/css/main.7d9acc41.css",
-    "main.js": "/CodeIn/static/js/main.68220d8d.js",
+    "main.js": "/CodeIn/static/js/main.cad401f9.js",
     "static/js/453.258b012d.chunk.js": "/CodeIn/static/js/453.258b012d.chunk.js",
     "static/media/Temp-profile-pic.png": "/CodeIn/static/media/Temp-profile-pic.b7417dd69293468174a4.png",
     "static/media/codeIn-logo.png": "/CodeIn/static/media/codeIn-logo.837ff981b5b195418798.png",
     "static/media/image_upload.png": "/CodeIn/static/media/image_upload.a0f1eb9b8338bd4c653a.png",
     "index.html": "/CodeIn/index.html",
     "main.7d9acc41.css.map": "/CodeIn/static/css/main.7d9acc41.css.map",
-    "main.68220d8d.js.map": "/CodeIn/static/js/main.68220d8d.js.map",
+    "main.cad401f9.js.map": "/CodeIn/static/js/main.cad401f9.js.map",
     "453.258b012d.chunk.js.map": "/CodeIn/static/js/453.258b012d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.7d9acc41.css",
-    "static/js/main.68220d8d.js"
+    "static/js/main.cad401f9.js"
   ]
 }
