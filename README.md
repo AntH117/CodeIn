@@ -10,7 +10,7 @@ This is my first full-stack project, designed to showcase the front-end projects
 * Dark mode toggle
 
 ## Live Demo
-[CodeIn](https://anth117.github.io/CodeIn)
+[CodeIn](https://anth117.github.io/CodeIn) <br/> <img src="https://github.com/AntH117/AnthH117/blob/main/Gifs/CodeIn.gif" width="700" height="700" />
 
 ## Tech Stack
 ### **Frontend**
