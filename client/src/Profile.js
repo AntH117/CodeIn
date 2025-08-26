@@ -149,7 +149,7 @@ export default function Profile () {
         
         return <div className='individual-post-body' style={isDarkMode ? {backgroundColor: '#121212'} : {backgroundColor: 'rgba(247,238,226,255)'}}>
             {userPosts && filteredPosts.map((post) => 
-                <IndividualPost data={post} setPostLoad={setPostLoad}/>
+                <IndividualPost data={post} setPostLoad={setPostLoad} tag={true}/>
             )}
             {userPosts?.length == 0 && <p>No posts yet!</p>}
         </div>
